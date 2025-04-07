@@ -1,6 +1,8 @@
 package com.example.quaterback.login.jwt;
 
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JWTUtil {
 
@@ -20,17 +23,51 @@ public class JWTUtil {
 
     public String getUsername(String token){
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        return Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("username", String.class);
     }
 
     public String getCategory(String token){
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+        return Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("category", String.class);
     }
 
-    public Boolean isExpired(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    public Boolean isValidate(String token) {
+        try{
+            Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration()
+                .before(new Date());
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT Token", e);
+        } catch (UnsupportedJwtException e){
+            log.error("Unsupported JWT Token", e);
+        } catch (MalformedJwtException e){
+            log.error("Malformed JWT Token", e);
+        } catch (SignatureException e){
+            log.error("invalid Signature", e);
+        } catch (io.jsonwebtoken.security.SecurityException e){
+            log.error("JWT security error", e);
+        } catch (JwtException e){
+            log.error("JWT Exception", e);
+        }
+        return false;
     }
 
     public String createJwt(String category, String username, Long expiredMs){
