@@ -1,0 +1,29 @@
+name: 기능 요청
+description: 새로운 기능이나 개선 사항을 요청해주세요.
+title: "[기능] "
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: "## 🔥 구현 기능 요약"
+  - type: textarea
+    id: summary
+    attributes:
+      label: 구현할 기능
+      placeholder: 여기에 기능 설명을 작성해주세요.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: tasks
+    attributes:
+      label: 작업 목록
+      options:
+        - label: 도메인 모델 개선
+        - label: 의존성 변경
+
+  - type: input
+    id: estimate
+    attributes:
+      label: 예상 소요 시간
+      placeholder: 예) 4시간
