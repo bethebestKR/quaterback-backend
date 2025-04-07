@@ -3,7 +3,7 @@ package com.example.quaterback.config;
 import com.example.quaterback.login.jwt.JWTFilter;
 import com.example.quaterback.login.jwt.JWTUtil;
 import com.example.quaterback.login.jwt.LoginFilter;
-import com.example.quaterback.login.repository.RefreshRepository;
+import com.example.quaterback.login.service.ReissueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
+    private final ReissueService reissueService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/login", "join", "reissue").permitAll()
                 .anyRequest().authenticated());
         //필터 등록
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, reissueService), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         //세션 설정
