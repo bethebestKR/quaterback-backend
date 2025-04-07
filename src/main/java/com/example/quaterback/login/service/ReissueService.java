@@ -73,11 +73,7 @@ public class ReissueService {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date.toString());
-
+        RefreshEntity refreshEntity = RefreshEntity.of(username, refresh, date.toString());
         refreshRepository.save(refreshEntity);
     }
 

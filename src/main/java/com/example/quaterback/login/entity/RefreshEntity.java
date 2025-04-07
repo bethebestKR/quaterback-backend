@@ -19,4 +19,18 @@ public class RefreshEntity {
     private String username;
     private String refresh;
     private String expiration;
+
+    protected RefreshEntity() {
+    }
+
+    private RefreshEntity(String username, String refresh, String expiration) {
+        this.username = username;
+        this.refresh = refresh;
+        this.expiration = expiration;
+    }
+
+    public static RefreshEntity of(String username, String refresh, String expiration) {
+        return new RefreshEntity(username, refresh, expiration);
+    }
+
 }
