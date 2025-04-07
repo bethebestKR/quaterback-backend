@@ -1,29 +1,57 @@
 name: 기능 요청
-description: 새로운 기능이나 개선 사항을 요청해주세요.
-title: "[기능] "
-labels: ["feature"]
+description: 새로운 기능 추가나 개선 사항을 제안해주세요.
+title: "[Feature] "
+labels: ["feature", "enhancement"]
+assignees:
+  - 작성자_GitHub_아이디 (원하면 제거 가능)
+
 body:
   - type: markdown
     attributes:
-      value: "## 🔥 구현 기능 요약"
+      value: |
+        ## ✨ 기능 설명
+        어떤 기능을 제안하고 싶은지 작성해주세요.
+
   - type: textarea
     id: summary
     attributes:
-      label: 구현할 기능
-      placeholder: 여기에 기능 설명을 작성해주세요.
+      label: 기능 요약
+      description: 어떤 기능인지 한두 줄로 간단히 요약해주세요.
+      placeholder: 예) 사용자 프로필 편집 기능 추가
     validations:
       required: true
 
-  - type: checkboxes
-    id: tasks
+  - type: textarea
+    id: motivation
     attributes:
-      label: 작업 목록
+      label: 제안 동기
+      description: 이 기능이 왜 필요한지, 어떤 문제를 해결하는지 설명해주세요.
+      placeholder: 예) 사용자 정보 수정이 불가능해서, UX 개선을 위해 필요합니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 효과
+      description: 기능이 구현되었을 때 예상되는 효과나 변화는?
+      placeholder: 예) 사용자 만족도 향상, 더 나은 정보 관리 가능 등
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 작업 항목
+      description: 이 기능을 위해 필요한 작업 목록을 체크리스트로 정리해보세요.
       options:
-        - label: 도메인 모델 개선
-        - label: 의존성 변경
+        - label: [ ] 관련 도메인 설계
+        - label: [ ] 컨트롤러 / 서비스 로직 추가
+        - label: [ ] 테스트 코드 작성
+        - label: [ ] API 문서 업데이트
 
   - type: input
     id: estimate
     attributes:
       label: 예상 소요 시간
-      placeholder: 예) 4시간
+      placeholder: 예) 4시간, 1일 등
