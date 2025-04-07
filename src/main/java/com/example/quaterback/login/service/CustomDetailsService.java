@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
 @RequiredArgsConstructor
 @Service
 public class CustomDetailsService implements UserDetailsService {
@@ -23,6 +24,6 @@ public class CustomDetailsService implements UserDetailsService {
 
             return new CustomUserDetails(userEntity);
         }
-        return null;
+        throw new UsernameNotFoundException("username not found");
     }
 }
