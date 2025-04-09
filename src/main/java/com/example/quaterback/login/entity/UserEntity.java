@@ -1,5 +1,6 @@
 package com.example.quaterback.login.entity;
 
+import com.example.quaterback.login.domain.UserDomain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,19 @@ public class UserEntity {
     private UserEntity(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public static UserEntity from(UserDomain userDomain){
+        return UserEntity.builder()
+                .username(userDomain.getUsername())
+                .password(userDomain.getPassword())
+                .build();
+    }
+
+    public UserDomain toDomain(){
+        return UserDomain.builder()
+                .username(username)
+                .build();
     }
 
 }
