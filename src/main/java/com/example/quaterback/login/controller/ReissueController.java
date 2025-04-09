@@ -1,6 +1,5 @@
 package com.example.quaterback.login.controller;
 
-import com.example.quaterback.login.constant.RefreshTokenErrorType;
 import com.example.quaterback.login.service.ReissueService;
 import com.example.quaterback.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-
 @RequiredArgsConstructor
 @RestController
 public class ReissueController {
@@ -22,12 +19,11 @@ public class ReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        String refreshToken = reissueService.validateRefresh(request.getCookies());
-
-        if(Arrays.stream(RefreshTokenErrorType.values())
-                .anyMatch(type -> type.toString().equals(refreshToken))) {
-
-            return new ResponseEntity<>(refreshToken, HttpStatus.BAD_REQUEST);
+        String refreshToken;
+        try{
+            refreshToken = reissueService.validateRefresh(request.getCookies());
+        } catch (RuntimeException e){
+            throw e;
         }
 
         String newRefreshToken = reissueService.getNewRefreshToken(refreshToken);

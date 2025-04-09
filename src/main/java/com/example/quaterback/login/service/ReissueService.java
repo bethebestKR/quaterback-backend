@@ -1,9 +1,9 @@
 package com.example.quaterback.login.service;
 
-import com.example.quaterback.login.constant.RefreshTokenErrorType;
 import com.example.quaterback.login.entity.RefreshEntity;
 import com.example.quaterback.login.jwt.JWTUtil;
 import com.example.quaterback.login.repository.RefreshRepository;
+import com.example.quaterback.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,24 +20,19 @@ public class ReissueService {
 
     public String validateRefresh(Cookie[] cookies){
         // refresh 토큰 추출
-        String refreshToken = extractRefreshToken(cookies);
-        // null 확인
-        if (refreshToken == null) {
-            return RefreshTokenErrorType.NULL.toString();
+        String refreshToken = CookieUtil.extractRefreshToken(cookies);
+
+        // null, 유효성 (만료 여부 등), refreshToken인지 확인
+        if (!jwtUtil.isValidateRefreshToken(refreshToken)){
+
+            throw new RuntimeException("invalid token");
         }
-        // 유효성 확인 (만료 여부 등)
-        if (!jwtUtil.isValidate(refreshToken)){
-            return RefreshTokenErrorType.EXPIRED.toString();
-        }
-        // refreshToken인지 확인
-        String category = jwtUtil.getCategory(refreshToken);
-        if (!category.equals("refreshToken")){
-            return RefreshTokenErrorType.NOT.toString();
-        }
+
         // DB에 저장되어 있는지 확인. 추후에 db말고 redis로 변경 가능
         Boolean isExist = refreshRepository.existsByRefresh(refreshToken);
         if (!isExist) {
-            return RefreshTokenErrorType.INVALID.toString();
+
+            throw new RuntimeException("invalid token");
         }
 
         return refreshToken;
@@ -57,23 +52,15 @@ public class ReissueService {
         return newRefresh;
     }
 
-    private String extractRefreshToken(Cookie[] cookies) {
-
-        for (Cookie cookie : cookies) {
-
-            if (cookie.getName().equals("refreshToken")) {
-
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
-
     public void addRefreshEntity(String username, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        RefreshEntity refreshEntity = RefreshEntity.of(username, refresh, date.toString());
+        RefreshEntity refreshEntity = RefreshEntity.builder()
+                .username(username)
+                .refresh(refresh)
+                .expiration(date.toString())
+                .build();
         refreshRepository.save(refreshEntity);
     }
 
