@@ -15,7 +15,8 @@ public class JoinController {
     @PostMapping("/join")
     public String join(JoinRequest joinRequest){
 
-        return joinService.joinProcess(joinRequest.username(), joinRequest.password());
+        String username = joinService.joinProcess(joinRequest.username(), joinRequest.password());
+        return username;
     }
 
 }
