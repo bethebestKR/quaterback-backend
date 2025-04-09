@@ -25,47 +25,29 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 헤더에서 Authorization에 담긴 토큰을 꺼냄
         String authorization = request.getHeader("Authorization");
-
-        if (authorization == null || !authorization.startsWith("Bearer")){
-
-            filterChain.doFilter(request, response);
-
-            return;
-        }
-
-        String accessToken = authorization.split(" ")[1];
-
         // 토큰이 없다면 다음 필터로 넘김
-        if (accessToken == null) {
-
+        if (!jwtUtil.hasAuthorizationToken(authorization)){
             filterChain.doFilter(request, response);
 
             return;
         }
+
+        String accessToken = authorization.substring(7);
 
         // 토큰 유효 여부 확인, 유효하지 않을 시 다음 필터로 넘기지 않음
-        if (!jwtUtil.isValidate(accessToken)){
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(accessToken);
-
-        if (!category.equals("accessToken")) {
-
-            //response body
-            PrintWriter writer = response.getWriter();
-            writer.print("invalid access token");
-
-            //response status code
+        if (!jwtUtil.isValidateAccessToken(accessToken)){
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
             return;
         }
 
         // username 값을 획득
         String username = jwtUtil.getUsername(accessToken);
 
-        UserEntity userEntity = UserEntity.of(username);
+        UserEntity userEntity = UserEntity.builder()
+                .username(username)
+                .build();
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
