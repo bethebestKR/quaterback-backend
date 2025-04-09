@@ -2,21 +2,26 @@ package com.example.quaterback.login.service;
 
 import com.example.quaterback.login.entity.RefreshEntity;
 import com.example.quaterback.login.jwt.JWTUtil;
-import com.example.quaterback.login.repository.RefreshRepository;
+import com.example.quaterback.login.repository.refresh.RefreshRepository;
 import com.example.quaterback.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Service
 public class ReissueService {
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+
+    public ReissueService(JWTUtil jwtUtil,
+                          @Qualifier("jpaRefreshRepository") RefreshRepository refreshRepository) {
+        this.jwtUtil = jwtUtil;
+        this.refreshRepository = refreshRepository;
+    }
 
     public String validateRefresh(Cookie[] cookies){
         // refresh 토큰 추출

@@ -2,19 +2,21 @@ package com.example.quaterback.login.service;
 
 import com.example.quaterback.login.dto.CustomUserDetails;
 import com.example.quaterback.login.entity.UserEntity;
-import com.example.quaterback.login.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.quaterback.login.repository.user.UserRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
-@RequiredArgsConstructor
 @Service
 public class CustomDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+
+    public CustomDetailsService(@Qualifier("jpaUserRepository") UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
