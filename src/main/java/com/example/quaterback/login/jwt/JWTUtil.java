@@ -45,15 +45,14 @@ public class JWTUtil {
 
     public Boolean isValidate(String token) {
         try{
-            Jwts
+            return Jwts
                 .parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getExpiration()
-                .before(new Date());
-            return true;
+                .after(new Date());
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT Token", e);
         } catch (UnsupportedJwtException e){
@@ -68,6 +67,25 @@ public class JWTUtil {
             log.error("JWT Exception", e);
         }
         return false;
+    }
+
+    public boolean hasAuthorizationToken(String authorization){
+        if (authorization == null || !authorization.startsWith("Bearer "))
+            return false;
+        try{
+           String accessToken = authorization.substring(7);
+        } catch (StringIndexOutOfBoundsException e){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isValidateAccessToken(String token){
+        return isValidate(token) && getCategory(token).equals("accessToken");
+    }
+
+    public boolean isValidateRefreshToken(String token){
+        return token != null && isValidate(token) && getCategory(token).equals("refreshToken");
     }
 
     public String createJwt(String category, String username, Long expiredMs){
