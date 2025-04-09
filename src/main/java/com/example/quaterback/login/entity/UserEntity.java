@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
 @Entity
 public class UserEntity {
@@ -22,6 +21,7 @@ public class UserEntity {
     protected UserEntity() {
     }
 
+    @Builder
     private UserEntity(String username, String password) {
         this.username = username;
         this.password = password;

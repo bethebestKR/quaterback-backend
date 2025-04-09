@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
 @Entity
 public class RefreshEntity {
@@ -23,6 +22,7 @@ public class RefreshEntity {
     protected RefreshEntity() {
     }
 
+    @Builder
     private RefreshEntity(String username, String refresh, String expiration) {
         this.username = username;
         this.refresh = refresh;
