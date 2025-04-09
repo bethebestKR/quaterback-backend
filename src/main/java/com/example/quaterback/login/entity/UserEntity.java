@@ -4,9 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
+@Builder
 @Getter
 @Entity
 public class UserEntity {
@@ -15,9 +16,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Setter
     private String username;
-    @Setter
     private String password;
 
     protected UserEntity() {
@@ -26,14 +25,6 @@ public class UserEntity {
     private UserEntity(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public static UserEntity of(String username, String password) {
-        return new UserEntity(username, password);
-    }
-
-    public static UserEntity of(String username) {
-        return new UserEntity(username, null);
     }
 
 }

@@ -4,10 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+@Builder
 @Getter
 @Entity
 public class RefreshEntity {
@@ -27,10 +27,6 @@ public class RefreshEntity {
         this.username = username;
         this.refresh = refresh;
         this.expiration = expiration;
-    }
-
-    public static RefreshEntity of(String username, String refresh, String expiration) {
-        return new RefreshEntity(username, refresh, expiration);
     }
 
 }
