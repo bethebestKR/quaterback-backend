@@ -1,4 +1,4 @@
-package com.example.quaterback.login.repository;
+package com.example.quaterback.login.repository.user;
 
 import com.example.quaterback.login.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
