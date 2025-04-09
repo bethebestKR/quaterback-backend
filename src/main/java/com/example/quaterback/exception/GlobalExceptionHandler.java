@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateJoinException.class)
-    public ResponseEntity<String> handleDuplicateJoinException(DuplicateJoinException ex){
+    public ResponseEntity<String> handleDuplicateJoinException(DuplicateJoinException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());

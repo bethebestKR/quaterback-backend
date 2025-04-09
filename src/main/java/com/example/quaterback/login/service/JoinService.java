@@ -21,9 +21,9 @@ public class JoinService {
     }
 
     @Transactional
-    public String joinProcess(String username, String password){
+    public String joinProcess(String username, String password) {
 
-        if (userRepository.existsByUsername(username)){
+        if (userRepository.existsByUsername(username)) {
             throw new DuplicateJoinException("이미 존재하는 ID입니다.");
         }
 

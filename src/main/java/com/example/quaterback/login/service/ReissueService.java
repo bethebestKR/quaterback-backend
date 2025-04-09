@@ -23,12 +23,12 @@ public class ReissueService {
         this.refreshRepository = refreshRepository;
     }
 
-    public String validateRefresh(Cookie[] cookies){
+    public String validateRefresh(Cookie[] cookies) {
         // refresh 토큰 추출
         String refreshToken = CookieUtil.extractRefreshToken(cookies);
 
         // null, 유효성 (만료 여부 등), refreshToken인지 확인
-        if (!jwtUtil.isValidateRefreshToken(refreshToken)){
+        if (!jwtUtil.isValidateRefreshToken(refreshToken)) {
 
             throw new RuntimeException("invalid token");
         }
@@ -43,13 +43,13 @@ public class ReissueService {
         return refreshToken;
     }
 
-    public String getNewAccessToken(String refreshToken){
+    public String getNewAccessToken(String refreshToken) {
         String username = jwtUtil.getUsername(refreshToken);
         return jwtUtil.createJwt("accessToken", username, 600000L);
     }
 
     @Transactional
-    public String getNewRefreshToken(String refreshToken){
+    public String getNewRefreshToken(String refreshToken) {
         String username = jwtUtil.getUsername(refreshToken);
         String newRefresh = jwtUtil.createJwt("refreshToken", username, 86400000L);
         refreshRepository.deleteByRefresh(refreshToken);

@@ -26,23 +26,23 @@ public class SecurityConfig {
     private final ReissueService reissueService;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         //csrf diable
         http.csrf((auth) -> auth.disable());
         //form login diable
-        http.formLogin((auth)-> auth.disable());
+        http.formLogin((auth) -> auth.disable());
         //http basic 인증 방식 disable
         http.httpBasic((auth) -> auth.disable());
         //인가 설정

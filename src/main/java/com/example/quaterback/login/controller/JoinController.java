@@ -13,7 +13,7 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/join")
-    public String join(JoinRequest joinRequest){
+    public String join(JoinRequest joinRequest) {
 
         String username = joinService.joinProcess(joinRequest.username(), joinRequest.password());
         return username;
