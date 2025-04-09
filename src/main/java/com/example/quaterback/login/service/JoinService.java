@@ -1,7 +1,6 @@
 package com.example.quaterback.login.service;
 
 import com.example.quaterback.exception.DuplicateJoinException;
-import com.example.quaterback.login.dto.JoinRequest;
 import com.example.quaterback.login.entity.UserEntity;
 import com.example.quaterback.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +16,7 @@ public class JoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public String joinProcess(JoinRequest joinRequest){
-
-        String username = joinRequest.username();
-        String password = joinRequest.password();
+    public String joinProcess(String username, String password){
 
         if (userRepository.existsByUsername(username)){
             throw new DuplicateJoinException("이미 존재하는 ID입니다.");
