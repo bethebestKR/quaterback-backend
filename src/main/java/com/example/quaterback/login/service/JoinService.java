@@ -26,7 +26,10 @@ public class JoinService {
             throw new DuplicateJoinException("이미 존재하는 ID입니다.");
         }
 
-        UserEntity data = UserEntity.of(username, bCryptPasswordEncoder.encode(password));
+        UserEntity data = UserEntity.builder()
+                .username(username)
+                .password(bCryptPasswordEncoder.encode(password))
+                .build();
 
         return userRepository.save(data).getUsername();
 
