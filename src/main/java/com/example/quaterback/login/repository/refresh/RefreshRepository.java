@@ -5,5 +5,5 @@ import com.example.quaterback.login.entity.RefreshEntity;
 public interface RefreshRepository {
     Boolean existsByRefresh(String refresh);
     void deleteByRefresh(String refresh);
-    void save(RefreshEntity refreshEntity);
+    RefreshEntity save(RefreshEntity refreshEntity);
 }
