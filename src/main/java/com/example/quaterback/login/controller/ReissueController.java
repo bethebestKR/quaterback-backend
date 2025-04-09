@@ -19,12 +19,7 @@ public class ReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        String refreshToken;
-        try{
-            refreshToken = reissueService.validateRefresh(request.getCookies());
-        } catch (RuntimeException e){
-            throw e;
-        }
+        String refreshToken = reissueService.validateRefresh(request.getCookies());
 
         String newRefreshToken = reissueService.getNewRefreshToken(refreshToken);
         String newAccessToken = reissueService.getNewAccessToken(refreshToken);
