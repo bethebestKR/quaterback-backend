@@ -26,7 +26,6 @@ public class HomeController {
     }
 
 
-
     @GetMapping("/check-redis")
     public String checkRedisConnection() {
         try {
