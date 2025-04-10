@@ -2,7 +2,6 @@ package com.example.quaterback.login.service;
 
 import com.example.quaterback.exception.DuplicateJoinException;
 import com.example.quaterback.login.domain.UserDomain;
-import com.example.quaterback.login.entity.UserEntity;
 import com.example.quaterback.login.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -27,7 +27,7 @@ public class JpaUserRepository implements UserRepository {
     public UserDomain save(UserDomain userDomain) {
 
         UserEntity userEntity = UserEntity.from(userDomain);
-        UserEntity resultUserEntity =  springDataJpaUserRepository.save(userEntity);
+        UserEntity resultUserEntity = springDataJpaUserRepository.save(userEntity);
         return resultUserEntity.toDomain();
     }
 }
