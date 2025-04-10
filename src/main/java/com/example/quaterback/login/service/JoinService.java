@@ -30,8 +30,7 @@ public class JoinService {
 
         UserDomain userDomain = UserDomain.createUserDomain(username, bCryptPasswordEncoder.encode(password));
 
-        UserEntity userEntity = UserEntity.from(userDomain);
-        UserDomain returnUserDomain = userRepository.save(userEntity).toDomain();
+        UserDomain returnUserDomain = userRepository.save(userDomain);
         String returnUsername = returnUserDomain.getUsername();
         return returnUsername;
 

@@ -1,5 +1,6 @@
 package com.example.quaterback.login.repository.user;
 
+import com.example.quaterback.login.domain.UserDomain;
 import com.example.quaterback.login.entity.UserEntity;
 
 public interface UserRepository {
@@ -7,5 +8,5 @@ public interface UserRepository {
 
     UserEntity findByUsername(String username);
 
-    UserEntity save(UserEntity userEntity);
+    UserDomain save(UserDomain userDomain);
 }

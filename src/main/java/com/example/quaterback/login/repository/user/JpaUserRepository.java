@@ -1,5 +1,6 @@
 package com.example.quaterback.login.repository.user;
 
+import com.example.quaterback.login.domain.UserDomain;
 import com.example.quaterback.login.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,10 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public UserEntity save(UserEntity userEntity) {
-        return springDataJpaUserRepository.save(userEntity);
+    public UserDomain save(UserDomain userDomain) {
+
+        UserEntity userEntity = UserEntity.from(userDomain);
+        UserEntity resultUserEntity =  springDataJpaUserRepository.save(userEntity);
+        return resultUserEntity.toDomain();
     }
 }
