@@ -1,14 +1,30 @@
 package com.example.quaterback.login.repository.refresh;
 
 import com.example.quaterback.login.entity.RefreshEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("jpaRefreshRepository")
-public interface JpaRefreshRepository extends RefreshRepository, JpaRepository<RefreshEntity, Long> {
-    Boolean existsByRefresh(String refresh);
+public class JpaRefreshRepository implements RefreshRepository {
 
-    void deleteByRefresh(String refresh);
+    private final SpringDataJpaRefreshRepository springDataJpaRefreshRepository;
 
-    RefreshEntity save(RefreshEntity refreshEntity);
+    public JpaRefreshRepository(SpringDataJpaRefreshRepository springDataJpaRefreshRepository) {
+        this.springDataJpaRefreshRepository = springDataJpaRefreshRepository;
+    }
+
+
+    @Override
+    public Boolean existsByRefresh(String refresh) {
+        return springDataJpaRefreshRepository.existsByRefresh(refresh);
+    }
+
+    @Override
+    public void deleteByRefresh(String refresh) {
+        springDataJpaRefreshRepository.deleteByRefresh(refresh);
+    }
+
+    @Override
+    public RefreshEntity save(RefreshEntity refreshEntity) {
+        return springDataJpaRefreshRepository.save(refreshEntity);
+    }
 }
