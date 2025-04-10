@@ -13,7 +13,7 @@ public class UserDomain {
     String username;
     String password;
 
-    public static UserDomain createUserDomain(String username, String password){
+    public static UserDomain createUserDomain(String username, String password) {
         return UserDomain.builder()
                 .username(username)
                 .password(password)

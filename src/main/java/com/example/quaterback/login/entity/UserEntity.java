@@ -28,14 +28,14 @@ public class UserEntity {
         this.password = password;
     }
 
-    public static UserEntity from(UserDomain userDomain){
+    public static UserEntity from(UserDomain userDomain) {
         return UserEntity.builder()
                 .username(userDomain.getUsername())
                 .password(userDomain.getPassword())
                 .build();
     }
 
-    public UserDomain toDomain(){
+    public UserDomain toDomain() {
         return UserDomain.builder()
                 .username(username)
                 .build();
