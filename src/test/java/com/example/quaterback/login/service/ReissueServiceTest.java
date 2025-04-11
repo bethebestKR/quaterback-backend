@@ -14,7 +14,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Date;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReissueServiceTest {
 
@@ -24,7 +25,7 @@ class ReissueServiceTest {
     private ReissueService reissueService;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         jwtUtil = new JWTUtil(secret);
         fakeRefreshRepository = new FakeRefreshRepository();
         reissueService = new ReissueService(jwtUtil, fakeRefreshRepository);
@@ -39,13 +40,13 @@ class ReissueServiceTest {
         String refreshToken = jwtUtil.createJwt("refreshToken", username, 86400000L);
         Date date = new Date(System.currentTimeMillis() + 86400000L);
         fakeRefreshRepository.save(RefreshEntity.builder()
-                        .username(username)
-                        .refresh(refreshToken)
-                        .expiration(date.toString())
+                .username(username)
+                .refresh(refreshToken)
+                .expiration(date.toString())
                 .build());
 
         //when
-        String result = reissueService.validateRefresh(new Cookie[] {new Cookie("refreshToken", refreshToken)});
+        String result = reissueService.validateRefresh(new Cookie[]{new Cookie("refreshToken", refreshToken)});
 
         //then
         assertThat(result).isEqualTo(refreshToken);
@@ -61,11 +62,11 @@ class ReissueServiceTest {
         String validButNotSavedToken = jwtUtil.createJwt("refreshToken", "userA", 86400000L);
 
         return Stream.of(
-          Arguments.of(new Cookie("refreshToken", fakeToken), "잘못된 형식의 토큰"),
-          Arguments.of(new Cookie("refreshToken", expiredToken), "만료된 토큰"),
-          Arguments.of(new Cookie("refreshToken", nullToken), "토큰 null"),
-          Arguments.of(new Cookie("refreshToken", accessToken), "refresh가 아닌 토큰"),
-          Arguments.of(new Cookie("refreshToken", validButNotSavedToken), "유효하지만 저장되지 않은 토큰")
+                Arguments.of(new Cookie("refreshToken", fakeToken), "잘못된 형식의 토큰"),
+                Arguments.of(new Cookie("refreshToken", expiredToken), "만료된 토큰"),
+                Arguments.of(new Cookie("refreshToken", nullToken), "토큰 null"),
+                Arguments.of(new Cookie("refreshToken", accessToken), "refresh가 아닌 토큰"),
+                Arguments.of(new Cookie("refreshToken", validButNotSavedToken), "유효하지만 저장되지 않은 토큰")
         );
     }
 
@@ -112,9 +113,9 @@ class ReissueServiceTest {
         String oldRefreshToken = jwtUtil.createJwt("refreshToken", username, 86400000L);
         Date date = new Date(System.currentTimeMillis() + 86400000L);
         fakeRefreshRepository.save(RefreshEntity.builder()
-                        .username(username)
-                        .refresh(oldRefreshToken)
-                        .expiration(date.toString())
+                .username(username)
+                .refresh(oldRefreshToken)
+                .expiration(date.toString())
                 .build());
 
         //when

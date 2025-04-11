@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CustomDetailsServiceTest {
 
@@ -16,7 +17,7 @@ class CustomDetailsServiceTest {
     private FakeUserRepository fakeUserRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         fakeUserRepository = new FakeUserRepository();
         customDetailsService = new CustomDetailsService(fakeUserRepository);
     }

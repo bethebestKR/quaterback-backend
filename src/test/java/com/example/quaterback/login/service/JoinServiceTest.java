@@ -7,7 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JoinServiceTest {
 
@@ -16,7 +17,7 @@ class JoinServiceTest {
     private JoinService joinService;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         userRepository = new FakeUserRepository();
         encoder = new BCryptPasswordEncoder();
         joinService = new JoinService(userRepository, encoder);

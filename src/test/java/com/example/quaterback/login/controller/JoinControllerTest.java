@@ -22,7 +22,8 @@ class JoinControllerTest {
 
     private final MockMvc mockMvc;
 
-    @MockitoBean private JoinService joinService;
+    @MockitoBean
+    private JoinService joinService;
 
     JoinControllerTest(@Autowired MockMvc mockMvc) {
         this.mockMvc = mockMvc;
