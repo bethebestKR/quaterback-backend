@@ -3,14 +3,7 @@ package com.example.quaterback.websocket;
 import com.example.quaterback.annotation.Handler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.socket.CloseStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -20,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Handler
+@Slf4j
 public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     private final Map<String, OcppMessageHandler> handlerMap;
@@ -33,15 +27,19 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        JsonNode jsonNode = new ObjectMapper().readTree(message.getPayload());
+        log.info("WebSocket message received");
 
-        String action = jsonNode.path("action").asText();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(message.getPayload());
+
+        String action = MessageUtil.getAction(jsonNode);
 
         OcppMessageHandler handler = handlerMap.get(action);
         if (handler != null) {
-            handler.handle(session, jsonNode);
+            handler.handle(session, jsonNode);  // payload만 넘겨도 됨
         } else {
-            // 기본 처리 or 에러 응답
+            log.warn("No handler found for action: {}", jsonNode);
+            // optionally respond with error
         }
     }
 }

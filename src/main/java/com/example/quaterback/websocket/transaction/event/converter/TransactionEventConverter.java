@@ -1,6 +1,7 @@
 package com.example.quaterback.websocket.transaction.event.converter;
 
 import com.example.quaterback.annotation.Converter;
+import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.example.quaterback.websocket.transaction.event.domain.sub.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,12 +13,15 @@ import java.util.List;
 @Converter
 public class TransactionEventConverter {
     public TransactionEventDomain convertToStartedDomain(JsonNode jsonNode) {
-        JsonNode payload = jsonNode.path("payload");
+        String messageId = MessageUtil.getMessageId(jsonNode);
+        String messageTypeId = MessageUtil.getMessageTypeId(jsonNode);
+        String action = MessageUtil.getAction(jsonNode);
+        JsonNode payload = MessageUtil.getPayload(jsonNode);
 
         return TransactionEventDomain.builder()
-                .messageId(jsonNode.path("messageId").asText())
-                .messageTypeId(jsonNode.path("messageTypeId").asText())
-                .action(jsonNode.path("action").asText())
+                .messageId(messageId)
+                .messageTypeId(messageTypeId)
+                .action(action)
                 .eventType(payload.path("eventType").asText())
                 .triggerReason(payload.path("triggerReason").asText())
                 .seqNo(payload.path("seqNo").asInt())

@@ -42,7 +42,7 @@ public class TransactionEventEntity {
 
     public static TransactionEventEntity from(TransactionEventDomain domain) {
         return TransactionEventEntity.builder()
-                .transactionId(domain.getTransactionInfo().getTransactionId())
+                .transactionId(domain.extractTransactionId())
                 .eventType(domain.getEventType())
                 .triggerReason(domain.getTriggerReason())
                 .seqNo(domain.getSeqNo())

@@ -1,6 +1,7 @@
 package com.example.quaterback.websocket.transaction.event.handler;
 
 import com.example.quaterback.annotation.Handler;
+import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
 import com.example.quaterback.websocket.transaction.event.service.TransactionEventService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,18 +30,18 @@ public class TransactionEventHandler implements OcppMessageHandler {
 
     @Override
     public void handle(WebSocketSession session, JsonNode jsonNode) throws IOException {
-        String messageId = jsonNode.path("messageId").asText();
-        JsonNode payload = jsonNode.path("payload");
-
+        String messageId = MessageUtil.getMessageId(jsonNode);
+        JsonNode payload = MessageUtil.getPayload(jsonNode);
         String eventType = payload.path("eventType").asText();
+        log.info(eventType);
 
         switch (eventType) {
             case "Started":
-                Long id = transactionEventService.create(jsonNode);
-                sendTransactionEventStarted(session, messageId);
                 break;
             case "Updated":
                 // 처리 예정
+                Long id = transactionEventService.create(jsonNode);
+                sendTransactionEventStarted(session, messageId);
                 break;
             case "Ended":
                 // 처리 예정

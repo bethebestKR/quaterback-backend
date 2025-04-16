@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(ocppWebSocketHandler, "/ocpp/{stationId}")
+        registry.addHandler(ocppWebSocketHandler, "/ocpp")
                 .setAllowedOrigins("*");
     }
 
