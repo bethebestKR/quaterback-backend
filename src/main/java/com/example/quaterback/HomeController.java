@@ -17,14 +17,8 @@ public class HomeController {
     @GetMapping("/")
     public String index() {
         // MySQL 연결 확인
-        try {
-            jdbcTemplate.execute("SELECT 1"); // MySQL 연결을 확인하기 위한 간단한 쿼리
-            return "Successfully connected to MySQL!";
-        } catch (Exception e) {
-            return "Failed to connect to MySQL: " + e.getMessage();
-        }
+        return "hello";
     }
-
 
     @GetMapping("/check-redis")
     public String checkRedisConnection() {

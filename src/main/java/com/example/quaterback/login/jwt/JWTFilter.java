@@ -20,8 +20,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private static final List<String> EXCLUDE_URIS = List.of(
+            "/*",
             "/login",
-            "/join"
+            "/join",
+            "/ocpp/**"
     );
 
     @Override
