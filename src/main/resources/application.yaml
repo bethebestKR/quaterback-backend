@@ -1,0 +1,16 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+
+jwt:
+  secret: cnovwndvsvmvbudhogktpflijryetfjbvjdgrwdvljkwdhlmqnbeewvrevevevsdf
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/quarterback
+    username: root
+    password: akdudckd1844!
+
+  jpa:
+    hibernate:
+      ddl-auto: create
