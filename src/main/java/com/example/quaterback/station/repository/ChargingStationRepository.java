@@ -1,7 +1,8 @@
 package com.example.quaterback.station.repository;
 
-import com.example.quaterback.station.entity.ChargingStationEntity;
+import com.example.quaterback.station.domain.ChargingStationDomain;
 
 public interface ChargingStationRepository {
-    ChargingStationEntity findByStationId(String stationId);
+    ChargingStationDomain findByStationId(String stationId);
+    String save(ChargingStationDomain domain);
 }

@@ -1,5 +1,6 @@
 package com.example.quaterback.station.repository;
 
+import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +13,20 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
     private final SpringDataJpaChargingStationRepository chargingStationRepository;
 
     @Override
-    public ChargingStationEntity findByStationId(String stationId) {
-        ChargingStationEntity entity = chargingStationRepository.findByStationId(stationId);
+    public ChargingStationDomain findByStationId(String stationId) {
+        ChargingStationEntity entity = chargingStationRepository.findByStationId(stationId)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
 
-        if (entity == null)
-            throw new EntityNotFoundException("entity not found");
+        ChargingStationDomain domain = entity.toDomain();
+        return domain;
+    }
 
-        return entity;
+    public String save(ChargingStationDomain domain) {
+        ChargingStationEntity entity = ChargingStationEntity.from(domain);
+
+        chargingStationRepository.save(entity);
+
+        return entity.getStationId();
     }
 
 }
