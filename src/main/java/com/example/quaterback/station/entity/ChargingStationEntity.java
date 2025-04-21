@@ -1,6 +1,7 @@
 package com.example.quaterback.station.entity;
 
-import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
+import com.example.quaterback.station.constant.StationStatus;
+import com.example.quaterback.station.domain.ChargingStationDomain;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,18 +29,34 @@ public class ChargingStationEntity {
 
     private LocalDateTime updateStatusTimeStamp;
 
-    private String stationStatus;
+    @Enumerated(EnumType.STRING)
+    private StationStatus stationStatus;
 
-    public static ChargingStationEntity from(BootNotificationDomain domain) {
+    public static ChargingStationEntity from(ChargingStationDomain domain) {
         return ChargingStationEntity.builder()
-                .stationId(domain.extractStationId())
+                .id(domain.getId())
+                .stationId(domain.getStationId())
                 .model(domain.getModel())
-                .vendorId(domain.extractVendorId())
-                .latitude(domain.extractLatitude())
-                .longitude(domain.extractLongitude())
-                .address(domain.extractAddress())
-                .updateStatusTimeStamp(LocalDateTime.now())
-                .stationStatus("active")
+                .vendorId(domain.getVendorId())
+                .latitude(domain.getLatitude())
+                .longitude(domain.getLongitude())
+                .address(domain.getAddress())
+                .updateStatusTimeStamp(domain.getUpdateStatusTimeStamp())
+                .stationStatus(domain.getStationStatus())
+                .build();
+    }
+
+    public ChargingStationDomain toDomain() {
+        return ChargingStationDomain.builder()
+                .id(id)
+                .stationId(stationId)
+                .model(model)
+                .vendorId(vendorId)
+                .latitude(latitude)
+                .longitude(longitude)
+                .address(address)
+                .updateStatusTimeStamp(updateStatusTimeStamp)
+                .stationStatus(stationStatus)
                 .build();
     }
 
