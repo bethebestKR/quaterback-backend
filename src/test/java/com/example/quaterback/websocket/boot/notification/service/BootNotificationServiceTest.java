@@ -64,4 +64,17 @@ class BootNotificationServiceTest {
         assertThat(resultDomain.getStationStatus()).isEqualTo(StationStatus.ACTIVE);
         assertThat(resultDomain.getUpdateStatusTimeStamp()).isAfter(before);
     }
+
+    public ChargingStationEntity createEntityFromDomain(BootNotificationDomain domain) {
+            return ChargingStationEntity.builder()
+                    .stationId(domain.extractStationId())
+                    .model(domain.getModel())
+                    .vendorId(domain.extractVendorId())
+                    .latitude(domain.extractLatitude())
+                    .longitude(domain.extractLongitude())
+                    .address(domain.extractAddress())
+                    .updateStatusTimeStamp(LocalDateTime.of(2025, 2, 10, 8, 30, 20))
+                    .stationStatus("inactive")
+                    .build();
+    }
 }
