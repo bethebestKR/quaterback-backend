@@ -26,14 +26,14 @@ public class BootNotificationHandler implements OcppMessageHandler {
     }
 
     @Override
-    public void handle(WebSocketSession session, JsonNode jsonNode) throws IOException {
+    public void handle(WebSocketSession session, JsonNode jsonNode) {
         String messageId = MessageUtil.getMessageId(jsonNode);
         JsonNode payload = MessageUtil.getPayload(jsonNode);
         String reason = payload.path("reason").asText();
         log.info("BootNotification reason - {}", reason);
 
         if (reason.equals("PowerUp")) {
-            String stationId = bootNotificationService.stationPowerUp(jsonNode);
+            String stationId = bootNotificationService.updateStationStatus(jsonNode);
             //반환 메시지 전송
         }
     }
