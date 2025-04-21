@@ -46,7 +46,7 @@ class BootNotificationServiceTest {
         ChargingStationEntity entity = BootNotificationFixture.createInitialChargingStationEntityFromJsonNode(
                 jsonNode,
                 "inactive",
-                LocalDateTime.of(2025,2,10,8,30,20)
+                LocalDateTime.of(2025, 2, 10, 8, 30, 20)
         );
         LocalDateTime before = entity.getUpdateStatusTimeStamp();
         repository.initializeStorage(entity);

@@ -1,7 +1,5 @@
 package com.example.quaterback.config;
 
-import com.example.quaterback.websocket.OcppMessageHandler;
-import com.example.quaterback.websocket.OcppWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +8,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
-
-import java.util.List;
 
 /*
  1. WebSocketConfigurer : 웹소켓을 구현하겠다. 반드시 상속받고 시작
