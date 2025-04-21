@@ -1,5 +1,7 @@
 package com.example.quaterback.station.repository;
 
+import com.example.quaterback.station.entity.ChargingStationEntity;
+
 public interface ChargingStationRepository {
-    String updateStationStatus(String stationId);
+    ChargingStationEntity findByStationId(String stationId);
 }
