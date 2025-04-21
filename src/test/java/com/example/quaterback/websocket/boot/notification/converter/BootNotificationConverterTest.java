@@ -1,55 +1,40 @@
 package com.example.quaterback.websocket.boot.notification.converter;
 
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
+import com.example.quaterback.websocket.boot.notification.factory.BootNotificationFixture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class BootNotificationConverterTest {
 
-    private ObjectMapper objectMapper;
     private BootNotificationConverter converter;
 
     @BeforeEach
     void setUp() {
-        objectMapper = new ObjectMapper();
         converter = new BootNotificationConverter();
     }
 
-    @DisplayName("convertToBootNotificationDomain - 전달 받은 jsonNode를 BootNotificationDomain으로 변환")
     @Test
-    void convertToBootNotificationDomainSuccess() throws JsonProcessingException {
+    void convertToBootNotificationDomain_전달_받은_jsonNode를_BootNotificationDomain으로_변환() throws JsonProcessingException {
 
         //given
-        String json = """
-                [
-                  2,
-                  "12345678-boot-location",
-                  "BootNotification",
-                  {
-                    "reason": "PowerUp",
-                    "chargingStation": {
-                      "model": "R1",
-                      "vendorName": "quarterback"
-                    },
-                    "customData": {
-                      "vendorId": "quarterback",
-                      "stationId": "station-001",
-                      "location": {
-                        "latitude": 37.5665,
-                        "longitude": 126.9780,
-                        "address": "서울특별시 중구 세종대로 110"
-                      }
-                    }
-                  }
-                ]
-                """;
-        JsonNode jsonNode = objectMapper.readTree(json);
+        JsonNode jsonNode = BootNotificationFixture.createBootNotificationJsonNode(
+                2,
+                "12345678-boot-location",
+                "BootNotification",
+                "PowerUp",
+                "R1",
+                "quarterback",
+                "quarterback",
+                "station-001",
+                37.5665,
+                126.9780,
+                "서울특별시 중구 세종대로 110"
+        );
 
         //when
         BootNotificationDomain result = converter.convertToBootNotificationDomain(jsonNode);

@@ -12,20 +12,11 @@ public class FakeChargingStationRepository implements ChargingStationRepository 
     private final Map<String, ChargingStationEntity> storage = new ConcurrentHashMap<>();
 
     @Override
-    public String updateStationStatus(String stationId) {
-        ChargingStationEntity entity = storage.get(stationId);
-        entity.setStationStatus("active");
-        entity.setUpdateStatusTimeStamp(LocalDateTime.now());
-        storage.put(stationId, entity);
-        return stationId;
+    public ChargingStationEntity findByStationId(String stationId) {
+        return storage.get(stationId);
     }
 
     public void initializeStorage(ChargingStationEntity entity) {
         storage.put(entity.getStationId(), entity);
     }
-
-    public ChargingStationEntity findByStationId(String stationId) {
-        return storage.get(stationId);
-    }
-
 }
