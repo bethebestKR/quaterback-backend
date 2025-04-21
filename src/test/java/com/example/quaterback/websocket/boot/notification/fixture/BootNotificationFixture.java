@@ -1,7 +1,10 @@
-package com.example.quaterback.websocket.boot.notification.factory;
+package com.example.quaterback.websocket.boot.notification.fixture;
 
+import com.example.quaterback.station.constant.StationStatus;
+import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
+import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -60,13 +63,21 @@ public class BootNotificationFixture {
 
     public static ChargingStationEntity createInitialChargingStationEntityFromJsonNode(
             JsonNode jsonNode,
-            String status,
+            StationStatus status,
             LocalDateTime updateDateTime
     ) {
         BootNotificationConverter converter = new BootNotificationConverter();
-        ChargingStationEntity entity = ChargingStationEntity.from(converter.convertToBootNotificationDomain(jsonNode));
-        entity.setStationStatus(status);
-        entity.setUpdateStatusTimeStamp(updateDateTime);
+        BootNotificationDomain domain = converter.convertToBootNotificationDomain(jsonNode);
+        ChargingStationEntity entity = ChargingStationEntity.builder()
+                .stationId(domain.extractStationId())
+                .model(domain.getModel())
+                .vendorId(domain.extractVendorId())
+                .latitude(domain.extractLatitude())
+                .longitude(domain.extractLongitude())
+                .address(domain.extractAddress())
+                .updateStatusTimeStamp(updateDateTime)
+                .stationStatus(status)
+                .build();
         return entity;
     }
 }

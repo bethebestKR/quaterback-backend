@@ -1,7 +1,7 @@
 package com.example.quaterback.websocket.boot.notification.converter;
 
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
-import com.example.quaterback.websocket.boot.notification.factory.BootNotificationFixture;
+import com.example.quaterback.websocket.boot.notification.fixture.BootNotificationFixture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;

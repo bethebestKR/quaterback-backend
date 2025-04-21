@@ -1,8 +1,10 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
+import com.example.quaterback.station.constant.StationStatus;
+import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
-import com.example.quaterback.websocket.boot.notification.factory.BootNotificationFixture;
+import com.example.quaterback.websocket.boot.notification.fixture.BootNotificationFixture;
 import com.example.quaterback.websocket.boot.notification.repository.FakeChargingStationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,21 +47,21 @@ class BootNotificationServiceTest {
         // 충전소 초기 데이터 세팅 및 초기 값 저장
         ChargingStationEntity entity = BootNotificationFixture.createInitialChargingStationEntityFromJsonNode(
                 jsonNode,
-                "inactive",
+                StationStatus.INACTIVE,
                 LocalDateTime.of(2025, 2, 10, 8, 30, 20)
         );
         LocalDateTime before = entity.getUpdateStatusTimeStamp();
         repository.initializeStorage(entity);
 
         //when
-        String result = bootNotificationService.stationPowerUp(jsonNode);
+        String result = bootNotificationService.updateStationStatus(jsonNode);
 
         //then
         String stationId = entity.getStationId();
         assertThat(result).isEqualTo(stationId);
 
-        ChargingStationEntity resultEntity = repository.findByStationId(stationId);
-        assertThat(resultEntity.getStationStatus()).isEqualTo("active");
-        assertThat(resultEntity.getUpdateStatusTimeStamp()).isAfter(before);
+        ChargingStationDomain resultDomain = repository.findByStationId(stationId);
+        assertThat(resultDomain.getStationStatus()).isEqualTo(StationStatus.ACTIVE);
+        assertThat(resultDomain.getUpdateStatusTimeStamp()).isAfter(before);
     }
 }
