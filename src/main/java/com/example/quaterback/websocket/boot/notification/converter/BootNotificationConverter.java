@@ -4,7 +4,7 @@ package com.example.quaterback.websocket.boot.notification.converter;
 import com.example.quaterback.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
-import com.example.quaterback.websocket.boot.notification.domain.sub.CustomData;
+import com.example.quaterback.websocket.boot.notification.domain.sub.BootCustomData;
 import com.example.quaterback.websocket.boot.notification.domain.sub.Location;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -22,7 +22,7 @@ public class BootNotificationConverter {
                 .action(action)
                 .reason(payload.path("reason").asText())
                 .model(payload.path("chargingStation").path("model").asText())
-                .customData(new CustomData(
+                .customData(new BootCustomData(
                         payload.path("customData").path("vendorId").asText(),
                         payload.path("customData").path("stationId").asText(),
                         new Location(
