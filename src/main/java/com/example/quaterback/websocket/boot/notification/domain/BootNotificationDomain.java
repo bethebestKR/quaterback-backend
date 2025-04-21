@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.domain;
 
-import com.example.quaterback.websocket.boot.notification.domain.sub.CustomData;
+import com.example.quaterback.websocket.boot.notification.domain.sub.BootCustomData;
 import lombok.*;
 
 @Getter
@@ -16,7 +16,7 @@ public class BootNotificationDomain {
     private String reason;
     private String model;
 
-    private CustomData customData;
+    private BootCustomData customData;
 
     public String extractStationId() {
         return customData.getStationId();
