@@ -1,4 +1,4 @@
-package com.example.quaterback.websocket.boot.notification.repository;
+package com.example.quaterback.websocket.station.repository;
 
 import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
