@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CustomData {
+public class BootCustomData {
     private String vendorId;
     private String stationId;
     private Location location;
