@@ -34,7 +34,6 @@ public class ChargingStationEntity {
 
     public static ChargingStationEntity from(ChargingStationDomain domain) {
         return ChargingStationEntity.builder()
-                .id(domain.getId())
                 .stationId(domain.getStationId())
                 .model(domain.getModel())
                 .vendorId(domain.getVendorId())
@@ -48,7 +47,6 @@ public class ChargingStationEntity {
 
     public ChargingStationDomain toDomain() {
         return ChargingStationDomain.builder()
-                .id(id)
                 .stationId(stationId)
                 .model(model)
                 .vendorId(vendorId)
