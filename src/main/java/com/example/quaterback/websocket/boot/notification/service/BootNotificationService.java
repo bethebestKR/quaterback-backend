@@ -8,6 +8,7 @@ import com.example.quaterback.websocket.boot.notification.domain.BootNotificatio
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,16 +17,14 @@ public class BootNotificationService {
     private final ChargingStationRepository chargingStationRepository;
     private final BootNotificationConverter converter;
 
+    @Transactional
     public String updateStationStatus(JsonNode jsonNode) {
         BootNotificationDomain bootNotificationDomain = converter.convertToBootNotificationDomain(jsonNode);
 
         ChargingStationDomain chargingStationDomain = chargingStationRepository.findByStationId(bootNotificationDomain.extractStationId());
 
-        String stationId = chargingStationDomain.getStationId();
-        if (chargingStationDomain.getStationStatus().equals(StationStatus.INACTIVE)) {
-            chargingStationDomain.updateStationStatus(StationStatus.ACTIVE);
-            stationId = chargingStationRepository.save(chargingStationDomain);
-        }
+        chargingStationDomain.updateStationStatus(StationStatus.ACTIVE);
+        String stationId = chargingStationRepository.update(chargingStationDomain);
 
         return stationId;
     }
