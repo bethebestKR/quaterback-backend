@@ -17,7 +17,7 @@ public class FakeChargingStationRepository implements ChargingStationRepository 
     }
 
     @Override
-    public String save(ChargingStationDomain domain) {
+    public String update(ChargingStationDomain domain) {
         ChargingStationEntity entity = ChargingStationEntity.from(domain);
         storage.put(entity.getStationId(), entity);
         return entity.getStationId();

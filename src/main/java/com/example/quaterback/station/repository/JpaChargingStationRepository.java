@@ -21,10 +21,12 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         return domain;
     }
 
-    public String save(ChargingStationDomain domain) {
-        ChargingStationEntity entity = ChargingStationEntity.from(domain);
+    public String update(ChargingStationDomain domain) {
+        ChargingStationEntity entity = chargingStationRepository.findByStationId(domain.getStationId())
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
 
-        chargingStationRepository.save(entity);
+        entity.setStationStatus(domain.getStationStatus());
+        entity.setUpdateStatusTimeStamp(domain.getUpdateStatusTimeStamp());
 
         return entity.getStationId();
     }
