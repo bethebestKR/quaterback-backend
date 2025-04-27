@@ -32,19 +32,6 @@ public class ChargingStationEntity {
     @Enumerated(EnumType.STRING)
     private StationStatus stationStatus;
 
-    public static ChargingStationEntity from(ChargingStationDomain domain) {
-        return ChargingStationEntity.builder()
-                .stationId(domain.getStationId())
-                .model(domain.getModel())
-                .vendorId(domain.getVendorId())
-                .latitude(domain.getLatitude())
-                .longitude(domain.getLongitude())
-                .address(domain.getAddress())
-                .updateStatusTimeStamp(domain.getUpdateStatusTimeStamp())
-                .stationStatus(domain.getStationStatus())
-                .build();
-    }
-
     public ChargingStationDomain toDomain() {
         return ChargingStationDomain.builder()
                 .stationId(stationId)
@@ -56,6 +43,11 @@ public class ChargingStationEntity {
                 .updateStatusTimeStamp(updateStatusTimeStamp)
                 .stationStatus(stationStatus)
                 .build();
+    }
+
+    public void updateStationStatus(StationStatus status) {
+        stationStatus = status;
+        updateStatusTimeStamp = LocalDateTime.now();
     }
 
 }

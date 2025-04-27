@@ -25,8 +25,7 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         ChargingStationEntity entity = chargingStationRepository.findByStationId(domain.getStationId())
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
 
-        entity.setStationStatus(domain.getStationStatus());
-        entity.setUpdateStatusTimeStamp(domain.getUpdateStatusTimeStamp());
+        entity.updateStationStatus(domain.getStationStatus());
 
         return entity.getStationId();
     }
