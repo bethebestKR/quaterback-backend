@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket.status.notification.domain;
 
-import com.example.quaterback.websocket.status.notification.domain.sub.CustomData;
+import com.example.quaterback.websocket.status.notification.domain.sub.StatusCustomData;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class StatusNotificationDomain {
     private Integer evseId;
     private Integer connectorId;
 
-    private CustomData customData;
+    private StatusCustomData customData;
 
     public String extractVendorId() {
         return customData.getVendorId();
