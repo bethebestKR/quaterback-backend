@@ -5,7 +5,6 @@ import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.example.quaterback.websocket.transaction.event.domain.sub.*;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;

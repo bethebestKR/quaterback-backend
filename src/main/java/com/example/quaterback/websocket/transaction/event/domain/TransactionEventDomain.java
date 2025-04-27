@@ -30,7 +30,7 @@ public class TransactionEventDomain {
     private CustomData customData;
     private List<MeterValue> meterValue;
 
-    public String extractTransactionId(){
+    public String extractTransactionId() {
         return transactionInfo.getTransactionId();
     }
 
