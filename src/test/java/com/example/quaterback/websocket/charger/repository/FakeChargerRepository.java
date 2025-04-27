@@ -1,7 +1,12 @@
 package com.example.quaterback.websocket.charger.repository;
 
+import com.example.quaterback.charger.constant.ChargerStatus;
+import com.example.quaterback.charger.domain.ChargerDomain;
 import com.example.quaterback.charger.entity.ChargerEntity;
 import com.example.quaterback.charger.repository.ChargerRepository;
+import com.example.quaterback.station.entity.ChargingStationEntity;
+import com.example.quaterback.websocket.charger.fixture.ChargerFixture;
+import com.example.quaterback.websocket.station.fixture.ChargingStationFixture;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -12,20 +17,21 @@ public class FakeChargerRepository implements ChargerRepository {
     private final Map<String, ChargerEntity> storage = new ConcurrentHashMap<>();
 
     @Override
-    public Integer updateChargerStatus(String stationId, Integer evseId, String status) {
-        ChargerEntity entity = findByStation_StationIdAndEvseId(stationId, evseId);
-        entity.setChargerStatus(status);
-        entity.setUpdateStatusTimeStamp(LocalDateTime.now());
-        storage.put(stationId + evseId, entity);
+    public ChargerDomain findByStationIdAndEvseId(String stationId, Integer evseId) {
+        return storage.get(stationId + evseId).toDomain();
+    }
+
+    @Override
+    public Integer update(ChargerDomain domain) {
+        ChargerEntity entity = storage.get(domain.getStationId() + domain.getEvseId());
+        entity.updateChargerStatus(domain.getChargerStatus());
+        storage.put(domain.getStationId() + domain.getEvseId(), entity);
         return entity.getEvseId();
     }
 
-    public void initializeStorage(ChargerEntity entity) {
-        String key = entity.getStation().getStationId() + entity.getEvseId();
-        storage.put(key, entity);
-    }
-
-    public ChargerEntity findByStation_StationIdAndEvseId(String stationId, Integer evseId) {
-        return storage.get(stationId + evseId);
+    public void initializeStorage(ChargerStatus status, LocalDateTime dateTime) {
+        ChargingStationEntity stationEntity = ChargingStationFixture.createStationEntity();
+        ChargerEntity chargerEntity = ChargerFixture.createChargerEntity(stationEntity, status, dateTime);
+        storage.put(chargerEntity.getStation().getStationId() + chargerEntity.getEvseId(), chargerEntity);
     }
 }
