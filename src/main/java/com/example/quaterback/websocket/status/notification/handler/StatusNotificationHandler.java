@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -36,6 +35,7 @@ public class StatusNotificationHandler implements OcppMessageHandler {
         log.info("StatusNotification - {} {} {}", stationId, evseId, status);
 
         Integer resultEvseId = statusNotificationService.chargerStatusUpdated(jsonNode);
+        log.info("updated {}", resultEvseId);
         //반환 메시지 전송
     }
 }
