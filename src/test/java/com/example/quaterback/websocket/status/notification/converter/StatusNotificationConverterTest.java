@@ -1,49 +1,37 @@
 package com.example.quaterback.websocket.status.notification.converter;
 
 import com.example.quaterback.websocket.status.notification.domain.StatusNotificationDomain;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.quaterback.websocket.status.notification.fixture.StatusNotificationFixture;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
 class StatusNotificationConverterTest {
 
-    private ObjectMapper objectMapper;
     private StatusNotificationConverter converter;
 
     @BeforeEach
     void setUp() {
-        objectMapper = new ObjectMapper();
         converter = new StatusNotificationConverter();
     }
 
-    @DisplayName("convertToStatusNotificationDomain - 전달 받은 jsonNode를 StatusNotificationDomain으로 변환")
     @Test
-    void convertToStatusNotificationDomainSuccess() throws JsonProcessingException {
+    void convertToStatusNotificationDomain_전달_받은_jsonNode를_Domain으로_변환() {
 
         //given
-        String json = """
-                [
-                  2,
-                  "status-notif-001",
-                  "StatusNotification",
-                  {
-                    "timestamp": "2025-04-20T16:30:00",
-                    "connectorStatus": "Occupied",
-                    "evseId": 1,
-                    "connectorId": 1,
-                    "customData": {
-                      "vendorId": "quarterback",
-                      "stationId": "station-001"
-                    }
-                  }
-                ]
-                """;
-        JsonNode jsonNode = objectMapper.readTree(json);
+        JsonNode jsonNode = StatusNotificationFixture.createStatusNotificationJsonNode(
+                2,
+                "status-notif-001",
+                "StatusNotification",
+                "2025-04-20T16:30:00",
+                "Occupied",
+                1,
+                1,
+                "quarterback",
+                "station-001"
+        );
 
         //when
         StatusNotificationDomain result = converter.convertToStatusNotificationDomain(jsonNode);
@@ -56,7 +44,6 @@ class StatusNotificationConverterTest {
         assertThat(result.getConnectorStatus()).isEqualTo("Occupied");
         assertThat(result.getEvseId()).isEqualTo(1);
         assertThat(result.getConnectorId()).isEqualTo(1);
-
         assertThat(result.extractVendorId()).isEqualTo("quarterback");
         assertThat(result.extractStationId()).isEqualTo("station-001");
     }
