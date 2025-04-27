@@ -1,7 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.fixture;
 
 import com.example.quaterback.station.constant.StationStatus;
-import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
