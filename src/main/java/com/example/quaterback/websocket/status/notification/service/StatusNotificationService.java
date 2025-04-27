@@ -1,11 +1,14 @@
 package com.example.quaterback.websocket.status.notification.service;
 
+import com.example.quaterback.charger.constant.ChargerStatus;
+import com.example.quaterback.charger.domain.ChargerDomain;
 import com.example.quaterback.charger.repository.ChargerRepository;
 import com.example.quaterback.websocket.status.notification.converter.StatusNotificationConverter;
 import com.example.quaterback.websocket.status.notification.domain.StatusNotificationDomain;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,9 +17,13 @@ public class StatusNotificationService {
     private final ChargerRepository chargerRepository;
     private final StatusNotificationConverter converter;
 
+    @Transactional
     public Integer chargerStatusUpdated(JsonNode jsonNode) {
-        StatusNotificationDomain domain = converter.convertToStatusNotificationDomain(jsonNode);
-        Integer evseId = chargerRepository.updateChargerStatus(domain.extractStationId(), domain.getEvseId(), domain.getConnectorStatus());
+        StatusNotificationDomain statusNotificationDomain = converter.convertToStatusNotificationDomain(jsonNode);
+
+        ChargerDomain chargerDomain = chargerRepository.findByStationIdAndEvseId(statusNotificationDomain.extractStationId(), statusNotificationDomain.getEvseId());
+        chargerDomain.updateChargerStatus(ChargerStatus.valueOf(statusNotificationDomain.getConnectorStatus().toUpperCase()));
+        Integer evseId = chargerRepository.update(chargerDomain);
         return evseId;
     }
 }
