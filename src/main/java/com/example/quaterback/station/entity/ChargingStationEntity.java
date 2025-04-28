@@ -38,6 +38,7 @@ public class ChargingStationEntity {
 
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL)
     private List<ChargerEntity> ChargerList = new ArrayList<>();
+
     public ChargingStationDomain toDomain() {
         return ChargingStationDomain.builder()
                 .stationId(stationId)

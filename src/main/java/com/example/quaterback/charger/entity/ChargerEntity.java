@@ -42,7 +42,16 @@ public class ChargerEntity {
     }
 
     public void updateChargerStatus(ChargerStatus status) {
-        chargerStatus = status;
-        updateStatusTimeStamp = LocalDateTime.now();
+        if (!status.equals(chargerStatus)) {
+            chargerStatus = status;
+            updateStatusTimeStamp = LocalDateTime.now();
+        }
+    }
+
+    public void assignStation(ChargingStationEntity stationEntity) {
+        station = stationEntity;
+        if (!stationEntity.getChargerList().contains(this)) {
+            stationEntity.getChargerList().add(this);
+        }
     }
 }
