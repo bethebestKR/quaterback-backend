@@ -17,8 +17,7 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         ChargingStationEntity entity = chargingStationRepository.findByStationId(stationId)
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
 
-        ChargingStationDomain domain = entity.toDomain();
-        return domain;
+        return entity.toDomain();
     }
 
     public String update(ChargingStationDomain domain) {

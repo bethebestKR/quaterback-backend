@@ -5,7 +5,7 @@ import com.example.quaterback.station.domain.ChargingStationDomain;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.fixture.BootNotificationFixture;
-import com.example.quaterback.websocket.boot.notification.repository.FakeChargingStationRepository;
+import com.example.quaterback.websocket.station.repository.FakeChargingStationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

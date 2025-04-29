@@ -4,6 +4,8 @@ import com.example.quaterback.station.constant.StationStatus;
 import com.example.quaterback.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
+import com.example.quaterback.websocket.boot.notification.domain.sub.BootCustomData;
+import com.example.quaterback.websocket.boot.notification.domain.sub.Location;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,22 +18,22 @@ public class BootNotificationFixture {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static JsonNode createBootNotificationJsonNode(
-            int messageId,
-            String messageType,
+            Integer messageType,
+            String messageId,
             String action,
             String reason,
             String model,
             String vendorName,
             String vendorId,
             String stationId,
-            double latitude,
-            double longitude,
+            Double latitude,
+            Double longitude,
             String address
     ) {
         ArrayNode rootArray = mapper.createArrayNode();
 
-        rootArray.add(messageId);
         rootArray.add(messageType);
+        rootArray.add(messageId);
         rootArray.add(action);
 
         // Payload 객체 생성
@@ -78,5 +80,36 @@ public class BootNotificationFixture {
                 .stationStatus(status)
                 .build();
         return entity;
+    }
+
+    public static BootNotificationDomain createExpectedDomain(
+            String messageType,
+            String messageId,
+            String action,
+            String reason,
+            String model,
+            String vendorId,
+            String stationId,
+            Double latitude,
+            Double longitude,
+            String address
+    ) {
+        BootNotificationDomain expected = new BootNotificationDomain(
+                messageType,
+                messageId,
+                action,
+                reason,
+                model,
+                new BootCustomData(
+                        vendorId,
+                        stationId,
+                        new Location(
+                                latitude,
+                                longitude,
+                                address
+                        )
+                )
+        );
+        return expected;
     }
 }
