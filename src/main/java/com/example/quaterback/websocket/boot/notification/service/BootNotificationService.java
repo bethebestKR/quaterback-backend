@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BootNotificationService {
 
-    private final ChargingStationRepository chargingStationRepository;
+    private final JpaChargingStationRepository chargingStationRepository;
     private final BootNotificationConverter converter;
 
     @Transactional
