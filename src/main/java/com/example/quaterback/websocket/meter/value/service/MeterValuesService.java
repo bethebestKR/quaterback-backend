@@ -2,7 +2,7 @@ package com.example.quaterback.websocket.meter.value.service;
 
 import com.example.quaterback.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.station.domain.ChargingStationDomain;
-import com.example.quaterback.station.repository.JpaChargingStationRepository;
+import com.example.quaterback.station.repository.ChargingStationRepository;
 import com.example.quaterback.websocket.meter.value.converter.MeterValuesConverter;
 import com.example.quaterback.websocket.meter.value.domain.MeterValuesDomain;
 import com.example.quaterback.websocket.sub.MeterValue;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MeterValuesService {
     private final MeterValuesConverter meterValuesConverter;
     private final RedisMapSessionToStationService redisService;
-    private final JpaChargingStationRepository jpaChargingStationRepository;
+    private final ChargingStationRepository jpaChargingStationRepository;
 
     @Transactional
     public String updateStationEss(JsonNode jsonNode, String sessionId) {
