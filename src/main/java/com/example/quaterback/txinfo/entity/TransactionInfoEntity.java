@@ -1,0 +1,41 @@
+package com.example.quaterback.txinfo.entity;
+
+import com.example.quaterback.txinfo.domain.TransactionInfoDomain;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "tx_info")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class TransactionInfoEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String transactionId;
+    private LocalDateTime startedTime;
+    private LocalDateTime endedTime;
+    private String vehicleNo;
+    private String userId;
+    private String stationId;
+    private Integer evseId;
+    private Integer totalMeterValue;
+    private Integer totalPrice;
+
+    public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain) {
+        return TransactionInfoEntity.builder()
+                .transactionId(domain.getTransactionId())
+                .startedTime(domain.getStartedTime())
+                .vehicleNo(domain.getVehicleNo())
+                .userId(domain.getUserId())
+                .stationId(domain.getStationId())
+                .evseId(domain.getEvseId())
+                .build();
+    }
+}
