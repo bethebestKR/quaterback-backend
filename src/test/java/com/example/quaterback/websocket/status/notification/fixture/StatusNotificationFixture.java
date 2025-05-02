@@ -1,7 +1,6 @@
 package com.example.quaterback.websocket.status.notification.fixture;
 
 import com.example.quaterback.websocket.status.notification.domain.StatusNotificationDomain;
-import com.example.quaterback.websocket.status.notification.domain.sub.StatusCustomData;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -21,9 +20,7 @@ public class StatusNotificationFixture {
             String timestamp,
             String connectorStatus,
             Integer evseId,
-            Integer connectorId,
-            String vendorId,
-            String stationId
+            Integer connectorId
     ) {
         ArrayNode rootArray = mapper.createArrayNode();
 
@@ -37,12 +34,6 @@ public class StatusNotificationFixture {
         payload.put("evseId", evseId);
         payload.put("connectorId", connectorId);
 
-        ObjectNode customData = mapper.createObjectNode();
-        customData.put("vendorId", vendorId);
-        customData.put("stationId", stationId);
-
-        payload.set("customData", customData);
-
         rootArray.add(payload);
 
         return rootArray;
@@ -55,9 +46,7 @@ public class StatusNotificationFixture {
             LocalDateTime timestamp,
             String connectorStatus,
             Integer evseId,
-            Integer connectorId,
-            String vendorId,
-            String stationId
+            Integer connectorId
     ) {
         StatusNotificationDomain expected = new StatusNotificationDomain(
                 messageType,
@@ -66,8 +55,7 @@ public class StatusNotificationFixture {
                 timestamp,
                 connectorStatus,
                 evseId,
-                connectorId,
-                new StatusCustomData(vendorId, stationId)
+                connectorId
         );
         return expected;
     }

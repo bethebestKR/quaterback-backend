@@ -39,9 +39,7 @@ class StatusNotificationConverterTest {
                 timestamp.toString(),
                 connectorStatus,
                 evseId,
-                connectorId,
-                vendorId,
-                stationId
+                connectorId
         );
         StatusNotificationDomain expected = StatusNotificationFixture.createExpectedDomain(
                 messageType.toString(),
@@ -50,9 +48,7 @@ class StatusNotificationConverterTest {
                 timestamp,
                 connectorStatus,
                 evseId,
-                connectorId,
-                vendorId,
-                stationId
+                connectorId
         );
 
         //when

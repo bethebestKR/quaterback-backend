@@ -2,10 +2,8 @@ package com.example.quaterback.websocket.boot.notification.fixture;
 
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
-import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
 import com.example.quaterback.websocket.boot.notification.domain.sub.BootCustomData;
-import com.example.quaterback.websocket.boot.notification.domain.sub.Location;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -25,10 +23,7 @@ public class BootNotificationFixture {
             String model,
             String vendorName,
             String vendorId,
-            String stationId,
-            Double latitude,
-            Double longitude,
-            String address
+            String stationId
     ) {
         ArrayNode rootArray = mapper.createArrayNode();
 
@@ -45,15 +40,9 @@ public class BootNotificationFixture {
         chargingStation.put("vendorName", vendorName);
         payload.set("chargingStation", chargingStation);
 
-        ObjectNode location = mapper.createObjectNode();
-        location.put("latitude", latitude);
-        location.put("longitude", longitude);
-        location.put("address", address);
-
         ObjectNode customData = mapper.createObjectNode();
         customData.put("vendorId", vendorId);
         customData.put("stationId", stationId);
-        customData.set("location", location);
 
         payload.set("customData", customData);
 
@@ -62,24 +51,28 @@ public class BootNotificationFixture {
         return rootArray;
     }
 
-    public static ChargingStationEntity createInitialChargingStationEntityFromJsonNode(
-            JsonNode jsonNode,
+    public static ChargingStationEntity createInitialChargingStationEntity(
+            String model,
+            String vendorId,
+            String stationId,
+            Double latitude,
+            Double longitude,
+            String address,
             StationStatus status,
-            LocalDateTime updateDateTime
+            LocalDateTime updateDateTime,
+            Integer essValue
     ) {
-        BootNotificationConverter converter = new BootNotificationConverter();
-        BootNotificationDomain domain = converter.convertToBootNotificationDomain(jsonNode);
-        ChargingStationEntity entity = ChargingStationEntity.builder()
-                .stationId(domain.extractStationId())
-                .model(domain.getModel())
-                .vendorId(domain.extractVendorId())
-                .latitude(domain.extractLatitude())
-                .longitude(domain.extractLongitude())
-                .address(domain.extractAddress())
-                .updateStatusTimeStamp(updateDateTime)
+        return ChargingStationEntity.builder()
+                .stationId(stationId)
+                .model(model)
+                .vendorId(vendorId)
+                .latitude(latitude)
+                .longitude(longitude)
+                .address(address)
                 .stationStatus(status)
+                .updateStatusTimeStamp(updateDateTime)
+                .essValue(essValue)
                 .build();
-        return entity;
     }
 
     public static BootNotificationDomain createExpectedDomain(
@@ -89,10 +82,7 @@ public class BootNotificationFixture {
             String reason,
             String model,
             String vendorId,
-            String stationId,
-            Double latitude,
-            Double longitude,
-            String address
+            String stationId
     ) {
         BootNotificationDomain expected = new BootNotificationDomain(
                 messageType,
@@ -102,13 +92,7 @@ public class BootNotificationFixture {
                 model,
                 new BootCustomData(
                         vendorId,
-                        stationId,
-                        new Location(
-                                latitude,
-                                longitude,
-                                address
-                        )
-                )
+                        stationId)
         );
         return expected;
     }
