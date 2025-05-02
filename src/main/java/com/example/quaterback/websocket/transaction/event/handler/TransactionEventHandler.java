@@ -35,16 +35,20 @@ public class TransactionEventHandler implements OcppMessageHandler {
         String eventType = payload.path("eventType").asText();
         log.info(eventType);
 
+        String tx_id;
         switch (eventType) {
             case "Started":
+                tx_id = transactionEventService.saveTxInfo(jsonNode, session.getId());
+                log.info("save info : {}", tx_id);
+                //sendTransactionEventStarted(session, messageId);
                 break;
             case "Updated":
-                // 처리 예정
-                Long id = transactionEventService.create(jsonNode);
-                sendTransactionEventStarted(session, messageId);
+                tx_id = transactionEventService.saveTxLog(jsonNode);
+                log.info("save log : {}", tx_id);
                 break;
             case "Ended":
-                // 처리 예정
+                tx_id = transactionEventService.updateTxEndTime(jsonNode);
+                log.info("save end time : {}", tx_id);
                 break;
             default:
                 // 무시
