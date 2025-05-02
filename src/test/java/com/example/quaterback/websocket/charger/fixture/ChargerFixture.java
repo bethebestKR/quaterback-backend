@@ -1,8 +1,8 @@
 package com.example.quaterback.websocket.charger.fixture;
 
-import com.example.quaterback.charger.constant.ChargerStatus;
-import com.example.quaterback.charger.entity.ChargerEntity;
-import com.example.quaterback.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
+import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.handler;
 
-import com.example.quaterback.annotation.Handler;
+import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
 import com.example.quaterback.websocket.boot.notification.service.BootNotificationService;
@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
-
-import java.io.IOException;
 
 @Handler
 @RequiredArgsConstructor

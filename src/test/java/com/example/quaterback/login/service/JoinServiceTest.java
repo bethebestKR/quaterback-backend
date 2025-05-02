@@ -1,6 +1,7 @@
 package com.example.quaterback.login.service;
 
-import com.example.quaterback.exception.DuplicateJoinException;
+import com.example.quaterback.api.domain.login.service.JoinService;
+import com.example.quaterback.common.exception.DuplicateJoinException;
 import com.example.quaterback.login.repository.FakeUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

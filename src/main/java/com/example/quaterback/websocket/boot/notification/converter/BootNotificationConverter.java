@@ -1,7 +1,7 @@
 package com.example.quaterback.websocket.boot.notification.converter;
 
 
-import com.example.quaterback.annotation.Converter;
+import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
 import com.example.quaterback.websocket.boot.notification.domain.sub.BootCustomData;

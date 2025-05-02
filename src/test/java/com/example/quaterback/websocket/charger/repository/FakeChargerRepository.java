@@ -1,10 +1,10 @@
 package com.example.quaterback.websocket.charger.repository;
 
-import com.example.quaterback.charger.constant.ChargerStatus;
-import com.example.quaterback.charger.domain.ChargerDomain;
-import com.example.quaterback.charger.entity.ChargerEntity;
-import com.example.quaterback.charger.repository.ChargerRepository;
-import com.example.quaterback.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
+import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
+import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.websocket.charger.fixture.ChargerFixture;
 import com.example.quaterback.websocket.station.fixture.ChargingStationFixture;
 
