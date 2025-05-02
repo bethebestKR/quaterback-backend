@@ -10,14 +10,13 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class MeterValue {
-    private LocalDateTime createdMeterTimestamp;
-    private LocalDateTime updatedMeterTimestamp;
+    private LocalDateTime timestamp;
     private List<SampledValue> sampledValues;
 
     // MeterValues 메시지용 팩토리
     public static MeterValue forMeterValues(JsonNode node) {
         return MeterValue.builder()
-                .createdMeterTimestamp(LocalDateTime.parse(node.path("timestamp").asText()))
+                .timestamp(LocalDateTime.parse(node.path("timestamp").asText()))
                 .sampledValues(List.of(
                         SampledValue.forMeterValues(
                                 node.path("sampledValue").get(0).path("value").asInt(),
@@ -29,7 +28,7 @@ public class MeterValue {
 
     public static MeterValue forTransaction(JsonNode node){
         return MeterValue.builder()
-                .createdMeterTimestamp(LocalDateTime.parse(node.path("timestamp").asText()))
+                .timestamp(LocalDateTime.parse(node.path("timestamp").asText()))
                 .sampledValues(List.of(
                         SampledValue.forTransactionEvent(
                                 node.path("sampledValue").get(0).path("value").asInt()

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CustomData {
+public class TransactionCustomData {
     private String vendorId;
-    private String stationId;
+    private VehicleInfo vehicleInfo;
 }

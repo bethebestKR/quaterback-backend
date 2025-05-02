@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SampledValue {
-    private Integer value;
+public class TxIdToken {
+    private String idToken;
+    private String type;
 }
