@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MeterValuesService {
     private final MeterValuesConverter meterValuesConverter;
     private final RedisMapSessionToStationService redisService;
-    private final ChargingStationRepository jpaChargingStationRepository;
+    private final ChargingStationRepository chargingStationRepository;
 
     @Transactional
     public String updateStationEss(JsonNode jsonNode, String sessionId) {
@@ -31,13 +31,13 @@ public class MeterValuesService {
         String stationId = redisService.getStationId(sessionId);
 
         //해당 아이디를 이용해 해당하는 충전소 Entity 객체 하나를 뽑아오면서 동시에 domain 으로 변환한 걸 반환
-        ChargingStationDomain chargingStationDomain = jpaChargingStationRepository.findByStationId(stationId);
+        ChargingStationDomain chargingStationDomain = chargingStationRepository.findByStationId(stationId);
 
         //뽑아온 도메인을 수정하고
         chargingStationDomain.updateStationEssValue(value);
 
         //수정된 도메인을 통해 Entity를 수정한다.
-        stationId = jpaChargingStationRepository.updateEss(chargingStationDomain);
+        stationId = chargingStationRepository.updateEss(chargingStationDomain);
         return stationId;
     }
 
