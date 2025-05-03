@@ -1,4 +1,4 @@
-package com.example.quaterback.txlog.domain;
+package com.example.quaterback.api.domain.txlog.domain;
 
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import lombok.*;

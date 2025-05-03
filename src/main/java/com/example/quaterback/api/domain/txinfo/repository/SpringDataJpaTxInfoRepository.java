@@ -1,6 +1,6 @@
-package com.example.quaterback.txinfo.repository;
+package com.example.quaterback.api.domain.txinfo.repository;
 
-import com.example.quaterback.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

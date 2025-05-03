@@ -2,7 +2,7 @@ package com.example.quaterback.websocket.status.notification.service;
 
 import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
-import com.example.quaterback.redis.service.RedisMapSessionToStationService;
+import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.websocket.charger.repository.FakeChargerRepository;
 import com.example.quaterback.websocket.status.notification.converter.StatusNotificationConverter;
 import com.example.quaterback.websocket.status.notification.fixture.StatusNotificationFixture;

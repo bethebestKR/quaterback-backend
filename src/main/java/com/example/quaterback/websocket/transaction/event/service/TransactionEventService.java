@@ -1,10 +1,10 @@
 package com.example.quaterback.websocket.transaction.event.service;
 
-import com.example.quaterback.redis.service.RedisMapSessionToStationService;
-import com.example.quaterback.txinfo.domain.TransactionInfoDomain;
-import com.example.quaterback.txinfo.repository.TxInfoRepository;
-import com.example.quaterback.txlog.domain.TransactionLogDomain;
-import com.example.quaterback.txlog.repository.TxLogRepository;
+import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
+import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
+import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
+import com.example.quaterback.api.domain.txlog.repository.TxLogRepository;
 import com.example.quaterback.websocket.transaction.event.converter.TransactionEventConverter;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.fasterxml.jackson.databind.JsonNode;

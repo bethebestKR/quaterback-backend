@@ -1,6 +1,6 @@
-package com.example.quaterback.txlog.entity;
+package com.example.quaterback.api.domain.txlog.entity;
 
-import com.example.quaterback.txlog.domain.TransactionLogDomain;
+import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
 import jakarta.persistence.*;
 import lombok.*;
 

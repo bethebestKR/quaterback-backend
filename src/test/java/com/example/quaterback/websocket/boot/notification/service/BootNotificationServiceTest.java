@@ -3,7 +3,7 @@ package com.example.quaterback.websocket.boot.notification.service;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
-import com.example.quaterback.redis.service.RedisMapSessionToStationService;
+import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.fixture.BootNotificationFixture;
 import com.example.quaterback.websocket.station.repository.FakeChargingStationRepository;

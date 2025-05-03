@@ -1,6 +1,7 @@
 package com.example.quaterback.websocket.meter.value.converter;
 
-import com.example.quaterback.annotation.Converter;
+
+import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.meter.value.domain.MeterValuesDomain;
 import com.example.quaterback.websocket.sub.MeterValue;

@@ -1,6 +1,6 @@
-package com.example.quaterback.txinfo.entity;
+package com.example.quaterback.api.domain.txinfo.entity;
 
-import com.example.quaterback.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import jakarta.persistence.*;
 import lombok.*;
 

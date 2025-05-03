@@ -1,8 +1,8 @@
 package com.example.quaterback.websocket.meter.value.service;
 
-import com.example.quaterback.redis.service.RedisMapSessionToStationService;
-import com.example.quaterback.station.domain.ChargingStationDomain;
-import com.example.quaterback.station.repository.ChargingStationRepository;
+import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
+import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
+import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.websocket.meter.value.converter.MeterValuesConverter;
 import com.example.quaterback.websocket.meter.value.domain.MeterValuesDomain;
 import com.example.quaterback.websocket.sub.MeterValue;

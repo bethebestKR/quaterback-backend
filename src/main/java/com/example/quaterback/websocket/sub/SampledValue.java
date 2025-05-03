@@ -1,7 +1,5 @@
 package com.example.quaterback.websocket.sub;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

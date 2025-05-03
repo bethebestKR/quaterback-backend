@@ -1,4 +1,4 @@
-package com.example.quaterback.redis;
+package com.example.quaterback.common.redis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

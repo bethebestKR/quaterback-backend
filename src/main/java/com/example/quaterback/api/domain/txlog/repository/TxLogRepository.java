@@ -1,6 +1,6 @@
-package com.example.quaterback.txlog.repository;
+package com.example.quaterback.api.domain.txlog.repository;
 
-import com.example.quaterback.txlog.domain.TransactionLogDomain;
+import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
 
 public interface TxLogRepository {
     String save(TransactionLogDomain domain);

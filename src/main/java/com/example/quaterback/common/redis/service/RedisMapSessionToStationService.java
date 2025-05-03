@@ -1,4 +1,4 @@
-package com.example.quaterback.redis.service;
+package com.example.quaterback.common.redis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

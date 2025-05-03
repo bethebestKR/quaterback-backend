@@ -1,7 +1,7 @@
-package com.example.quaterback.txlog.repository;
+package com.example.quaterback.api.domain.txlog.repository;
 
-import com.example.quaterback.txlog.domain.TransactionLogDomain;
-import com.example.quaterback.txlog.entity.TransactionLogEntity;
+import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
+import com.example.quaterback.api.domain.txlog.entity.TransactionLogEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

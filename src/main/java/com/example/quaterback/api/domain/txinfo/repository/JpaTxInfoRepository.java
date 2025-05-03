@@ -1,7 +1,7 @@
-package com.example.quaterback.txinfo.repository;
+package com.example.quaterback.api.domain.txinfo.repository;
 
-import com.example.quaterback.txinfo.domain.TransactionInfoDomain;
-import com.example.quaterback.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
-package com.example.quaterback.txlog.repository;
+package com.example.quaterback.api.domain.txlog.repository;
 
-import com.example.quaterback.txlog.entity.TransactionLogEntity;
+import com.example.quaterback.api.domain.txlog.entity.TransactionLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
