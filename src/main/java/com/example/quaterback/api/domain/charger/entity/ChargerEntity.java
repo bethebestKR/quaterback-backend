@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @Table(name = "charger_info")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ChargerEntity {
 
     @Id
@@ -28,9 +28,10 @@ public class ChargerEntity {
 
     private LocalDateTime updateStatusTimeStamp;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id", referencedColumnName = "stationId")
     private ChargingStationEntity station;
+
 
     public ChargerDomain toDomain() {
         return ChargerDomain.builder()
