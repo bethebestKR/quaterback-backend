@@ -24,6 +24,11 @@ public class FakeChargingStationRepository implements ChargingStationRepository 
         return entity.getStationId();
     }
 
+    @Override
+    public String updateEss(ChargingStationDomain domain) {
+        return "";
+    }
+
     public void initializeStorage(ChargingStationEntity entity) {
         storage.put(entity.getStationId(), entity);
     }

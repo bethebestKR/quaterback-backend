@@ -29,4 +29,14 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         return entity.getStationId();
     }
 
+    @Override
+    public String updateEss(ChargingStationDomain domain) {
+        ChargingStationEntity entity = chargingStationRepository.findByStationId(domain.getStationId())
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        entity.updateStationEssValue(domain.getEssValue());
+
+        return entity.getStationId();
+    }
+
 }

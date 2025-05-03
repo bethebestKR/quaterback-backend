@@ -19,11 +19,16 @@ public class ChargingStationDomain {
     private String address;
     private LocalDateTime updateStatusTimeStamp;
     private StationStatus stationStatus;
+    private Integer essValue;
 
     public void updateStationStatus(StationStatus status) {
         if (!this.stationStatus.equals(status)) {
             this.stationStatus = status;
             this.updateStatusTimeStamp = LocalDateTime.now();
         }
+    }
+
+    public void updateStationEssValue(Integer essValue){
+        this.essValue = essValue;
     }
 }

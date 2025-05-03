@@ -29,9 +29,6 @@ class BootNotificationConverterTest {
         String vendorName = "quarterback";
         String vendorId = "quarterback";
         String stationId = "station-001";
-        Double latitude = 37.5665;
-        Double longitude = 126.9780;
-        String address = "서울특별시 중구 세종대로 110";
         JsonNode jsonNode = BootNotificationFixture.createBootNotificationJsonNode(
                 messageType,
                 messageId,
@@ -40,10 +37,7 @@ class BootNotificationConverterTest {
                 model,
                 vendorName,
                 vendorId,
-                stationId,
-                latitude,
-                longitude,
-                address
+                stationId
         );
         BootNotificationDomain expected = BootNotificationFixture.createExpectedDomain(
                 messageType.toString(),
@@ -52,10 +46,7 @@ class BootNotificationConverterTest {
                 reason,
                 model,
                 vendorId,
-                stationId,
-                latitude,
-                longitude,
-                address
+                stationId
         );
 
         //when
