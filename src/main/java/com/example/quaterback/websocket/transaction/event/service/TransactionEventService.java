@@ -46,7 +46,7 @@ public class TransactionEventService {
         TransactionEventDomain txEventDomain = converter.convertToNonStartedTransactionDomain(jsonNode);
 
         Integer totalMeterValue = txLogRepository.getTotalMeterValue(txEventDomain.extractTransactionId());
-        Integer totalPrice =  (int) (totalMeterValue * 0.5);
+        Integer totalPrice =  (int) (totalMeterValue * 0.5); // 추후 총 사용 전력량에 대한 전기요금 계산으로 변경
 
         TransactionInfoDomain txInfoDomain = TransactionInfoDomain.fromEndedTxEventDomain(txEventDomain, totalMeterValue, totalPrice);
         String resultTransactionId = txInfoRepository.updateEndTime(txInfoDomain);

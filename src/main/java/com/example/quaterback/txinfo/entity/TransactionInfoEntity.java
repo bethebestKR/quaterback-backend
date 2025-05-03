@@ -38,4 +38,11 @@ public class TransactionInfoEntity {
                 .evseId(domain.getEvseId())
                 .build();
     }
+
+    public String updateEndTimeAndTotalValues(TransactionInfoDomain domain) {
+        endedTime = domain.getEndedTime();
+        totalMeterValue = domain.getTotalMeterValue();
+        totalPrice = domain.getTotalPrice();
+        return transactionId;
+    }
 }

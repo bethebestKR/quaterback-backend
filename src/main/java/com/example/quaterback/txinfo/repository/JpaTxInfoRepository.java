@@ -24,9 +24,10 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         TransactionInfoEntity entity = springDataJpaTxInfoRepository.findByTransactionId(domain.getTransactionId())
                 .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
 
-        entity.setEndedTime(domain.getEndedTime());
-        entity.setTotalMeterValue(domain.getTotalMeterValue());
-        entity.setTotalPrice(domain.getTotalPrice());
+        if (domain.getEndedTime() != null && domain.getTotalMeterValue() != null && domain.getTotalPrice() != null) {
+            String returnTxId = entity.updateEndTimeAndTotalValues(domain);
+            return returnTxId;
+        }
         return null;
     }
 }
