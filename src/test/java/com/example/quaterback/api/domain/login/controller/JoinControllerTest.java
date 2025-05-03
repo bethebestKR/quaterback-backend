@@ -1,7 +1,8 @@
-package com.example.quaterback.login.controller;
+package com.example.quaterback.api.domain.login.controller;
 
 import com.example.quaterback.api.domain.login.controller.JoinController;
 import com.example.quaterback.api.domain.login.service.JoinService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Map;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,13 +40,17 @@ class JoinControllerTest {
         //given
         String username = "userA";
         String password = "tempPw";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(
+                Map.of("username", username, "password", password)
+        );
         given(joinService.joinProcess(username, password)).willReturn(username);
 
         //when & then
         mockMvc.perform(post("/join")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("username", username)
-                        .param("password", password)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(username));

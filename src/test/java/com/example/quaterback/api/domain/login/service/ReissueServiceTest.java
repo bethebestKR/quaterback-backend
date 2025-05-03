@@ -1,9 +1,8 @@
-package com.example.quaterback.login.service;
+package com.example.quaterback.api.domain.login.service;
 
 import com.example.quaterback.api.domain.login.entity.RefreshEntity;
 import com.example.quaterback.api.domain.login.jwt.JWTUtil;
-import com.example.quaterback.api.domain.login.service.ReissueService;
-import com.example.quaterback.login.repository.FakeRefreshRepository;
+import com.example.quaterback.api.domain.login.repository.FakeRefreshRepository;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

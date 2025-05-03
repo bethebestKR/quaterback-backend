@@ -1,4 +1,4 @@
-package com.example.quaterback.websocket.charger.fixture;
+package com.example.quaterback.api.domain.charger.fixture;
 
 import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.entity.ChargerEntity;

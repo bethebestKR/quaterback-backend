@@ -1,4 +1,4 @@
-package com.example.quaterback.login.controller;
+package com.example.quaterback.api.domain.login.controller;
 
 import com.example.quaterback.api.domain.login.controller.ReissueController;
 import com.example.quaterback.api.domain.login.service.ReissueService;

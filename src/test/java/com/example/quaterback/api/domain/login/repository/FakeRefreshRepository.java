@@ -1,4 +1,4 @@
-package com.example.quaterback.login.repository;
+package com.example.quaterback.api.domain.login.repository;
 
 import com.example.quaterback.api.domain.login.entity.RefreshEntity;
 import com.example.quaterback.api.domain.login.repository.refresh.RefreshRepository;

@@ -1,4 +1,4 @@
-package com.example.quaterback.websocket.station.fixture;
+package com.example.quaterback.api.domain.station.fixture;
 
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
