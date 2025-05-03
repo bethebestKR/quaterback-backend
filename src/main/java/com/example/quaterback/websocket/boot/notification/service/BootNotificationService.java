@@ -1,8 +1,8 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
-import com.example.quaterback.station.constant.StationStatus;
-import com.example.quaterback.station.domain.ChargingStationDomain;
-import com.example.quaterback.station.repository.ChargingStationRepository;
+import com.example.quaterback.api.domain.station.constant.StationStatus;
+import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
+import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.domain.BootNotificationDomain;
 import com.fasterxml.jackson.databind.JsonNode;

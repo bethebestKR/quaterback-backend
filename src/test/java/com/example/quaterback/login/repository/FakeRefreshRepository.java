@@ -1,7 +1,7 @@
 package com.example.quaterback.login.repository;
 
-import com.example.quaterback.login.entity.RefreshEntity;
-import com.example.quaterback.login.repository.refresh.RefreshRepository;
+import com.example.quaterback.api.domain.login.entity.RefreshEntity;
+import com.example.quaterback.api.domain.login.repository.refresh.RefreshRepository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

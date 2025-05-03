@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket.status.notification.handler;
 
-import com.example.quaterback.annotation.Handler;
+import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
 import com.example.quaterback.websocket.status.notification.service.StatusNotificationService;

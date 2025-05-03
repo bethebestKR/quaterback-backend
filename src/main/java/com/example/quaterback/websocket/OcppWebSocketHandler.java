@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket;
 
-import com.example.quaterback.annotation.Handler;
+import com.example.quaterback.common.annotation.Handler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

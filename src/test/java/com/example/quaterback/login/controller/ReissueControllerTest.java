@@ -1,6 +1,7 @@
 package com.example.quaterback.login.controller;
 
-import com.example.quaterback.login.service.ReissueService;
+import com.example.quaterback.api.domain.login.controller.ReissueController;
+import com.example.quaterback.api.domain.login.service.ReissueService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

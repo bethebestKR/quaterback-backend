@@ -1,7 +1,7 @@
 package com.example.quaterback.websocket.station.fixture;
 
-import com.example.quaterback.station.constant.StationStatus;
-import com.example.quaterback.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.station.constant.StationStatus;
+import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 
 import java.time.LocalDateTime;
 

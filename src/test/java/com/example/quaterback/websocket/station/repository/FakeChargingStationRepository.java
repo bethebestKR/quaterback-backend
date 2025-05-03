@@ -1,8 +1,8 @@
 package com.example.quaterback.websocket.station.repository;
 
-import com.example.quaterback.station.domain.ChargingStationDomain;
-import com.example.quaterback.station.entity.ChargingStationEntity;
-import com.example.quaterback.station.repository.ChargingStationRepository;
+import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
+import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

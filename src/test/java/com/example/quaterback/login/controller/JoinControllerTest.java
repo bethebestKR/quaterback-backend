@@ -1,6 +1,7 @@
 package com.example.quaterback.login.controller;
 
-import com.example.quaterback.login.service.JoinService;
+import com.example.quaterback.api.domain.login.controller.JoinController;
+import com.example.quaterback.api.domain.login.service.JoinService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket.status.notification.converter;
 
-import com.example.quaterback.annotation.Converter;
+import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.status.notification.domain.StatusNotificationDomain;
 import com.example.quaterback.websocket.status.notification.domain.sub.StatusCustomData;

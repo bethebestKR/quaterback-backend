@@ -1,8 +1,8 @@
 package com.example.quaterback.login.repository;
 
-import com.example.quaterback.login.domain.UserDomain;
-import com.example.quaterback.login.entity.UserEntity;
-import com.example.quaterback.login.repository.user.UserRepository;
+import com.example.quaterback.api.domain.login.domain.UserDomain;
+import com.example.quaterback.api.domain.login.entity.UserEntity;
+import com.example.quaterback.api.domain.login.repository.user.UserRepository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

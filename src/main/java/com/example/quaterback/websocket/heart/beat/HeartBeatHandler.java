@@ -1,6 +1,6 @@
 package com.example.quaterback.websocket.heart.beat;
 
-import com.example.quaterback.annotation.Handler;
+import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.OcppMessageHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.socket.WebSocketSession;
