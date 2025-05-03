@@ -47,7 +47,18 @@ public class SecurityConfig {
         http.httpBasic((auth) -> auth.disable());
         //인가 설정
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/*", "/login", "join", "reissue", "/ocpp/**").permitAll()
+                .requestMatchers(
+                        "/login",
+                        "/join",
+                        "/reissue",
+                        "/ocpp/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs",
+                        "/api-docs/**",
+                        "/**"
+                ).permitAll()
                 .anyRequest().authenticated());
         //필터 등록
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, reissueService), UsernamePasswordAuthenticationFilter.class);

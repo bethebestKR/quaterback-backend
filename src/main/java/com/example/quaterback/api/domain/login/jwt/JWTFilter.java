@@ -23,7 +23,13 @@ public class JWTFilter extends OncePerRequestFilter {
             "/*",
             "/login",
             "/join",
-            "/ocpp/**"
+            "/ocpp/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/v3/api-docs",
+            "/api-docs/**",
+            "/**"
     );
 
     @Override
