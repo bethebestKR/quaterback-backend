@@ -22,8 +22,8 @@ public class MeterValuesService {
     @Transactional
     public String updateStationEss(JsonNode jsonNode, String sessionId) {
         MeterValuesDomain meterValuesDomain = meterValuesConverter.convertToMeterValuesDomain(jsonNode);
-        MeterValue meterValue = meterValuesDomain.getMeterValue().get(0);
-        SampledValue sampledValue = meterValue.getSampledValues().get(0);
+        MeterValue meterValue = meterValuesDomain.extractFirstMeterValue();
+        SampledValue sampledValue = meterValue.extractFirstSampledValue();
         Integer value = sampledValue.getValue();
 
         String stationId = redisService.getStationId(sessionId);
