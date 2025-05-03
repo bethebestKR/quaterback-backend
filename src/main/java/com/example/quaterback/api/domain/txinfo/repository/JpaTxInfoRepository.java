@@ -1,5 +1,7 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
+import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.station.repository.SpringDataJpaChargingStationRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,10 +13,15 @@ import org.springframework.stereotype.Repository;
 public class JpaTxInfoRepository implements TxInfoRepository {
 
     private final SpringDataJpaTxInfoRepository springDataJpaTxInfoRepository;
+    private final SpringDataJpaChargingStationRepository springDataJpaChargingStationRepository;
 
     @Override
     public String save(TransactionInfoDomain domain) {
         TransactionInfoEntity entity = TransactionInfoEntity.fromTransactionInfoDomain(domain);
+        ChargingStationEntity stationEntity = springDataJpaChargingStationRepository.findByStationId(domain.getStationId())
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        entity.assignStation(stationEntity);
         springDataJpaTxInfoRepository.save(entity);
         return entity.getTransactionId();
     }
