@@ -30,6 +30,10 @@ public class StationService {
         return converter.toStationFullInfo(query);
     }
 
+    public ChargingStationDomain getStation(String stationId){
+        return chargingStationRepository.findByStationId(stationId);
+    }
+
     @Transactional
     public DeleteResultResponse removeStation(String stationName) {
         chargingStationRepository.deleteByName(stationName);

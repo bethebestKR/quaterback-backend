@@ -1,10 +1,16 @@
 package com.example.quaterback.websocket.transaction.event.service;
 
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
+import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
+import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponse;
+import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponsePage;
+import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
@@ -15,10 +21,13 @@ import com.example.quaterback.websocket.transaction.event.domain.TransactionEven
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -79,4 +88,14 @@ public class TransactionEventService {
         List<ChargerUsageQuery> queryList = txInfoRepository.findWithStationInfo();
         return converter.toChargerUsageResponseList(queryList);
     }
+
+    public Page<ChargingRecordQuery> findChargingEventsByStationId(String stationId, Pageable pageable) {
+        return txInfoRepository.findChargerUsageByStationId(stationId, pageable);
+    }
+
+    public List<HourlyCongestion> findHourlyCount(String stationId) {
+        List<HourlyCongestionQuery> queryList = txInfoRepository.findHourlyCountsByStationId(stationId);
+        return converter.toHourlyCongestionList(queryList);
+    }
+
 }

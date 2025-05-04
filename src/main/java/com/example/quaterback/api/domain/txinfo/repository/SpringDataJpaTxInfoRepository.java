@@ -4,8 +4,13 @@ import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
+import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,4 +50,29 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
 """)
     List<ChargerUsageQuery> findWithStationInfo();
 
+    @Query("""
+    SELECT new com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery(
+        t.startedTime,
+        t.endedTime,
+        t.totalPrice,
+        t.transactionId
+    )
+    FROM TransactionInfoEntity t
+    WHERE t.stationId = :stationId
+""")
+    Page<ChargingRecordQuery> findChargerUsageByStationId(
+            @Param("stationId") String stationId,
+            Pageable pageable
+    );
+
+    @Query("""
+        SELECT new com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery(
+            HOUR(t.startedTime), COUNT(t)
+        )
+        FROM TransactionInfoEntity t
+        WHERE t.stationId = :stationId
+        GROUP BY HOUR(t.startedTime)
+        ORDER BY HOUR(t.startedTime)
+    """)
+    List<HourlyCongestionQuery> findHourlyCountsByStationId(@Param("stationId") String stationId);
 }

@@ -5,17 +5,24 @@ import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQu
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
+import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
+import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponse;
+import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponsePage;
+import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
 import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.sub.MeterValue;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.example.quaterback.websocket.transaction.event.domain.sub.*;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Converter
@@ -96,6 +103,28 @@ public class TransactionEventConverter {
     public List<ChargerUsageResponse> toChargerUsageResponseList(List<ChargerUsageQuery> queryList) {
         return queryList.stream()
                 .map(ChargerUsageResponse::from)
+                .toList();
+    }
+
+    public List<HourlyCongestion> toHourlyCongestionList(List<HourlyCongestionQuery> queryList) {
+
+        Map<Integer,Long> countMap = queryList.stream()
+                .collect(Collectors.toMap(
+                        HourlyCongestionQuery::getHour,
+                        HourlyCongestionQuery::getCount
+                ));
+
+        long maxCount = countMap.values().stream()
+                .mapToLong(Long::longValue)
+                .max()
+                .orElse(0);
+
+        return IntStream.range(0,24)
+                .mapToObj(hour ->{
+                    Long count  = countMap.getOrDefault(hour,0L);
+                    boolean isPeak = count==maxCount && count >0;
+                    return new HourlyCongestion(hour,count,isPeak);
+                })
                 .toList();
     }
 }

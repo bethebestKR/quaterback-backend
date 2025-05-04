@@ -5,8 +5,12 @@ import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
+import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,5 +53,15 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     @Override
     public List<ChargerUsageQuery> findWithStationInfo() {
         return springDataJpaTxInfoRepository.findWithStationInfo();
+    }
+
+    @Override
+    public Page<ChargingRecordQuery> findChargerUsageByStationId(String stationId, Pageable pageable) {
+        return springDataJpaTxInfoRepository.findChargerUsageByStationId(stationId, pageable);
+    }
+
+    @Override
+    public List<HourlyCongestionQuery> findHourlyCountsByStationId(String stationId) {
+        return springDataJpaTxInfoRepository.findHourlyCountsByStationId(stationId);
     }
 }

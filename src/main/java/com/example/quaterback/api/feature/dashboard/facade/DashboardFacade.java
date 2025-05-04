@@ -20,7 +20,6 @@ public class DashboardFacade {
     private final StationService stationService;
 
     public List<HourlyDischargeResponse> getHourlyDischarge() {
-        log.info("fuck2");
        return transactionEventService.getHourlyDischarge();
     }
 
