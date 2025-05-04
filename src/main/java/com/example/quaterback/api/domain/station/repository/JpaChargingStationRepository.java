@@ -66,4 +66,12 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         }
         return row;
     }
+
+    @Override
+    public List<ChargingStationDomain> findAll() {
+        List<ChargingStationEntity> stations = chargingStationRepository.findAll();
+        return stations.stream()
+                .map(ChargingStationEntity::toDomain)
+                .toList();
+    }
 }

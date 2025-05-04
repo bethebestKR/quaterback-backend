@@ -13,4 +13,6 @@ public interface ChargingStationRepository {
     StationFullInfoQuery getFullStationInfo(String stationName);
 
     int deleteByName(String stationName);
+
+    List<ChargingStationDomain> findAll();
 }
