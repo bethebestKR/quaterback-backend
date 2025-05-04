@@ -2,9 +2,14 @@ package com.example.quaterback.api.domain.txinfo.repository;
 
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
+import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
+import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -29,5 +34,20 @@ public class JpaTxInfoRepository implements TxInfoRepository {
             return returnTxId;
         }
         return null;
+    }
+
+    @Override
+    public List<Object[]> findTotalDischargePerHour() {
+        return springDataJpaTxInfoRepository.findTotalDischargePerHour();
+    }
+
+    @Override
+    public DashboardSummaryQuery findDashboardSummary() {
+        return springDataJpaTxInfoRepository.findDashboardSummary();
+    }
+
+    @Override
+    public List<ChargerUsageQuery> findWithStationInfo() {
+        return springDataJpaTxInfoRepository.findWithStationInfo();
     }
 }
