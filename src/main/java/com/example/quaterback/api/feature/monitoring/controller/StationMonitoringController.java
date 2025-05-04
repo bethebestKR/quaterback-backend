@@ -1,9 +1,6 @@
 package com.example.quaterback.api.feature.monitoring.controller;
 
-import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponse;
-import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponsePage;
-import com.example.quaterback.api.feature.monitoring.dto.response.CongestionChartResponse;
-import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
+import com.example.quaterback.api.feature.monitoring.dto.response.*;
 import com.example.quaterback.api.feature.monitoring.facade.StationMonitoringFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +34,36 @@ public class StationMonitoringController {
     ) {
         return stationMonitoringFacade.getCongestionChart(stationId);
     }
+    @GetMapping("/evse-ids/{stationId}")
+    public List<EvseIdResponse> getEvseIds(
+            @PathVariable(name="stationId") String stationId
+    ){
+        return stationMonitoringFacade.getEvseIds(stationId);
+    }
 
+    @GetMapping("/charger-info/available/{evseId}")
+    public AvailableChargerPageResponse getAvailableChargerInfo(
+            @PathVariable(name="evseId") Integer evseId,
+            @RequestParam(name="page",defaultValue = "0") int page,
+            @RequestParam(name ="size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("endedTime").descending());
+        return stationMonitoringFacade.getAvailableChargerInfo(evseId, pageable);
+    }
 
+    @GetMapping("/charger-info/unavailable/{evseId}")
+    public UnavailableChargerPageResponse getUnavailableChargerInfo(
+            @PathVariable(name="evseId") Integer evseId,
+            @RequestParam(name="page",defaultValue = "0") int page,
+            @RequestParam(name ="size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("endedTime").descending());
+        return stationMonitoringFacade.getUnavailableChargerInfo(evseId, pageable);
+    }
+
+    //todo 충전요금 추후 계발
+    @GetMapping("/charger-money/{stationId}")
+    public Long todoCharger() {
+        return 1L;
+    }
 }

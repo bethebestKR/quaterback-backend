@@ -6,9 +6,11 @@ import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageRes
 import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponse;
 import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponsePage;
+import com.example.quaterback.api.feature.monitoring.dto.response.DailyUsageDto;
 import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
 import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
@@ -127,4 +129,6 @@ public class TransactionEventConverter {
                 })
                 .toList();
     }
+
+
 }

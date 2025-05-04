@@ -39,6 +39,19 @@ public class TransactionInfoEntity {
                 .build();
     }
 
+    public static TransactionInfoDomain toDomain(TransactionInfoEntity entity) {
+        return TransactionInfoDomain.builder()
+                .transactionId(entity.getTransactionId())
+                .startedTime(entity.getStartedTime())
+                .endedTime(entity.getEndedTime())
+                .vehicleNo(entity.getVehicleNo())
+                .userId(entity.getUserId())
+                .stationId(entity.getStationId())
+                .evseId(entity.getEvseId())
+                .totalMeterValue(entity.getTotalMeterValue())
+                .totalPrice(entity.getTotalPrice())
+                .build();
+    }
     public String updateEndTimeAndTotalValues(TransactionInfoDomain domain) {
         endedTime = domain.getEndedTime();
         totalMeterValue = domain.getTotalMeterValue();

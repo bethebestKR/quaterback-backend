@@ -6,6 +6,7 @@ import com.example.quaterback.api.domain.station.repository.ChargingStationRepos
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.DeleteResultResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.StationFullInfoResponse;
+import com.example.quaterback.api.feature.monitoring.dto.response.EvseIdResponse;
 import com.example.quaterback.api.feature.overview.dto.response.StationOverviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
