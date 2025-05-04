@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -69,9 +70,16 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
 
     @Override
     public List<ChargingStationDomain> findAll() {
-        List<ChargingStationEntity> stations = chargingStationRepository.findAll();
-        return stations.stream()
+        List<ChargingStationEntity> stationEntitys = chargingStationRepository.findAll();
+        return stationEntitys.stream()
                 .map(ChargingStationEntity::toDomain)
                 .toList();
+    }
+
+    @Override
+    public ChargingStationDomain findByStationName(String stationName) {
+        ChargingStationEntity stationEntity = chargingStationRepository.findByStationName(stationName)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        return stationEntity.toDomain();
     }
 }

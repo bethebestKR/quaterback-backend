@@ -15,4 +15,6 @@ public interface ChargingStationRepository {
     int deleteByName(String stationName);
 
     List<ChargingStationDomain> findAll();
+
+    ChargingStationDomain findByStationName(String stationName);
 }

@@ -25,4 +25,8 @@ public class ChargingStationConverter {
                 .map(StationOverviewResponse::from)
                 .toList();
     }
+
+    public StationOverviewResponse toStationOverviewRespons(ChargingStationDomain station) {
+        return StationOverviewResponse.from(station);
+    }
 }

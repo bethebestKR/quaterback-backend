@@ -20,7 +20,7 @@ public class StationService {
     private final ChargingStationConverter converter;
 
 
-    public List<StationFullInfoResponse> getStationInfos(){
+    public List<StationFullInfoResponse> getStationInfos() {
         List<StationFullInfoQuery> queryList = chargingStationRepository.getFullStationInfos();
         return converter.toStationFullInfos(queryList);
     }
@@ -39,5 +39,10 @@ public class StationService {
     public List<StationOverviewResponse> getStationOverviews() {
         List<ChargingStationDomain> stations = chargingStationRepository.findAll();
         return converter.toStationOverviewResponse(stations);
+    }
+
+    public StationOverviewResponse getStationOverview(String stationName) {
+        ChargingStationDomain station = chargingStationRepository.findByStationName(stationName);
+        return converter.toStationOverviewRespons(station);
     }
 }

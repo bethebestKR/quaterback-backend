@@ -54,4 +54,7 @@ public interface SpringDataJpaChargingStationRepository extends JpaRepository<Ch
     @Modifying
     @Query("delete from ChargingStationEntity cs where cs.model = :stationName")
     int deleteByName(@Param("stationName")String stationName);
+
+    @Query("select cs from ChargingStationEntity cs where cs.model =:stationName")
+    Optional<ChargingStationEntity> findByStationName(@Param("stationName")String stationName);
 }
