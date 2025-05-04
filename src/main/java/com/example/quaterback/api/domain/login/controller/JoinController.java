@@ -4,6 +4,7 @@ import com.example.quaterback.api.domain.login.service.JoinService;
 import com.example.quaterback.api.domain.login.dto.JoinRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -13,10 +14,9 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/join")
-    public String join(JoinRequest joinRequest) {
+    public String join(@RequestBody JoinRequest joinRequest) {
 
         String username = joinService.joinProcess(joinRequest.username(), joinRequest.password());
         return username;
     }
-
 }

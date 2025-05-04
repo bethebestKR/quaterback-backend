@@ -40,11 +40,15 @@ class JoinControllerTest {
 
         //when & then
         mockMvc.perform(post("/join")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("username", username)
-                        .param("password", password)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+            {
+                "username": "userA",
+                "password": "tempPw"
+            }
+        """)
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(username));
+                .andExpect(content().string("userA"));
     }
 }
