@@ -1,5 +1,10 @@
 package com.example.quaterback.websocket.transaction.event.service;
 
+import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
+import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
+import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
+import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
+import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
@@ -9,17 +14,22 @@ import com.example.quaterback.websocket.transaction.event.converter.TransactionE
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionEventService {
 
     private final TransactionEventConverter converter;
     private final TxInfoRepository txInfoRepository;
     private final TxLogRepository txLogRepository;
     private final RedisMapSessionToStationService redisMappingService;
+
     public String saveTxInfo(JsonNode jsonNode, String sessionId) {
         TransactionEventDomain txEventDomain = converter.convertToStartedTransactionDomain(jsonNode);
 
@@ -46,7 +56,7 @@ public class TransactionEventService {
         TransactionEventDomain txEventDomain = converter.convertToNonStartedTransactionDomain(jsonNode);
 
         Integer totalMeterValue = txLogRepository.getTotalMeterValue(txEventDomain.extractTransactionId());
-        Integer totalPrice =  (int) (totalMeterValue * 0.5); // 추후 총 사용 전력량에 대한 전기요금 계산으로 변경
+        Integer totalPrice = (int) (totalMeterValue * 0.5); // 추후 총 사용 전력량에 대한 전기요금 계산으로 변경
 
         TransactionInfoDomain txInfoDomain = TransactionInfoDomain.fromEndedTxEventDomain(txEventDomain, totalMeterValue, totalPrice);
         String resultTransactionId = txInfoRepository.updateEndTime(txInfoDomain);
@@ -54,4 +64,19 @@ public class TransactionEventService {
         return resultTransactionId;
     }
 
+    @Transactional
+    public List<HourlyDischargeResponse> getHourlyDischarge() {
+        List<Object[]> result = txInfoRepository.findTotalDischargePerHour();
+        return converter.toHourlyDischargeResponseList(result);
+    }
+
+    public DashboardSummaryResponse getDailySummary() {
+        DashboardSummaryQuery query = txInfoRepository.findDashboardSummary();
+        return converter.toDashboardSummaryResponse(query);
+    }
+
+    public List<ChargerUsageResponse> getChargerUsage() {
+        List<ChargerUsageQuery> queryList = txInfoRepository.findWithStationInfo();
+        return converter.toChargerUsageResponseList(queryList);
+    }
 }
