@@ -1,5 +1,10 @@
 package com.example.quaterback.websocket.transaction.event.converter;
 
+import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
+import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
+import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
+import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
+import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
 import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.sub.MeterValue;
@@ -8,7 +13,10 @@ import com.example.quaterback.websocket.transaction.event.domain.sub.*;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 @Converter
 public class TransactionEventConverter {
@@ -66,5 +74,28 @@ public class TransactionEventConverter {
                         MeterValue.forTransaction(payload.path("meterValue").get(0))
                 ))
                 .build();
+    }
+
+    public List<HourlyDischargeResponse> toHourlyDischargeResponseList(List<Object[]> raw) {
+        Map<Integer, Integer> hourMap = new HashMap<>();
+        for (Object[] row : raw) {
+            int hour = ((Number) row[0]).intValue();
+            int value = ((Number) row[1]).intValue();
+            hourMap.put(hour, value);
+        }
+
+        return IntStream.range(0, 24)
+                .mapToObj(h -> new HourlyDischargeResponse(h, hourMap.getOrDefault(h, 0)))
+                .toList();
+    }
+
+    public DashboardSummaryResponse toDashboardSummaryResponse(DashboardSummaryQuery query){
+        return DashboardSummaryResponse.from(query);
+    }
+
+    public List<ChargerUsageResponse> toChargerUsageResponseList(List<ChargerUsageQuery> queryList) {
+        return queryList.stream()
+                .map(ChargerUsageResponse::from)
+                .toList();
     }
 }
