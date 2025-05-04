@@ -2,12 +2,18 @@ package com.example.quaterback.api.domain.station.repository;
 
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
+import com.example.quaterback.api.feature.dashboard.dto.response.StationFullInfoResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class JpaChargingStationRepository implements ChargingStationRepository {
 
     private final SpringDataJpaChargingStationRepository chargingStationRepository;
@@ -39,4 +45,25 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         return entity.getStationId();
     }
 
+    @Override
+    public List<StationFullInfoQuery> getFullStationInfos() {
+        return chargingStationRepository.getFullStationInfos();
+    }
+
+    @Override
+    public StationFullInfoQuery getFullStationInfo(String stationName) {
+        log.info("stationName : {}", stationName);
+        return chargingStationRepository.getFullStationInfo(stationName)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+    }
+
+    @Override
+    public int deleteByName(String stationName) {
+        int row = chargingStationRepository.deleteByName(stationName);
+
+        if(row== 0){
+            throw new EntityNotFoundException("삭제 대상이 없습니다: " + stationName);
+        }
+        return row;
+    }
 }
