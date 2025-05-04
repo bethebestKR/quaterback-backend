@@ -7,9 +7,11 @@ import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageRes
 import com.example.quaterback.api.feature.dashboard.dto.response.DashboardSummaryResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischargeResponse;
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponse;
 import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponsePage;
+import com.example.quaterback.api.feature.monitoring.dto.response.DailyUsageDto;
 import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
@@ -26,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,4 +101,11 @@ public class TransactionEventService {
         return converter.toHourlyCongestionList(queryList);
     }
 
+    public Page<TransactionInfoDomain> findTransactionInfo(Integer evseId, Pageable pageable) {
+        return txInfoRepository.findAllByEvseId(evseId, pageable);
+    }
+
+    public DailyUsageQuery findOneDayUsageInfo(Integer evseId, LocalDate date) {
+        return txInfoRepository.findDailyUsageByEvseIdAndDate(evseId, date);
+    }
 }
