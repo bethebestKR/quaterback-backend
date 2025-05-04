@@ -6,6 +6,7 @@ import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
+import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -63,5 +67,19 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     @Override
     public List<HourlyCongestionQuery> findHourlyCountsByStationId(String stationId) {
         return springDataJpaTxInfoRepository.findHourlyCountsByStationId(stationId);
+    }
+
+    @Override
+    public Page<TransactionInfoDomain> findAllByEvseId(Integer evseId, Pageable pageable) {
+        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findAllByEvseId(evseId, pageable);
+
+        return entityPage.map(TransactionInfoEntity::toDomain);
+    }
+
+    @Override
+    public DailyUsageQuery findDailyUsageByEvseIdAndDate(Integer evseId, LocalDate date) {
+        return springDataJpaTxInfoRepository.findDailyUsageByEvseIdAndDate(evseId,date)
+                .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
+
     }
 }
