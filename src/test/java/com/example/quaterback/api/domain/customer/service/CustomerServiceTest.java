@@ -4,7 +4,8 @@ import com.example.quaterback.api.domain.customer.domain.CustomerDomain;
 import com.example.quaterback.api.domain.customer.repository.CustomerRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
-import com.example.quaterback.api.feature.managing.dto.*;
+import com.example.quaterback.api.feature.managing.dto.request.CustomerUpdateRequest;
+import com.example.quaterback.api.feature.managing.dto.response.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,10 +46,10 @@ class CustomerServiceTest {
         when(customerRepository.findByCustomerIdContating(keyword, pageable)).thenReturn(page);
 
         // when
-        Page<CustomerResponseDto> result = customerService.findCustomers("customerId", keyword, pageable);
+        CustomerListResponse result = customerService.findCustomers("customerId", keyword, pageable);
 
         // then
-        assertThat(result).hasSize(1);
+        assertThat(result).hasFieldOrProperty("customerList");
         verify(customerRepository).findByCustomerIdContating(keyword, pageable);
     }
 
@@ -63,10 +64,10 @@ class CustomerServiceTest {
         when(customerRepository.findByCustomerNameContaining(keyword, pageable)).thenReturn(page);
 
         //when
-        Page<CustomerResponseDto> result = customerService.findCustomers("customerName", keyword, pageable);
+        CustomerListResponse result = customerService.findCustomers("customerName", keyword, pageable);
 
         //then
-        assertThat(result).hasSize(1);
+        assertThat(result).hasFieldOrProperty("customerList");
         verify(customerRepository).findByCustomerNameContaining(keyword, pageable);
     }
 
@@ -80,10 +81,10 @@ class CustomerServiceTest {
         when(customerRepository.findAll(pageable)).thenReturn(page);
 
         //when
-        Page<CustomerResponseDto> result = customerService.findCustomers(null, null, pageable);
+        CustomerListResponse result = customerService.findCustomers(null, null, pageable);
 
         //then
-        assertThat(result).hasSize(1);
+        assertThat(result).hasFieldOrProperty("customerList");
         verify(customerRepository).findAll(pageable);
     }
 
@@ -95,7 +96,7 @@ class CustomerServiceTest {
         when(customerRepository.findByCustomerId(customerId)).thenReturn(customer);
 
         //when
-        CustomerDetailResponseDto result = customerService.findByCustomerId(customerId);
+        CustomerDetailResponse result = customerService.findByCustomerId(customerId);
 
         //then
         assertThat(result).isNotNull();
@@ -106,7 +107,7 @@ class CustomerServiceTest {
     void updateCustomerInfo_고객정보수정() {
         //given
         String customerId = "user123";
-        CustomerUpdateRequestDto requestDto = CustomerUpdateRequestDto.builder()
+        CustomerUpdateRequest requestDto = CustomerUpdateRequest.builder()
                 .customerName("name123")
                 .email("email123")
                 .phone("phone123")
@@ -115,10 +116,10 @@ class CustomerServiceTest {
         when(customerRepository.updateCustomerInfo(any(CustomerDomain.class))).thenReturn(customerId);
 
         //when
-        CustomerUpdateResponseDto result = customerService.updateCustomerInfo(customerId, requestDto);
+        CustomerUpdateResponse result = customerService.updateCustomerInfo(customerId, requestDto);
 
         //then
-        assertThat(result.getCustomerId()).isEqualTo(customerId);
+        assertThat(result.customerId()).isEqualTo(customerId);
         verify(customerRepository).updateCustomerInfo(any());
     }
 
@@ -146,11 +147,11 @@ class CustomerServiceTest {
         when(txInfoRepository.findByIdTokenOrderByStartedTimeDesc(idToken, pageable)).thenReturn(page);
 
         //when
-        Page<CustomerChargedLogResponseDto> result =
+        CustomerChargedLogListResponse result =
                 customerService.findChargedLogListByCustomerId(customerId, null, null, pageable);
 
         //then
-        assertThat(result).hasSize(1);
+        assertThat(result).hasFieldOrProperty("customerChargedLogList");
         verify(txInfoRepository).findByIdTokenOrderByStartedTimeDesc(idToken, pageable);
     }
 
@@ -177,10 +178,10 @@ class CustomerServiceTest {
         Page<TransactionInfoDomain> page = new PageImpl<>(List.of(tx));
         when(txInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, start, end, pageable)).thenReturn(page);
 
-        Page<CustomerChargedLogResponseDto> result =
+        CustomerChargedLogListResponse result =
                 customerService.findChargedLogListByCustomerId(customerId, start, end, pageable);
 
-        assertThat(result).hasSize(1);
+        assertThat(result).hasFieldOrProperty("customerChargedLogList");
         verify(txInfoRepository).findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, start, end, pageable);
     }
 

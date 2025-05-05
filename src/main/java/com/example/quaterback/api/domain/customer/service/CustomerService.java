@@ -4,7 +4,8 @@ import com.example.quaterback.api.domain.customer.domain.CustomerDomain;
 import com.example.quaterback.api.domain.customer.repository.CustomerRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
-import com.example.quaterback.api.feature.managing.dto.*;
+import com.example.quaterback.api.feature.managing.dto.request.CustomerUpdateRequest;
+import com.example.quaterback.api.feature.managing.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final TxInfoRepository txInfoRepository;
 
-    public Page<CustomerResponseDto> findCustomers(String searchType, String keyword, Pageable pageable) {
+    public CustomerListResponse findCustomers(String searchType, String keyword, Pageable pageable) {
         Page<CustomerDomain> result;
 
         if (searchType != null && searchType.equals("customerId") && keyword != null && !keyword.isBlank()) {
@@ -33,22 +34,22 @@ public class CustomerService {
             result = customerRepository.findAll(pageable);
         }
 
-        return result.map(CustomerResponseDto::fromDomain);
+        return CustomerListResponse.from(result.map(CustomerResponse::fromDomain));
     }
 
-    public CustomerDetailResponseDto findByCustomerId(String customerId) {
+    public CustomerDetailResponse findByCustomerId(String customerId) {
         CustomerDomain customerDomain = customerRepository.findByCustomerId(customerId);
-        return CustomerDetailResponseDto.fromCustomerDomain(customerDomain);
+        return CustomerDetailResponse.fromCustomerDomain(customerDomain);
     }
 
     @Transactional
-    public CustomerUpdateResponseDto updateCustomerInfo(String customerId, CustomerUpdateRequestDto customerUpdateRequestDto) {
-        CustomerDomain customerDomain = CustomerDomain.fromCustomerUpdateRequestDto(customerId, customerUpdateRequestDto);
+    public CustomerUpdateResponse updateCustomerInfo(String customerId, CustomerUpdateRequest customerUpdateRequest) {
+        CustomerDomain customerDomain = CustomerDomain.fromCustomerUpdateRequestDto(customerId, customerUpdateRequest);
         String resultCustomerId = customerRepository.updateCustomerInfo(customerDomain);
-        return CustomerUpdateResponseDto.fromCustomerId(resultCustomerId);
+        return CustomerUpdateResponse.fromCustomerId(resultCustomerId);
     }
 
-    public Page<CustomerChargedLogResponseDto> findChargedLogListByCustomerId(
+    public CustomerChargedLogListResponse findChargedLogListByCustomerId(
             String customerId,
             LocalDate startDate,
             LocalDate endDate,
@@ -66,7 +67,8 @@ public class CustomerService {
         else {
             result = txInfoRepository.findByIdTokenOrderByStartedTimeDesc(idToken, pageable);
         }
-        return result.map(CustomerChargedLogResponseDto::fromTxInfoDomain);
+        return CustomerChargedLogListResponse
+                .from(result.map(CustomerChargedLogResponse::fromTxInfoDomain));
     }
 
 }

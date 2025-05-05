@@ -1,6 +1,6 @@
 package com.example.quaterback.api.domain.customer.domain;
 
-import com.example.quaterback.api.feature.managing.dto.CustomerUpdateRequestDto;
+import com.example.quaterback.api.feature.managing.dto.request.CustomerUpdateRequest;
 import lombok.*;
 
 @Getter
@@ -17,7 +17,7 @@ public class CustomerDomain {
     private String vehicleNo;
     private String registrationDate;
 
-    public static CustomerDomain fromCustomerUpdateRequestDto(String customerId, CustomerUpdateRequestDto dto) {
+    public static CustomerDomain fromCustomerUpdateRequestDto(String customerId, CustomerUpdateRequest dto) {
         return CustomerDomain.builder()
                 .customerId(customerId)
                 .customerName(dto.getCustomerName())
