@@ -1,7 +1,7 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
-import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
-import com.example.quaterback.api.domain.station.repository.SpringDataJpaChargingStationRepository;
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
+import com.example.quaterback.api.domain.charger.repository.SpringDataJpaChargerRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,15 +17,16 @@ import java.time.LocalDate;
 public class JpaTxInfoRepository implements TxInfoRepository {
 
     private final SpringDataJpaTxInfoRepository springDataJpaTxInfoRepository;
-    private final SpringDataJpaChargingStationRepository springDataJpaChargingStationRepository;
+    private final SpringDataJpaChargerRepository springDataJpaChargerRepository;
 
     @Override
     public String save(TransactionInfoDomain domain) {
-        TransactionInfoEntity entity = TransactionInfoEntity.fromTransactionInfoDomain(domain);
-        ChargingStationEntity stationEntity = springDataJpaChargingStationRepository.findByStationId(domain.getStationId())
+        String stationId = domain.getStationId();
+        Integer evseId = domain.getEvseId();
+        ChargerEntity chargerEntity = springDataJpaChargerRepository.findByStation_StationIdAndEvseId(stationId, evseId)
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
 
-        entity.assignStation(stationEntity);
+        TransactionInfoEntity entity = TransactionInfoEntity.fromTransactionInfoDomain(domain, chargerEntity);
         springDataJpaTxInfoRepository.save(entity);
         return entity.getTransactionId();
     }
@@ -53,6 +54,5 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, startTime, endTime, pageable);
         return entityPage.map(TransactionInfoEntity::toDomain);
     }
-
 
 }

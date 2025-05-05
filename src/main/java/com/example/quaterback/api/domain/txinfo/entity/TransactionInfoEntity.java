@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.txinfo.entity;
 
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import jakarta.persistence.*;
@@ -24,22 +25,21 @@ public class TransactionInfoEntity {
     private LocalDateTime endedTime;
     private String vehicleNo;
     private String idToken;
+    private String stationId;
 
     @ManyToOne
-    @JoinColumn(name = "station_id", referencedColumnName = "stationId")
-    private ChargingStationEntity station;
-
-    private Integer evseId;
+    @JoinColumn(name = "evse_id")
+    private ChargerEntity charger;
     private Integer totalMeterValue;
     private Integer totalPrice;
 
-    public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain) {
+    public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain, ChargerEntity chargerEntity) {
         return TransactionInfoEntity.builder()
                 .transactionId(domain.getTransactionId())
                 .startedTime(domain.getStartedTime())
                 .vehicleNo(domain.getVehicleNo())
                 .idToken(domain.getIdToken())
-                .evseId(domain.getEvseId())
+                .charger(chargerEntity)
                 .build();
     }
 
@@ -50,9 +50,7 @@ public class TransactionInfoEntity {
         return transactionId;
     }
 
-    public void assignStation(ChargingStationEntity stationEntity) {
-        station = stationEntity;
-    }
+
 
     public TransactionInfoDomain toDomain() {
         return TransactionInfoDomain.builder()
