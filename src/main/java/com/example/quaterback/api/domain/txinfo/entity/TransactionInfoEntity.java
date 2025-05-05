@@ -23,7 +23,7 @@ public class TransactionInfoEntity {
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
     private String vehicleNo;
-    private String userId;
+    private String idToken;
 
     @ManyToOne
     @JoinColumn(name = "station_id", referencedColumnName = "stationId")
@@ -38,7 +38,7 @@ public class TransactionInfoEntity {
                 .transactionId(domain.getTransactionId())
                 .startedTime(domain.getStartedTime())
                 .vehicleNo(domain.getVehicleNo())
-                .userId(domain.getUserId())
+                .idToken(domain.getIdToken())
                 .evseId(domain.getEvseId())
                 .build();
     }
@@ -52,5 +52,16 @@ public class TransactionInfoEntity {
 
     public void assignStation(ChargingStationEntity stationEntity) {
         station = stationEntity;
+    }
+
+    public TransactionInfoDomain toDomain() {
+        return TransactionInfoDomain.builder()
+                .transactionId(transactionId)
+                .startedTime(startedTime)
+                .endedTime(endedTime)
+                .vehicleNo(vehicleNo)
+                .totalMeterValue(totalMeterValue)
+                .totalPrice(totalPrice)
+                .build();
     }
 }
