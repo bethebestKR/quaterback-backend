@@ -1,22 +1,20 @@
-package com.example.quaterback.api.feature.managing.dto;
+package com.example.quaterback.api.feature.managing.dto.response;
 
 import com.example.quaterback.api.domain.customer.domain.CustomerDomain;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 @Builder
-public class CustomerDetailResponseDto {
-    private String customerId;
-    private String customerName;
-    private String idToken;
-    private String phone;
-    private String email;
-    private String vehicleNo;
-    private String registrationDate;
-
-    public static CustomerDetailResponseDto fromCustomerDomain(CustomerDomain customerDomain) {
-        return CustomerDetailResponseDto.builder()
+public record CustomerDetailResponse(
+        String customerId,
+        String customerName,
+        String idToken,
+        String phone,
+        String email,
+        String vehicleNo,
+        String registrationDate
+) {
+    public static CustomerDetailResponse fromCustomerDomain(CustomerDomain customerDomain) {
+        return CustomerDetailResponse.builder()
                 .customerId(customerDomain.getCustomerId())
                 .customerName(customerDomain.getCustomerName())
                 .phone(customerDomain.getPhone())
