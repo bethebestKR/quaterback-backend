@@ -1,6 +1,9 @@
 -- 먼저 지우고 다시 넣기
+DELETE FROM tx_log;
+DELETE FROM tx_info;
 DELETE FROM charger_info WHERE station_id = 'station-001';
 DELETE FROM charging_station WHERE station_id = 'station-001';
+DELETE FROM customer;
 
 -- 그 다음 새로 삽입
 INSERT INTO charging_station (station_id, model, vendor_id, latitude, longitude, address, update_status_time_stamp, station_status)

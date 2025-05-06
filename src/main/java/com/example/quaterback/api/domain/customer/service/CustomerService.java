@@ -48,7 +48,17 @@ public class CustomerService {
         return CustomerUpdateResponse.fromCustomerId(resultCustomerId);
     }
 
-    public CustomerChargedLogListResponse findChargedLogListByCustomerId(
+    public CustomerChargedLogListResponse findAllChargedLogListByCustomerId(String customerId, Pageable pageable) {
+        CustomerDomain customerDomain = customerRepository.findByCustomerId(customerId);
+        String idToken = customerDomain.getIdToken();
+
+        Page<TransactionInfoDomain> result = txInfoRepository.findByIdTokenOrderByStartedTimeDesc(idToken, pageable);
+
+        return CustomerChargedLogListResponse
+                .from(result.map(CustomerChargedLogResponse::fromTxInfoDomain));
+    }
+
+    public CustomerChargedLogListResponse findChargedLogListByCustomerIdAndPeriod(
             String customerId,
             LocalDate startDate,
             LocalDate endDate,
@@ -57,15 +67,9 @@ public class CustomerService {
         CustomerDomain customerDomain = customerRepository.findByCustomerId(customerId);
         String idToken = customerDomain.getIdToken();
 
-        Page<TransactionInfoDomain> result;
-        if (startDate != null && endDate != null) {
-            result = txInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(
-                    idToken, startDate, endDate, pageable
-            );
-        }
-        else {
-            result = txInfoRepository.findByIdTokenOrderByStartedTimeDesc(idToken, pageable);
-        }
+        Page<TransactionInfoDomain> result = txInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(
+                    idToken, startDate, endDate, pageable);
+
         return CustomerChargedLogListResponse
                 .from(result.map(CustomerChargedLogResponse::fromTxInfoDomain));
     }

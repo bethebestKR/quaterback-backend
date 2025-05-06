@@ -8,6 +8,7 @@ import com.example.quaterback.api.feature.managing.dto.response.CustomerListResp
 import com.example.quaterback.api.feature.managing.dto.response.CustomerUpdateResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -68,16 +69,26 @@ public class CustomerManageController {
         return customerService.updateCustomerInfo(customerId, dto);
     }
 
-    @GetMapping("/chargedLog/{customerId}")
-    public CustomerChargedLogListResponse chargedLog(
+    @GetMapping("chargedLog/{customerId}")
+    public CustomerChargedLogListResponse getAllChargedLog(
             @PathVariable String customerId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startedTime"));
-        return customerService.findChargedLogListByCustomerId(customerId, startDate, endDate, pageable);
+        return customerService.findAllChargedLogListByCustomerId(customerId, pageable);
+    }
+
+    @GetMapping("/chargedLog/{customerId}/search")
+    public CustomerChargedLogListResponse getChargedLogByPeriod(
+            @PathVariable String customerId,
+            @RequestParam @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startedTime"));
+        return customerService.findChargedLogListByCustomerIdAndPeriod(customerId, startDate, endDate, pageable);
     }
 
 }
