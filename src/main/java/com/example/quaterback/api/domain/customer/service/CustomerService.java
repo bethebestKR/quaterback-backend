@@ -21,19 +21,18 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final TxInfoRepository txInfoRepository;
 
-    public CustomerListResponse findCustomers(String searchType, String keyword, Pageable pageable) {
-        Page<CustomerDomain> result;
+    public CustomerListResponse findAllCustomers(Pageable pageable) {
+        Page<CustomerDomain> result = customerRepository.findAll(pageable);
+        return CustomerListResponse.from(result.map(CustomerResponse::fromDomain));
+    }
 
-        if (searchType != null && searchType.equals("customerId") && keyword != null && !keyword.isBlank()) {
-            result = customerRepository.findByCustomerIdContating(keyword, pageable);
-        }
-        else if (searchType != null && searchType.equals("customerName") && keyword != null && !keyword.isBlank()) {
-            result = customerRepository.findByCustomerNameContaining(keyword, pageable);
-        }
-        else {
-            result = customerRepository.findAll(pageable);
-        }
+    public CustomerListResponse searchCustomersByCustomerId(String customerId, Pageable pageable) {
+        Page<CustomerDomain> result = customerRepository.findByCustomerIdContating(customerId, pageable);
+        return CustomerListResponse.from(result.map(CustomerResponse::fromDomain));
+    }
 
+    public CustomerListResponse searchCustomersByCustomerName(String customerName, Pageable pageable) {
+        Page<CustomerDomain> result = customerRepository.findByCustomerNameContaining(customerName, pageable);
         return CustomerListResponse.from(result.map(CustomerResponse::fromDomain));
     }
 
