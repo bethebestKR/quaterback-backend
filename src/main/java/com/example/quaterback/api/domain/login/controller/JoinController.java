@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.login.controller;
 
+import com.example.quaterback.api.domain.login.dto.JoinResponse;
 import com.example.quaterback.api.domain.login.service.JoinService;
 import com.example.quaterback.api.domain.login.dto.JoinRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,10 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/join")
-    public String join(@RequestBody JoinRequest joinRequest) {
+    public JoinResponse join(@RequestBody JoinRequest joinRequest) {
 
         String username = joinService.joinProcess(joinRequest.username(), joinRequest.password());
-        return username;
+        return new JoinResponse(username);
     }
 
 }
