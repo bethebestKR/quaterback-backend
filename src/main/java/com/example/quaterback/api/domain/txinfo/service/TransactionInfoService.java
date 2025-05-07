@@ -87,14 +87,6 @@ public class TransactionInfoService {
 
     public void saveTxInfo(CreateTransactionInfoRequest request){
         TransactionInfoDomain txInfoDomain = request.toDomain();
-        ChargerEntity chargerEntity = springDataJpaChargerRepository.findByStation_StationIdAndEvseId(
-               txInfoDomain.getStationId(), txInfoDomain.getEvseId()
-       ).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-
-        TransactionInfoEntity txEntity = TransactionInfoEntity.fromTransactionInfoDomain(
-                txInfoDomain, chargerEntity
-        );
-
-        springDataJpaTxInfoRepository.save(txEntity);
+        jpaTxInfoRepository.save(txInfoDomain);
     }
 }
