@@ -57,19 +57,16 @@ public class TransactionDetailsController {
     {
         LocalDateTime start = firstDate.atStartOfDay();
         LocalDateTime end = secondDate.atTime(LocalTime.MAX);
-        List<TransactionInfoEntity> txInfoEntities = transactionInfoService.getChargerTransactionsByStationAndPeriod(
-                start,end,stationName
+
+        TransactionInfoDomain onlyTimeTxDomain = TransactionInfoDomain.fromLocalDateTimeToDomain(
+                start
+                ,end
         );
 
-        Integer allMeterValue = txInfoEntities.stream()
-                .mapToInt(TransactionInfoEntity :: getTotalMeterValue)
-                .sum();
-        Integer allPrice = txInfoEntities.stream()
-                .mapToInt(TransactionInfoEntity :: getTotalPrice)
-                .sum();
-        TransactionSummaryDto transactionSummaryDto = new TransactionSummaryDto(
-                allMeterValue, allPrice
+        TransactionSummaryDto transactionSummaryDto = transactionInfoService.getChargerTransactionsByStationAndPeriod(
+                onlyTimeTxDomain,stationName
         );
+
         return ResponseEntity.ok(new ApiResponse<>("success", transactionSummaryDto));
     }
 

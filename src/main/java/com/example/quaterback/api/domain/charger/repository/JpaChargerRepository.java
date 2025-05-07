@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,8 +33,11 @@ public class JpaChargerRepository implements ChargerRepository {
     }
 
     @Override
-    public List<ChargerEntity> findByStationID(String stationId) {
+    public List<ChargerDomain> findByStationID(String stationId) {
         List<ChargerEntity> chargerEntities = chargerRepository.findByStation_StationId(stationId);
-        return chargerEntities;
+        List<ChargerDomain> chargerDomains = chargerEntities.stream()
+                .map(ChargerDomain :: fromEntityToDomain)
+                .collect(Collectors.toList());
+        return chargerDomains;
     }
 }

@@ -14,8 +14,7 @@ public interface TxInfoRepository {
 
     String updateEndTime(TransactionInfoDomain domain);
 
-    List<TransactionInfoEntity> findByChargerPkAndCreatedAtBetween(LocalDateTime start,
-                                                                   LocalDateTime end,
+    List<TransactionInfoDomain> findByChargerPkAndCreatedAtBetween(TransactionInfoDomain domain,
                                                                    Long chargerPk);
 
     Page<TransactionInfoDomain> findByStationIdAndCreatedAtBetween(TransactionInfoDomain domain,

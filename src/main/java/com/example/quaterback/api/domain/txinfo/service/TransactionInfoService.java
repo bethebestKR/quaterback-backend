@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.txinfo.service;
 
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
 import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
 import com.example.quaterback.api.domain.charger.repository.SpringDataJpaChargerRepository;
@@ -11,6 +12,7 @@ import com.example.quaterback.api.domain.txinfo.repository.SpringDataJpaTxInfoRe
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
 import com.example.quaterback.api.feature.managing.dto.apiRequest.CreateTransactionInfoRequest;
 import com.example.quaterback.api.feature.managing.dto.txInfo.TransactionInfoDto;
+import com.example.quaterback.api.feature.managing.dto.txInfo.TransactionSummaryDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,25 +34,34 @@ public class TransactionInfoService {
     private final SpringDataJpaChargerRepository springDataJpaChargerRepository;
     private final JpaTxInfoRepository jpaTxInfoRepository;
     //charger 별 충전기록 얻기
-    public List<TransactionInfoEntity> getChargerTransactionsByStationAndPeriod(LocalDateTime start,
-                                                                                LocalDateTime end,
+    public TransactionSummaryDto getChargerTransactionsByStationAndPeriod(TransactionInfoDomain domain,
                                                                                 String stationName){
         //stationId 얻고
         String stationId = chargingStationRepository.findStationIdByStationName(stationName);
 
         //stationId로 충전소에 관련된 Charger 객체들 뽑고
-        List<ChargerEntity> chargerList = new ArrayList<>(chargerRepository.findByStationID(stationId));
+        List<ChargerDomain> chargerList = new ArrayList<>(chargerRepository.findByStationID(stationId));
 
-        //for 문을 돌면서 해당 charger Pk를 통해  txInfoRepository로 결과 가져오기
-        //혹은 tmp 별로 나눠서 따로 저장하여 사용
-        List<TransactionInfoEntity> totalTransactionInfos = new ArrayList<>();
-        for(ChargerEntity charger : chargerList){
-            List<TransactionInfoEntity> tmp = txInfoRepository.findByChargerPkAndCreatedAtBetween(start,
-                    end,
+
+        List<TransactionInfoDomain> totalTransactionInfos = new ArrayList<>();
+
+        for(ChargerDomain charger : chargerList){
+            List<TransactionInfoDomain> tmp = txInfoRepository.findByChargerPkAndCreatedAtBetween(domain,
                     charger.getId());
             totalTransactionInfos.addAll(tmp);
         }
-        return totalTransactionInfos;
+
+        Integer allMeterValue = totalTransactionInfos.stream()
+                .mapToInt(TransactionInfoDomain :: getTotalMeterValue)
+                .sum();
+        Integer allPrice = totalTransactionInfos.stream()
+                .mapToInt(TransactionInfoDomain :: getTotalPrice)
+                .sum();
+
+        TransactionSummaryDto transactionSummaryDto = new TransactionSummaryDto(
+                allMeterValue, allPrice
+        );
+        return transactionSummaryDto;
     }
 
 

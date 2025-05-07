@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -47,14 +48,19 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     }
 
     @Override
-    public List<TransactionInfoEntity> findByChargerPkAndCreatedAtBetween(LocalDateTime start,
-                                                                          LocalDateTime end,
+    public List<TransactionInfoDomain> findByChargerPkAndCreatedAtBetween(TransactionInfoDomain domain,
                                                                           Long chargerPk) {
+        LocalDateTime start = domain.getStartedTime();
+        LocalDateTime end = domain.getEndedTime();
+
         List<TransactionInfoEntity> txEntities = springDataJpaTxInfoRepository.findByChargerPkAndTimeRange(
                 chargerPk
                 ,start
                 ,end);
-        return txEntities;
+        List<TransactionInfoDomain> txDomains = txEntities.stream()
+                .map(TransactionInfoDomain::fromTxEntityDomain)
+                .collect(Collectors.toList());
+        return txDomains;
     }
 
     @Override
