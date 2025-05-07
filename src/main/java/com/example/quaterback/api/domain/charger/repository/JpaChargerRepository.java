@@ -6,6 +6,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class JpaChargerRepository implements ChargerRepository {
@@ -27,5 +29,11 @@ public class JpaChargerRepository implements ChargerRepository {
         entity.updateChargerStatus(domain.getChargerStatus());
 
         return entity.getEvseId();
+    }
+
+    @Override
+    public List<ChargerEntity> findByStationID(String stationId) {
+        List<ChargerEntity> chargerEntities = chargerRepository.findByStation_StationId(stationId);
+        return chargerEntities;
     }
 }
