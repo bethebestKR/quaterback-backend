@@ -35,13 +35,8 @@ public class TransactionDetailsController {
         LocalDateTime start = firstDate.atStartOfDay();
         LocalDateTime end = secondDate.atTime(LocalTime.MAX);
 
-        TransactionInfoDomain onlyTimeTxDomain = TransactionInfoDomain.fromLocalDateTimeToDomain(
-                start
-                ,end
-        );
-
         Page<TransactionInfoDto> dtoPage = transactionInfoService.getStationTransactionsByStationAndPeriod(
-                onlyTimeTxDomain, stationName, pageable
+                start, end,  stationName, pageable
         );
 
         PageResponse<TransactionInfoDto> pageResponse = new PageResponse<>(dtoPage);
@@ -58,13 +53,8 @@ public class TransactionDetailsController {
         LocalDateTime start = firstDate.atStartOfDay();
         LocalDateTime end = secondDate.atTime(LocalTime.MAX);
 
-        TransactionInfoDomain onlyTimeTxDomain = TransactionInfoDomain.fromLocalDateTimeToDomain(
-                start
-                ,end
-        );
-
         TransactionSummaryDto transactionSummaryDto = transactionInfoService.getChargerTransactionsByStationAndPeriod(
-                onlyTimeTxDomain,stationName
+                start, end ,stationName
         );
 
         return ResponseEntity.ok(new ApiResponse<>("success", transactionSummaryDto));

@@ -34,8 +34,14 @@ public class TransactionInfoService {
     private final SpringDataJpaChargerRepository springDataJpaChargerRepository;
     private final JpaTxInfoRepository jpaTxInfoRepository;
     //charger 별 충전기록 얻기
-    public TransactionSummaryDto getChargerTransactionsByStationAndPeriod(TransactionInfoDomain domain,
+    public TransactionSummaryDto getChargerTransactionsByStationAndPeriod(LocalDateTime start,
+                                                                                LocalDateTime end,
                                                                                 String stationName){
+
+        TransactionInfoDomain domain = TransactionInfoDomain.fromLocalDateTimeToDomain(
+                start
+                ,end
+        );
         //stationId 얻고
         String stationId = chargingStationRepository.findStationIdByStationName(stationName);
 
@@ -67,8 +73,12 @@ public class TransactionInfoService {
 
 
     public Page<TransactionInfoDto> getStationTransactionsByStationAndPeriod(
-            TransactionInfoDomain onlyTimeTxDomain, String stationName, Pageable pageable
+            LocalDateTime start, LocalDateTime end, String stationName, Pageable pageable
     ){
+        TransactionInfoDomain onlyTimeTxDomain = TransactionInfoDomain.fromLocalDateTimeToDomain(
+                start
+                ,end
+        );
         String stationId = chargingStationRepository.findStationIdByStationName(stationName);
 
         Page<TransactionInfoDomain> txInfoDomains = txInfoRepository.findByStationIdAndCreatedAtBetween(
