@@ -6,9 +6,11 @@ import com.example.quaterback.api.domain.charger.repository.SpringDataJpaCharger
 import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.domain.txinfo.repository.JpaTxInfoRepository;
 import com.example.quaterback.api.domain.txinfo.repository.SpringDataJpaTxInfoRepository;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
 import com.example.quaterback.api.feature.managing.dto.apiRequest.CreateTransactionInfoRequest;
+import com.example.quaterback.api.feature.managing.dto.txInfo.TransactionInfoDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,7 @@ public class TransactionInfoService {
     private final ChargingStationRepository chargingStationRepository;
     private final SpringDataJpaTxInfoRepository springDataJpaTxInfoRepository;
     private final SpringDataJpaChargerRepository springDataJpaChargerRepository;
-
+    private final JpaTxInfoRepository jpaTxInfoRepository;
     //charger 별 충전기록 얻기
     public List<TransactionInfoEntity> getChargerTransactionsByStationAndPeriod(LocalDateTime start,
                                                                                 LocalDateTime end,
@@ -69,6 +71,14 @@ public class TransactionInfoService {
                 .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
         return tXInfoEntity;
     }
+
+
+    public TransactionInfoDto getOneTxInfo(String transactionId){
+        TransactionInfoDomain txDomain = TransactionInfoDomain.transactionIdDomain(transactionId);
+        TransactionInfoDomain fullTxDomain = jpaTxInfoRepository.getOneTxInfoByTxId(txDomain);
+        return new TransactionInfoDto(fullTxDomain);
+    }
+
 
     public void saveTxInfo(CreateTransactionInfoRequest request){
         TransactionInfoDomain txInfoDomain = request.toDomain();

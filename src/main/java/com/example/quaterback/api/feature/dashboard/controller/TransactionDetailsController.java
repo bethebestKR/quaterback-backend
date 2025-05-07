@@ -1,6 +1,5 @@
 package com.example.quaterback.api.feature.dashboard.controller;
-
-import com.example.quaterback.api.domain.station.service.ChargingStationService;
+import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
 import com.example.quaterback.api.feature.managing.dto.apiRequest.CreateTransactionInfoRequest;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionDetailsController {
     private final TransactionInfoService transactionInfoService;
-    private final ChargingStationService chargingStationService;
 
     @GetMapping(value = "api/v1/charging-station/records", produces = "application/json")
     public ResponseEntity<ApiResponse<PageResponse<TransactionInfoDto>>> getDetailsV1(
@@ -42,7 +39,7 @@ public class TransactionDetailsController {
                 start, end, stationName, pageable
         );
 
-       Page<TransactionInfoDto> dtoPage = transactionInfoPage.map(TransactionInfoDto :: new);
+       Page<TransactionInfoDto> dtoPage = transactionInfoPage.map(entity -> new TransactionInfoDto(new TransactionInfoDomain()));
        PageResponse<TransactionInfoDto> pageResponse = new PageResponse<>(dtoPage);
 
         return ResponseEntity.ok(new ApiResponse("success", pageResponse));
@@ -72,7 +69,13 @@ public class TransactionDetailsController {
         return ResponseEntity.ok(new ApiResponse<>("success", transactionSummaryDto));
     }
 
-
+    @GetMapping("api/v1/charging-station/record")
+    public ResponseEntity<ApiResponse<TransactionInfoDto>> getOneTxInfo(
+            @RequestParam("transactionId") String transactionId
+    ){
+        TransactionInfoDto result = transactionInfoService.getOneTxInfo(transactionId);
+        return ResponseEntity.ok(new ApiResponse<>("success", result));
+    }
 //     @GetMapping("api/v1/charging-station/names")
 //     public List<String> getStationNames(
 //     ) {

@@ -64,4 +64,13 @@ public class JpaTxInfoRepository implements TxInfoRepository {
                                                                           Pageable pageable) {
         return springDataJpaTxInfoRepository.findByStationIdAndPeriod(stationId, start, end, pageable);
     }
+
+    @Override
+    public TransactionInfoDomain getOneTxInfoByTxId(TransactionInfoDomain txInfoDomain) {
+        TransactionInfoEntity txEntity = springDataJpaTxInfoRepository.findByTransactionId(txInfoDomain.getTransactionId())
+                .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
+        return TransactionInfoDomain.fromTxEntityDomain(txEntity);
+    }
+
+
 }

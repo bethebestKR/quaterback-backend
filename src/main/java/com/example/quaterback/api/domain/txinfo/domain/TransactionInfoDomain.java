@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.txinfo.domain;
 
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import lombok.*;
 
@@ -41,4 +42,22 @@ public class TransactionInfoDomain {
                 .build();
     }
 
+    public static TransactionInfoDomain transactionIdDomain(String transactionId){
+        return TransactionInfoDomain.builder()
+                .transactionId(transactionId)
+                .build();
+    }
+    public static TransactionInfoDomain fromTxEntityDomain(TransactionInfoEntity entity){
+        return TransactionInfoDomain.builder()
+                .transactionId(entity.getTransactionId())
+                .endedTime(entity.getEndedTime())
+                .startedTime(entity.getStartedTime())
+                .stationId(entity.getStationId())
+                .vehicleNo(entity.getVehicleNo())
+                .userId(entity.getUserId())
+                .evseId(entity.getEvseId().getEvseId())
+                .totalMeterValue(entity.getTotalMeterValue())
+                .totalPrice(entity.getTotalPrice())
+                .build();
+    }
 }

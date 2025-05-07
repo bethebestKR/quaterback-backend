@@ -22,5 +22,6 @@ public interface TxInfoRepository {
                                                                    String stationId,
                                                                    Pageable pageable);
 
+    TransactionInfoDomain getOneTxInfoByTxId(TransactionInfoDomain txInfoDomain);
 
 }

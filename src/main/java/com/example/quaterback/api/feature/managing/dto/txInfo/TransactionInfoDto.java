@@ -1,5 +1,6 @@
 package com.example.quaterback.api.feature.managing.dto.txInfo;
 
+import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import lombok.Data;
 import lombok.Getter;
@@ -29,15 +30,15 @@ public class TransactionInfoDto {
         }
     }
 
-    public TransactionInfoDto(TransactionInfoEntity entity) {
-        this.transactionId = entity.getTransactionId();
-        this.userId = entity.getUserId();
-        this.vehicleNo = entity.getVehicleNo();
+    public TransactionInfoDto(TransactionInfoDomain domain) {
+        this.transactionId = domain.getTransactionId();
+        this.userId = domain.getUserId();
+        this.vehicleNo = domain.getVehicleNo();
         this.chargeSummary = new ChargeSummary(
-                entity.getStartedTime(),
-                entity.getEndedTime(),
-                entity.getTotalMeterValue(),
-                entity.getTotalPrice()
+                domain.getStartedTime(),
+                domain.getEndedTime(),
+                domain.getTotalMeterValue(),
+                domain.getTotalPrice()
         );
     }
 }
