@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
+import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import org.springframework.data.domain.Page;
@@ -17,8 +18,7 @@ public interface TxInfoRepository {
                                                                    LocalDateTime end,
                                                                    Long chargerPk);
 
-    Page<TransactionInfoEntity> findByStationIdAndCreatedAtBetween(LocalDateTime start,
-                                                                   LocalDateTime end,
+    Page<TransactionInfoDomain> findByStationIdAndCreatedAtBetween(TransactionInfoDomain domain,
                                                                    String stationId,
                                                                    Pageable pageable);
 

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 public class ChargingStationDomain {
     private String stationId;
+    private String stationName;
     private String model;
     private String vendorId;
     private Double latitude;

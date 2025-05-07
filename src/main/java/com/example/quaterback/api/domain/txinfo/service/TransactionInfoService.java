@@ -55,23 +55,17 @@ public class TransactionInfoService {
 
 
 
-    public Page<TransactionInfoEntity> getStationTransactionsByStationAndPeriod(
-            LocalDateTime start, LocalDateTime end, String stationName, Pageable pageable
+    public Page<TransactionInfoDto> getStationTransactionsByStationAndPeriod(
+            TransactionInfoDomain onlyTimeTxDomain, String stationName, Pageable pageable
     ){
         String stationId = chargingStationRepository.findStationIdByStationName(stationName);
 
-        Page<TransactionInfoEntity> transactionInfoEntities = txInfoRepository.findByStationIdAndCreatedAtBetween(
-                start, end, stationId, pageable
+        Page<TransactionInfoDomain> txInfoDomains = txInfoRepository.findByStationIdAndCreatedAtBetween(
+                onlyTimeTxDomain, stationId, pageable
         );
-        return transactionInfoEntities;
+        Page<TransactionInfoDto> dtoPage = txInfoDomains.map(domain -> new TransactionInfoDto(domain));
+        return dtoPage;
     }
-
-    public TransactionInfoEntity getTxInfoByTxId(String transactionId){
-        TransactionInfoEntity tXInfoEntity = springDataJpaTxInfoRepository.findByTransactionId(transactionId)
-                .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
-        return tXInfoEntity;
-    }
-
 
     public TransactionInfoDto getOneTxInfo(String transactionId){
         TransactionInfoDomain txDomain = TransactionInfoDomain.transactionIdDomain(transactionId);

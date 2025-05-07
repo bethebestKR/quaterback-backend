@@ -18,13 +18,13 @@ public class TransactionInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String transactionId;
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
     private String vehicleNo;
     private String userId;
     private String stationId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eves_id")
     private ChargerEntity evseId;
@@ -36,6 +36,7 @@ public class TransactionInfoEntity {
         return TransactionInfoEntity.builder()
                 .transactionId(domain.getTransactionId())
                 .startedTime(domain.getStartedTime())
+                .endedTime(domain.getEndedTime())
                 .vehicleNo(domain.getVehicleNo())
                 .userId(domain.getUserId())
                 .stationId(domain.getStationId())

@@ -23,9 +23,10 @@ public class CreateTransactionInfoRequest {
     public TransactionInfoDomain toDomain(){
         return TransactionInfoDomain.builder()
                 .transactionId(transactionId)
-                .startedTime(startedTime)
-                .vehicleNo(vehicleNo)
                 .userId(userId)
+                .vehicleNo(vehicleNo)
+                .startedTime(startedTime)
+                .endedTime(endedTime)
                 .stationId(stationId)
                 .evseId(evseId)
                 .totalMeterValue(totalMeterValue)

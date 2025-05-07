@@ -25,8 +25,8 @@ import java.util.List;
 public class TransactionDetailsController {
     private final TransactionInfoService transactionInfoService;
 
-    @GetMapping(value = "api/v1/charging-station/records", produces = "application/json")
-    public ResponseEntity<ApiResponse<PageResponse<TransactionInfoDto>>> getDetailsV1(
+    @GetMapping(value = "api/v1/charging-station/records")
+    public ResponseEntity<ApiResponse<PageResponse<TransactionInfoDto>>> getDetails(
             @RequestParam("fistDate") LocalDate firstDate,
             @RequestParam("secondDate") LocalDate secondDate,
             @RequestParam("stationName") String stationName,
@@ -35,12 +35,16 @@ public class TransactionDetailsController {
         LocalDateTime start = firstDate.atStartOfDay();
         LocalDateTime end = secondDate.atTime(LocalTime.MAX);
 
-        Page<TransactionInfoEntity> transactionInfoPage = transactionInfoService.getStationTransactionsByStationAndPeriod(
-                start, end, stationName, pageable
+        TransactionInfoDomain onlyTimeTxDomain = TransactionInfoDomain.fromLocalDateTimeToDomain(
+                start
+                ,end
         );
 
-       Page<TransactionInfoDto> dtoPage = transactionInfoPage.map(entity -> new TransactionInfoDto(new TransactionInfoDomain()));
-       PageResponse<TransactionInfoDto> pageResponse = new PageResponse<>(dtoPage);
+        Page<TransactionInfoDto> dtoPage = transactionInfoService.getStationTransactionsByStationAndPeriod(
+                onlyTimeTxDomain, stationName, pageable
+        );
+
+        PageResponse<TransactionInfoDto> pageResponse = new PageResponse<>(dtoPage);
 
         return ResponseEntity.ok(new ApiResponse("success", pageResponse));
     }
@@ -96,7 +100,7 @@ public class TransactionDetailsController {
     public  ResponseEntity<ApiResponse<String>> createTxInfo(
             @RequestBody CreateTransactionInfoRequest request
     ){
-        log.info("adadf{}", request.getTotalMeterValue());
+
         transactionInfoService.saveTxInfo(request);
 
         return ResponseEntity.ok(new ApiResponse<>("success","created"));

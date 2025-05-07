@@ -60,4 +60,14 @@ public class TransactionInfoDomain {
                 .totalPrice(entity.getTotalPrice())
                 .build();
     }
+
+    public static TransactionInfoDomain fromLocalDateTimeToDomain(
+            LocalDateTime start
+            ,LocalDateTime end)
+    {
+        return TransactionInfoDomain.builder()
+                .startedTime(start)
+                .endedTime(end)
+                .build();
+    }
 }

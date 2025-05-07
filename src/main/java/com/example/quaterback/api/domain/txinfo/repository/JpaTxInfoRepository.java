@@ -58,11 +58,19 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     }
 
     @Override
-    public Page<TransactionInfoEntity> findByStationIdAndCreatedAtBetween(LocalDateTime start,
-                                                                          LocalDateTime end,
+    public Page<TransactionInfoDomain> findByStationIdAndCreatedAtBetween(TransactionInfoDomain domain,
                                                                           String stationId,
                                                                           Pageable pageable) {
-        return springDataJpaTxInfoRepository.findByStationIdAndPeriod(stationId, start, end, pageable);
+        LocalDateTime start = domain.getStartedTime();
+        LocalDateTime end = domain.getEndedTime();
+
+        Page<TransactionInfoEntity> txInfoEntities =  springDataJpaTxInfoRepository.findByStationIdAndPeriod(
+                stationId, start, end, pageable
+        );
+
+        Page<TransactionInfoDomain> txInfoDomains = txInfoEntities
+                .map(entity -> TransactionInfoDomain.fromTxEntityDomain(entity));
+        return txInfoDomains;
     }
 
     @Override
