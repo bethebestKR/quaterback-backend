@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.txinfo.entity;
 
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,18 +25,23 @@ public class TransactionInfoEntity {
     private String vehicleNo;
     private String userId;
     private String stationId;
-    private Integer evseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "eves_id")
+    private ChargerEntity evseId;
+
     private Integer totalMeterValue;
     private Integer totalPrice;
 
-    public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain) {
+    public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain, ChargerEntity chargerEntity) {
         return TransactionInfoEntity.builder()
                 .transactionId(domain.getTransactionId())
                 .startedTime(domain.getStartedTime())
                 .vehicleNo(domain.getVehicleNo())
                 .userId(domain.getUserId())
                 .stationId(domain.getStationId())
-                .evseId(domain.getEvseId())
+                .totalPrice(domain.getTotalPrice())
+                .totalMeterValue(domain.getTotalMeterValue())
+                .evseId(chargerEntity)
                 .build();
     }
 
@@ -45,4 +51,5 @@ public class TransactionInfoEntity {
         totalPrice = domain.getTotalPrice();
         return transactionId;
     }
+
 }
