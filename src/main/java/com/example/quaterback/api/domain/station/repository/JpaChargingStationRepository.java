@@ -39,4 +39,11 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
         return entity.getStationId();
     }
 
+    @Override
+    public String findStationIdByStationName(String stationName) {
+        ChargingStationEntity entity = chargingStationRepository.findByStationName(stationName)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        return entity.getStationId();
+    }
+
 }
