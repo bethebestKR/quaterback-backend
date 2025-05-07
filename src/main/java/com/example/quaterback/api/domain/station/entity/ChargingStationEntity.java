@@ -23,8 +23,10 @@ public class ChargingStationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String stationId;
+
+    private String stationName;
     private String model;
     private String vendorId;
     private Double latitude;
