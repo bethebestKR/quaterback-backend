@@ -4,6 +4,8 @@ import com.example.quaterback.api.domain.login.service.ReissueService;
 import com.example.quaterback.common.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +29,4 @@ public class ReissueController {
         response.addCookie(CookieUtil.createCookie("refreshToken", newRefreshToken));
         return new ResponseEntity<>("reissued refresh token", HttpStatus.OK);
     }
-
 }

@@ -30,7 +30,7 @@ public interface TxInfoRepository {
 
     List<HourlyCongestionQuery> findHourlyCountsByStationId(String stationId);
 
-    Page<TransactionInfoDomain> findAllByEvseId(Integer evseId, Pageable pageable);
+    Page<TransactionInfoDomain> findAllByEvseId(String stationId, Integer evseId, Pageable pageable);
 
-   DailyUsageQuery findDailyUsageByEvseIdAndDate(Integer evseId, LocalDate date);
+   DailyUsageQuery findDailyUsageByEvseIdAndDate(String stationId, Integer evseId, LocalDate date);
 }

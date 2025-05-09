@@ -70,16 +70,15 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     }
 
     @Override
-    public Page<TransactionInfoDomain> findAllByEvseId(Integer evseId, Pageable pageable) {
-        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findAllByEvseId(evseId, pageable);
+    public Page<TransactionInfoDomain> findAllByEvseId(String stationId, Integer evseId, Pageable pageable) {
+        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findAllByEvseId(stationId, evseId, pageable);
 
         return entityPage.map(TransactionInfoEntity::toDomain);
     }
 
     @Override
-    public DailyUsageQuery findDailyUsageByEvseIdAndDate(Integer evseId, LocalDate date) {
-        return springDataJpaTxInfoRepository.findDailyUsageByEvseIdAndDate(evseId,date)
+    public DailyUsageQuery findDailyUsageByEvseIdAndDate(String stationId, Integer evseId, LocalDate date) {
+        return springDataJpaTxInfoRepository.findDailyUsageByEvseIdAndDate(stationId,evseId,date)
                 .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
-
     }
 }

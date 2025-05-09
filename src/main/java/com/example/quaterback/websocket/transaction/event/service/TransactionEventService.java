@@ -101,11 +101,11 @@ public class TransactionEventService {
         return converter.toHourlyCongestionList(queryList);
     }
 
-    public Page<TransactionInfoDomain> findTransactionInfo(Integer evseId, Pageable pageable) {
-        return txInfoRepository.findAllByEvseId(evseId, pageable);
+    public Page<TransactionInfoDomain> findTransactionInfo(String stationId, Integer evseId, Pageable pageable) {
+        return txInfoRepository.findAllByEvseId(stationId, evseId, pageable);
     }
 
-    public DailyUsageQuery findOneDayUsageInfo(Integer evseId, LocalDate date) {
-        return txInfoRepository.findDailyUsageByEvseIdAndDate(evseId, date);
+    public DailyUsageQuery findOneDayUsageInfo(String stationId, Integer evseId, LocalDate date) {
+        return txInfoRepository.findDailyUsageByEvseIdAndDate( stationId, evseId, date);
     }
 }

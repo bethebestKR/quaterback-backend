@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/monitoring")
@@ -41,24 +42,26 @@ public class StationMonitoringController {
         return stationMonitoringFacade.getEvseIds(stationId);
     }
 
-    @GetMapping("/charger-info/available/{evseId}")
+    @GetMapping("/charger-info/{stationId}/available/{evseId}")
     public AvailableChargerPageResponse getAvailableChargerInfo(
+            @PathVariable(name="stationId") String stationId,
             @PathVariable(name="evseId") Integer evseId,
             @RequestParam(name="page",defaultValue = "0") int page,
             @RequestParam(name ="size", defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("endedTime").descending());
-        return stationMonitoringFacade.getAvailableChargerInfo(evseId, pageable);
+        return stationMonitoringFacade.getAvailableChargerInfo(stationId, evseId, pageable);
     }
 
-    @GetMapping("/charger-info/unavailable/{evseId}")
+    @GetMapping("/charger-info/{stationId}/unavailable/{evseId}")
     public UnavailableChargerPageResponse getUnavailableChargerInfo(
+            @PathVariable(name="stationId") String stationId,
             @PathVariable(name="evseId") Integer evseId,
             @RequestParam(name="page",defaultValue = "0") int page,
             @RequestParam(name ="size", defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("endedTime").descending());
-        return stationMonitoringFacade.getUnavailableChargerInfo(evseId, pageable);
+        return stationMonitoringFacade.getUnavailableChargerInfo(stationId, evseId, pageable);
     }
 
     //todo 충전요금 추후 계발

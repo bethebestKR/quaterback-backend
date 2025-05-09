@@ -74,14 +74,14 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
             HOUR(t.startedTime), COUNT(t)
         )
         FROM TransactionInfoEntity t
-        WHERE t.stationId = :stationId
+        WHERE t.stationId = :stationId 
         GROUP BY HOUR(t.startedTime)
         ORDER BY HOUR(t.startedTime)
     """)
     List<HourlyCongestionQuery> findHourlyCountsByStationId(@Param("stationId") String stationId);
 
-    @Query("select t from TransactionInfoEntity t where t.evseId=:evseId")
-    Page<TransactionInfoEntity> findAllByEvseId(@Param("evseId")Integer evseId, Pageable pageable);
+    @Query("select t from TransactionInfoEntity t where t.evseId=:evseId and t.stationId =:stationId")
+    Page<TransactionInfoEntity> findAllByEvseId(@Param("stationId")String stationId, @Param("evseId")Integer evseId, Pageable pageable);
 
     @Query("""
     SELECT new com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery(
@@ -90,10 +90,11 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         SUM(t.totalPrice)              
     )
     FROM TransactionInfoEntity t
-    WHERE t.evseId = :evseId
+    WHERE t.evseId = :evseId and t.stationId = :stationId
       AND FUNCTION('DATE', t.startedTime) = :date
 """)
     Optional<DailyUsageQuery> findDailyUsageByEvseIdAndDate(
+            @Param("stationId") String stationId,
             @Param("evseId") Integer evseId,
             @Param("date") LocalDate date
     );

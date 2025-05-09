@@ -40,18 +40,18 @@ public class StationMonitoringFacade {
         return chargerService.getEvesId(stationId);
     }
 
-    public AvailableChargerPageResponse getAvailableChargerInfo(Integer evseId, Pageable pageable) {
-        Page<TransactionInfoDomain> domainPage = transactionEventService.findTransactionInfo(evseId, pageable);
+    public AvailableChargerPageResponse getAvailableChargerInfo(String stationId, Integer evseId, Pageable pageable) {
+        Page<TransactionInfoDomain> domainPage = transactionEventService.findTransactionInfo(stationId,evseId, pageable);
 
-        DailyUsageQuery today = transactionEventService.findOneDayUsageInfo(evseId, LocalDate.now());
-        DailyUsageQuery yesterday = transactionEventService.findOneDayUsageInfo(evseId, LocalDate.now().minusDays(1));
+        DailyUsageQuery today = transactionEventService.findOneDayUsageInfo( stationId, evseId, LocalDate.now());
+        DailyUsageQuery yesterday = transactionEventService.findOneDayUsageInfo( stationId,evseId, LocalDate.now().minusDays(1));
 
         DailyUsageDto dailyUsage = DailyUsageDto.from(today, yesterday);
         return AvailableChargerPageResponse.from(dailyUsage,domainPage);
     }
 
-    public UnavailableChargerPageResponse getUnavailableChargerInfo(Integer evseId, Pageable pageable) {
-        Page<TransactionInfoDomain> domainPage = transactionEventService.findTransactionInfo(evseId, pageable);
+    public UnavailableChargerPageResponse getUnavailableChargerInfo(String stationId, Integer evseId, Pageable pageable) {
+        Page<TransactionInfoDomain> domainPage = transactionEventService.findTransactionInfo(stationId,evseId, pageable);
         return UnavailableChargerPageResponse.from(domainPage);
     }
 }
