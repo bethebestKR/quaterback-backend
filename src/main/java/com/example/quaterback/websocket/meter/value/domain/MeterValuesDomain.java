@@ -19,4 +19,7 @@ public class MeterValuesDomain {
 
     private List<MeterValue> meterValue;
 
+    public MeterValue extractFirstMeterValue() {
+        return meterValue.get(0);
+    }
 }

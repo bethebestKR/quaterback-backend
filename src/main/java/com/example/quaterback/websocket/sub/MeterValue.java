@@ -36,4 +36,8 @@ public class MeterValue {
                 ))
                 .build();
     }
+
+    public SampledValue extractFirstSampledValue() {
+        return sampledValues.get(0);
+    }
 }
