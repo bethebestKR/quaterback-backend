@@ -7,22 +7,26 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
-import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface TxInfoRepository {
     String save(TransactionInfoDomain domain);
 
     String updateEndTime(TransactionInfoDomain domain);
+
+    List<TransactionInfoDomain> findByChargerPkAndCreatedAtBetween(TransactionInfoDomain domain,
+                                                                   Long chargerPk);
+
+    Page<TransactionInfoDomain> findByStationIdAndCreatedAtBetween(TransactionInfoDomain domain,
+                                                                   String stationId,
+                                                                   Pageable pageable);
+
+    TransactionInfoDomain getOneTxInfoByTxId(TransactionInfoDomain txInfoDomain);
+
     Page<TransactionInfoDomain> findByIdTokenOrderByStartedTimeDesc(String idToken, Pageable pageable);
     Page<TransactionInfoDomain> findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(String idToken, LocalDate startTime, LocalDate endTime, Pageable pageable);
 
