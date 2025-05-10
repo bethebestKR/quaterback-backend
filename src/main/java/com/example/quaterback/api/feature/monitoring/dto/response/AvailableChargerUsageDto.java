@@ -22,7 +22,7 @@ public record AvailableChargerUsageDto(
                 domain.getTotalPrice(),
                 domain.getVehicleNo(),
                 domain.getStationId(),     // → chargerModel로 교체 필요 시 수정
-                domain.getUserId(),        // → approvalNumber로 교체 필요 시 수정
+                domain.getIdToken(),        // → approvalNumber로 교체 필요 시 수정
                 "00"                       // → errorCode가 도메인에 없으면 고정값
         );
     }
