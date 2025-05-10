@@ -1,12 +1,15 @@
 package com.example.quaterback.api.domain.login.jwt;
 
 import com.example.quaterback.api.domain.login.service.ReissueService;
+import com.example.quaterback.api.feature.login.dto.LoginRequest;
+import com.example.quaterback.api.feature.login.dto.LoginResponse;
 import com.example.quaterback.common.util.CookieUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,22 +19,35 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
+@Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final ReissueService reissueService;
 
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ReissueService reissueService) {
+        setFilterProcessesUrl("/api/login");
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.reissueService = reissueService;
+    }
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            LoginRequest loginRequest = mapper.readValue(request.getInputStream(), LoginRequest.class);
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+            String username = loginRequest.getUsername();
+            String password = loginRequest.getPassword();
 
-        return authenticationManager.authenticate(authToken);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+            return authenticationManager.authenticate(authToken);
+        } catch (IOException e) {
+            throw new RuntimeException("Faild to parse login request", e);
+        }
     }
 
     @Override
@@ -47,6 +63,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(CookieUtil.createCookie("refreshToken", refreshToken));
         response.setStatus(HttpStatus.OK.value());
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        LoginResponse loginResponse = new LoginResponse(username);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(loginResponse);
+        response.getWriter().write(json);
+
     }
 
     @Override

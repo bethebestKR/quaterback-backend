@@ -1,5 +1,7 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
+import com.example.quaterback.api.domain.charger.repository.SpringDataJpaChargerRepository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +28,16 @@ import java.util.Optional;
 public class JpaTxInfoRepository implements TxInfoRepository {
 
     private final SpringDataJpaTxInfoRepository springDataJpaTxInfoRepository;
+    private final SpringDataJpaChargerRepository springDataJpaChargerRepository;
 
     @Override
     public String save(TransactionInfoDomain domain) {
-        TransactionInfoEntity entity = TransactionInfoEntity.fromTransactionInfoDomain(domain);
+        String stationId = domain.getStationId();
+        Integer evseId = domain.getEvseId();
+        ChargerEntity chargerEntity = springDataJpaChargerRepository.findByStation_StationIdAndEvseId(stationId, evseId)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        TransactionInfoEntity entity = TransactionInfoEntity.fromTransactionInfoDomain(domain, chargerEntity);
         springDataJpaTxInfoRepository.save(entity);
         return entity.getTransactionId();
     }
@@ -81,4 +91,17 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         return springDataJpaTxInfoRepository.findDailyUsageByEvseIdAndDate(stationId,evseId,date)
                 .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
     }
+
+    @Override
+    public Page<TransactionInfoDomain> findByIdTokenOrderByStartedTimeDesc(String idToken, Pageable pageable) {
+        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findByIdTokenOrderByStartedTimeDesc(idToken, pageable);
+        return entityPage.map(TransactionInfoEntity::toDomain);
+    }
+
+    @Override
+    public Page<TransactionInfoDomain> findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(String idToken, LocalDate startTime, LocalDate endTime, Pageable pageable) {
+        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, startTime, endTime, pageable);
+        return entityPage.map(TransactionInfoEntity::toDomain);
+    }
+
 }

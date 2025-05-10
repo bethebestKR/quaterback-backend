@@ -48,9 +48,9 @@ public class SecurityConfig {
         //인가 설정
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers(
-                        "/login",
+                        "/api/login",
                         "/join",
-                        "/reissue",
+                        "/api/reissue",
                         "/ocpp/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
