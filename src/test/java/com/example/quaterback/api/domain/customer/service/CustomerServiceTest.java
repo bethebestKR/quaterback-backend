@@ -43,14 +43,14 @@ class CustomerServiceTest {
         CustomerDomain customer = mock(CustomerDomain.class);
         Page<CustomerDomain> page = new PageImpl<>(List.of(customer));
 
-        when(customerRepository.findByCustomerIdContating(keyword, pageable)).thenReturn(page);
+        when(customerRepository.findByCustomerIdContaining(keyword, pageable)).thenReturn(page);
 
         // when
-        CustomerListResponse result = customerService.findCustomers("customerId", keyword, pageable);
+        CustomerListResponse result = customerService.searchCustomersByCustomerId(keyword, pageable);
 
         // then
         assertThat(result).hasFieldOrProperty("customerList");
-        verify(customerRepository).findByCustomerIdContating(keyword, pageable);
+        verify(customerRepository).findByCustomerIdContaining(keyword, pageable);
     }
 
     @Test
@@ -64,7 +64,7 @@ class CustomerServiceTest {
         when(customerRepository.findByCustomerNameContaining(keyword, pageable)).thenReturn(page);
 
         //when
-        CustomerListResponse result = customerService.findCustomers("customerName", keyword, pageable);
+        CustomerListResponse result = customerService.searchCustomersByCustomerName(keyword, pageable);
 
         //then
         assertThat(result).hasFieldOrProperty("customerList");
@@ -81,7 +81,7 @@ class CustomerServiceTest {
         when(customerRepository.findAll(pageable)).thenReturn(page);
 
         //when
-        CustomerListResponse result = customerService.findCustomers(null, null, pageable);
+        CustomerListResponse result = customerService.findAllCustomers(pageable);
 
         //then
         assertThat(result).hasFieldOrProperty("customerList");
@@ -148,7 +148,7 @@ class CustomerServiceTest {
 
         //when
         CustomerChargedLogListResponse result =
-                customerService.findChargedLogListByCustomerId(customerId, null, null, pageable);
+                customerService.findAllChargedLogListByCustomerId(customerId, pageable);
 
         //then
         assertThat(result).hasFieldOrProperty("customerChargedLogList");
@@ -179,7 +179,7 @@ class CustomerServiceTest {
         when(txInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, start, end, pageable)).thenReturn(page);
 
         CustomerChargedLogListResponse result =
-                customerService.findChargedLogListByCustomerId(customerId, start, end, pageable);
+                customerService.findChargedLogListByCustomerIdAndPeriod(customerId, start, end, pageable);
 
         assertThat(result).hasFieldOrProperty("customerChargedLogList");
         verify(txInfoRepository).findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, start, end, pageable);

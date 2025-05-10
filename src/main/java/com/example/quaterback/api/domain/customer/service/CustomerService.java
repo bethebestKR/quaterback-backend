@@ -27,7 +27,7 @@ public class CustomerService {
     }
 
     public CustomerListResponse searchCustomersByCustomerId(String customerId, Pageable pageable) {
-        Page<CustomerDomain> result = customerRepository.findByCustomerIdContating(customerId, pageable);
+        Page<CustomerDomain> result = customerRepository.findByCustomerIdContaining(customerId, pageable);
         return CustomerListResponse.from(result.map(CustomerResponse::fromDomain));
     }
 

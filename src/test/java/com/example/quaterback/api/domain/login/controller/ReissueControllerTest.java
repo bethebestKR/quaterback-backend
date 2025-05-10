@@ -1,6 +1,5 @@
 package com.example.quaterback.api.domain.login.controller;
 
-import com.example.quaterback.api.domain.login.controller.ReissueController;
 import com.example.quaterback.api.domain.login.service.ReissueService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -46,12 +46,12 @@ class ReissueControllerTest {
         given(reissueService.getNewRefreshToken(oldRefreshToken)).willReturn(newRefreshToken);
 
         //when & then
-        mockMvc.perform(post("/reissue")
+        mockMvc.perform(post("/api/reissue")
                         .cookie(cookie)
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Authorization", "Bearer " + newAccessToken))
                 .andExpect(cookie().value("refreshToken", newRefreshToken))
-                .andExpect(content().string("reissued refresh token"));
+                .andExpect(jsonPath("$.result").value("success"));
     }
 }

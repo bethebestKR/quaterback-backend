@@ -2,6 +2,7 @@ package com.example.quaterback.websocket.transaction.event.fixture;
 
 import com.example.quaterback.websocket.sub.MeterValue;
 import com.example.quaterback.websocket.sub.SampledValue;
+import com.example.quaterback.websocket.sub.SubIdToken;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.example.quaterback.websocket.transaction.event.domain.sub.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -106,7 +107,7 @@ public class TransactionEventFixture {
                 seqNo,
                 new TransactionInfo(transactionId),
                 new Evse(id),
-                new TxIdToken(idToken, "Central"),
+                new SubIdToken(idToken, "Central"),
                 new TransactionCustomData("quarterback", new VehicleInfo(vehicleNo,model,batteryCapacityKWh,requestedEnergyKWh)),
                 null
         );
@@ -194,7 +195,7 @@ public class TransactionEventFixture {
                 seqNo,
                 new TransactionInfo(transactionId),
                 new Evse(id),
-                new TxIdToken(idToken, "Central"),
+                new SubIdToken(idToken, "Central"),
                 null,
                 List.of(new MeterValue(
                         timestamp,
