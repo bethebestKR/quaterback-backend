@@ -1,4 +1,4 @@
-package com.example.quaterback.websocket.transaction.event.domain.sub;
+package com.example.quaterback.websocket.sub;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TxIdToken {
+public class SubIdToken {
     private String idToken;
     private String type;
 }
