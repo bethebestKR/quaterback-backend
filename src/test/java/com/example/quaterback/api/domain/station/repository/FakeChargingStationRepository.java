@@ -3,7 +3,9 @@ package com.example.quaterback.api.domain.station.repository;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
+import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,6 +29,31 @@ public class FakeChargingStationRepository implements ChargingStationRepository 
     @Override
     public String updateEss(ChargingStationDomain domain) {
         return "";
+    }
+
+    @Override
+    public List<StationFullInfoQuery> getFullStationInfos() {
+        return List.of();
+    }
+
+    @Override
+    public StationFullInfoQuery getFullStationInfo(String stationName) {
+        return null;
+    }
+
+    @Override
+    public int deleteByName(String stationName) {
+        return 0;
+    }
+
+    @Override
+    public List<ChargingStationDomain> findAll() {
+        return List.of();
+    }
+
+    @Override
+    public ChargingStationDomain findByStationName(String stationName) {
+        return null;
     }
 
     public void initializeStorage(ChargingStationEntity entity) {

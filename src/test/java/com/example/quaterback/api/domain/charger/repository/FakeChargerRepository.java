@@ -8,6 +8,7 @@ import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.domain.station.fixture.ChargingStationFixture;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,6 +27,11 @@ public class FakeChargerRepository implements ChargerRepository {
         entity.updateChargerStatus(domain.getChargerStatus());
         storage.put(domain.getStationId() + domain.getEvseId(), entity);
         return entity.getEvseId();
+    }
+
+    @Override
+    public List<ChargerDomain> findAllByStationId(String stationId) {
+        return List.of();
     }
 
     public void initializeStorage(ChargerStatus status, LocalDateTime dateTime) {
