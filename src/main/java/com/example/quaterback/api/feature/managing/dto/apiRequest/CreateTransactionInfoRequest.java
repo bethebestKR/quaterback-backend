@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CreateTransactionInfoRequest {
     private String transactionId;
-    private String userId;
+    private String idToken;
     private String vehicleNo;
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
@@ -23,7 +23,7 @@ public class CreateTransactionInfoRequest {
     public TransactionInfoDomain toDomain(){
         return TransactionInfoDomain.builder()
                 .transactionId(transactionId)
-                .userId(userId)
+                .idToken(idToken)
                 .vehicleNo(vehicleNo)
                 .startedTime(startedTime)
                 .endedTime(endedTime)

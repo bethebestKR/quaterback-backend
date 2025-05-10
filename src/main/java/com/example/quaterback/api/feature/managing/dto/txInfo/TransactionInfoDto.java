@@ -1,9 +1,7 @@
 package com.example.quaterback.api.feature.managing.dto.txInfo;
 
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
-import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +9,7 @@ import java.time.LocalDateTime;
 public class TransactionInfoDto {
 
     private final String transactionId;
-    private final String userId;
+    private final String idToken;
     private final String vehicleNo;
     private final ChargeSummary chargeSummary;
 
@@ -32,7 +30,7 @@ public class TransactionInfoDto {
 
     public TransactionInfoDto(TransactionInfoDomain domain) {
         this.transactionId = domain.getTransactionId();
-        this.userId = domain.getUserId();
+        this.idToken = domain.getIdToken();
         this.vehicleNo = domain.getVehicleNo();
         this.chargeSummary = new ChargeSummary(
                 domain.getStartedTime(),
