@@ -3,18 +3,21 @@ package com.example.quaterback.api.domain.charger.entity;
 import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "charger_info")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ChargerEntity {
 
     @Id
@@ -28,9 +31,16 @@ public class ChargerEntity {
 
     private LocalDateTime updateStatusTimeStamp;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id", referencedColumnName = "stationId")
     private ChargingStationEntity station;
+
+    @OneToMany(mappedBy ="evseId", cascade = CascadeType.ALL)
+    private List<TransactionInfoEntity> txInfoList = new ArrayList<>();
+
+
+/***연관 관계 메서드 작성 필요!!!!***/
+
 
     public ChargerDomain toDomain() {
         return ChargerDomain.builder()
