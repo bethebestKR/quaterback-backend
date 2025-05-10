@@ -1,10 +1,11 @@
 package com.example.quaterback.websocket.transaction.event.domain;
 
 import com.example.quaterback.websocket.sub.MeterValue;
+import com.example.quaterback.websocket.sub.SubIdToken;
 import com.example.quaterback.websocket.transaction.event.domain.sub.Evse;
 import com.example.quaterback.websocket.transaction.event.domain.sub.TransactionCustomData;
 import com.example.quaterback.websocket.transaction.event.domain.sub.TransactionInfo;
-import com.example.quaterback.websocket.transaction.event.domain.sub.TxIdToken;
+
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class TransactionEventDomain {
 
     private TransactionInfo transactionInfo;
     private Evse evse;
-    private TxIdToken txIdToken;
+    private SubIdToken txIdToken;
     private TransactionCustomData customData;
     private List<MeterValue> meterValue;
 

@@ -24,7 +24,7 @@ public class TransactionLogEntity {
     private Integer meterValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "eves_id")
+    @JoinColumn(name = "evse_id")
     private ChargerEntity evseId;
 
     public static TransactionLogEntity fromTxLogDomain(TransactionLogDomain domain) {

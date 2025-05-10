@@ -15,6 +15,7 @@ import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongesti
 import com.example.quaterback.common.annotation.Converter;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.sub.MeterValue;
+import com.example.quaterback.websocket.sub.SubIdToken;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.example.quaterback.websocket.transaction.event.domain.sub.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,7 +46,7 @@ public class TransactionEventConverter {
                 .timestamp(LocalDateTime.parse(payload.path("timestamp").asText()))
                 .transactionInfo(new TransactionInfo(payload.path("transactionInfo").path("transactionId").asText()))
                 .evse(new Evse(payload.path("evse").path("id").asInt()))
-                .txIdToken(new TxIdToken(
+                .txIdToken(new SubIdToken(
                         payload.path("idToken").path("idToken").asText(),
                         payload.path("idToken").path("type").asText()))
                 .customData(new TransactionCustomData(
@@ -76,7 +77,7 @@ public class TransactionEventConverter {
                 .timestamp(LocalDateTime.parse(payload.path("timestamp").asText()))
                 .transactionInfo(new TransactionInfo(payload.path("transactionInfo").path("transactionId").asText()))
                 .evse(new Evse(payload.path("evse").path("id").asInt()))
-                .txIdToken(new TxIdToken(
+                .txIdToken(new SubIdToken(
                         payload.path("idToken").path("idToken").asText(),
                         payload.path("idToken").path("type").asText()))
                 .meterValue(List.of(
