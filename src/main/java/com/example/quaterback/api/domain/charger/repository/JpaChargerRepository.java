@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
 @Repository
 @RequiredArgsConstructor
 public class JpaChargerRepository implements ChargerRepository {
@@ -39,5 +41,14 @@ public class JpaChargerRepository implements ChargerRepository {
                 .map(ChargerDomain :: fromEntityToDomain)
                 .collect(Collectors.toList());
         return chargerDomains;
+    }
+
+    @Override
+    public List<ChargerDomain> findAllByStationId(String stationId) {
+        List<ChargerEntity> entityList = chargerRepository.findAllByStationId(stationId);
+
+        return entityList.stream()
+                .map(ChargerEntity::toDomain)
+                .toList();
     }
 }

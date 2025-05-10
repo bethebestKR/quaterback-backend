@@ -16,7 +16,7 @@ public class TransactionInfoDomain {
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
     private String vehicleNo;
-    private String userId;
+    private String idToken;
     private String stationId;
     private Integer evseId;
     private Integer totalMeterValue;
@@ -27,7 +27,7 @@ public class TransactionInfoDomain {
                 .transactionId(domain.extractTransactionId())
                 .startedTime(domain.getTimestamp())
                 .vehicleNo(domain.extractVehicleNo())
-                .userId(domain.extractUserId())
+                .idToken(domain.extractUserId())
                 .stationId(stationId)
                 .evseId(domain.extractEvseId())
                 .build();
@@ -54,7 +54,7 @@ public class TransactionInfoDomain {
                 .startedTime(entity.getStartedTime())
                 .stationId(entity.getStationId())
                 .vehicleNo(entity.getVehicleNo())
-                .userId(entity.getUserId())
+                .idToken(entity.getIdToken())
                 .evseId(entity.getEvseId().getEvseId())
                 .totalMeterValue(entity.getTotalMeterValue())
                 .totalPrice(entity.getTotalPrice())

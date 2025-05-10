@@ -18,11 +18,13 @@ public class TransactionInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String transactionId;
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
     private String vehicleNo;
-    private String userId;
+    private String idToken;
     private String stationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,11 +40,11 @@ public class TransactionInfoEntity {
                 .startedTime(domain.getStartedTime())
                 .endedTime(domain.getEndedTime())
                 .vehicleNo(domain.getVehicleNo())
-                .userId(domain.getUserId())
                 .stationId(domain.getStationId())
                 .totalPrice(domain.getTotalPrice())
                 .totalMeterValue(domain.getTotalMeterValue())
                 .evseId(chargerEntity)
+                .idToken(domain.getIdToken())
                 .build();
     }
 
@@ -53,4 +55,16 @@ public class TransactionInfoEntity {
         return transactionId;
     }
 
+
+
+    public TransactionInfoDomain toDomain() {
+        return TransactionInfoDomain.builder()
+                .transactionId(transactionId)
+                .startedTime(startedTime)
+                .endedTime(endedTime)
+                .vehicleNo(vehicleNo)
+                .totalMeterValue(totalMeterValue)
+                .totalPrice(totalPrice)
+                .build();
+    }
 }
