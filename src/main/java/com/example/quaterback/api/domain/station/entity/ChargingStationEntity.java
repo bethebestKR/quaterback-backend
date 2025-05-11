@@ -63,4 +63,18 @@ public class ChargingStationEntity {
     public void updateStationEssValue(Integer value){
         essValue = value;
     }
+
+    public static ChargingStationEntity fromCsDomain(ChargingStationDomain csDomain){
+        return ChargingStationEntity.builder()
+                .stationId(csDomain.getStationId())
+                .stationName(csDomain.getStationName())
+                .model(csDomain.getModel())
+                .vendorId(csDomain.getVendorId())
+                .latitude(csDomain.getLatitude())
+                .longitude(csDomain.getLongitude())
+                .address(csDomain.getAddress())
+                .updateStatusTimeStamp(csDomain.getUpdateStatusTimeStamp())
+                .stationStatus(csDomain.getStationStatus())
+                .build();
+    }
 }

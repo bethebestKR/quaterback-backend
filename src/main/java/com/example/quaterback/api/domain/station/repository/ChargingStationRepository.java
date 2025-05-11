@@ -1,12 +1,9 @@
 package com.example.quaterback.api.domain.station.repository;
 
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
-import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 
 import java.util.List;
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
-
-import java.util.List;
 
 public interface ChargingStationRepository {
     ChargingStationDomain findByStationId(String stationId);
@@ -22,4 +19,7 @@ public interface ChargingStationRepository {
     List<ChargingStationDomain> findAll();
 
     ChargingStationDomain findByStationName(String stationName);
+
+    void save(ChargingStationDomain chargingStationDomain);
+
 }

@@ -63,4 +63,14 @@ public class ChargerEntity {
             stationEntity.getChargerList().add(this);
         }
     }
+
+    public static ChargerEntity fromChargerDomainToEntity(ChargerDomain chargerDomain, ChargingStationEntity csEntity){
+        return ChargerEntity.builder()
+                .chargerStatus(chargerDomain.getChargerStatus())
+                .evseId(chargerDomain.getEvseId())
+                .updateStatusTimeStamp(chargerDomain.getUpdateStatusTimeStamp())
+                .station(csEntity)
+                .build();
+
+    }
 }
