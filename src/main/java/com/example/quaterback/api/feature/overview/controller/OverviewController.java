@@ -3,7 +3,7 @@ package com.example.quaterback.api.feature.overview.controller;
 import com.example.quaterback.api.domain.charger.service.ChargerService;
 import com.example.quaterback.api.domain.station.service.StationService;
 import com.example.quaterback.api.feature.managing.dto.apiResponse.ApiResponse;
-import com.example.quaterback.api.feature.overview.Exception.OverviewExceptionValidator;
+import com.example.quaterback.common.exception.StationIdValidator;
 import com.example.quaterback.api.feature.overview.dto.response.CsAndChargerParams;
 import com.example.quaterback.api.feature.overview.dto.response.StationOverviewResponse;
 import com.example.quaterback.api.feature.overview.service.OverviewService;
@@ -39,7 +39,7 @@ public class OverviewController {
     public ResponseEntity<ApiResponse<String>> createCs(
         @RequestBody CsAndChargerParams request
     ){
-        OverviewExceptionValidator.validateStationId(request.getStationId());
+        StationIdValidator.validateStationId(request.getStationId());
         overviewService.createCsAndCharger(request);
         return ResponseEntity.ok(new ApiResponse<>("success", "created"));
     }
