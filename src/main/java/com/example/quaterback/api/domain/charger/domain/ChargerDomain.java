@@ -2,6 +2,7 @@ package com.example.quaterback.api.domain.charger.domain;
 
 import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
+import com.example.quaterback.api.feature.overview.dto.response.CsAndChargerParams;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,14 @@ public class ChargerDomain {
                 .chargerStatus(entity.getChargerStatus())
                 .updateStatusTimeStamp(entity.getUpdateStatusTimeStamp())
                 .stationId(entity.getStation().getStationId())
+                .build();
+    }
+    public static ChargerDomain fromRequestToDomain(Integer evseId, String stationId){
+        return ChargerDomain.builder()
+                .evseId(evseId)
+                .stationId(stationId)
+                .chargerStatus(ChargerStatus.UNAVAILABLE)
+                .updateStatusTimeStamp(LocalDateTime.now())
                 .build();
     }
 }
