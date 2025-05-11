@@ -1,5 +1,8 @@
 package com.example.quaterback.websocket;
 
+import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
+import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,7 +27,7 @@ public class InactiveStationService {
     private final RedisHeartbeatMonitorService heartbeatMonitorService;
     private final ChargingStationRepository chargingStationRepository;
     private final RedisTemplate<String, String> stringRedisTemplate;
-
+    private final ChargerRepository chargerRepository;
     private static final long HEARTBEAT_INTERVAL_MS = 30_000;
 
     @Transactional
@@ -39,9 +43,15 @@ public class InactiveStationService {
             Long lastHeartbeat = heartbeatMonitorService.getLastHeartbeat(stationId);
             if (lastHeartbeat == null || isExpired(lastHeartbeat)) {
                 ChargingStationDomain domain = chargingStationRepository.findByStationId(stationId);
+                List<ChargerDomain> chargerDomains = chargerRepository.findByStationID(stationId);
                 if (domain != null) {
                     domain.updateStationStatus(StationStatus.INACTIVE);
                     chargingStationRepository.update(domain);
+
+                    for(ChargerDomain charger : chargerDomains){
+                        charger.updateChargerStatus(ChargerStatus.UNAVAILABLE);
+                        chargerRepository.update(charger);
+                    }
                     log.info("Station [{}] marked INACTIVE due to expired heartbeat", stationId);
                 } else {
                     log.warn("Station [{}] not found in DB", stationId);
