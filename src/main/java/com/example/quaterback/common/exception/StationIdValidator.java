@@ -1,12 +1,11 @@
-package com.example.quaterback.api.feature.overview.Exception;
+package com.example.quaterback.common.exception;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.regex.Pattern;
 
-public class OverviewExceptionValidator {
+public class StationIdValidator {
     private static final Pattern STATION_ID_PATTERN = Pattern.compile("^station-\\d+$");
 
     public static void validateStationId(String stationId){
