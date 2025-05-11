@@ -44,6 +44,7 @@ public class ChargingStationEntity {
     public ChargingStationDomain toDomain() {
         return ChargingStationDomain.builder()
                 .stationId(stationId)
+                .stationName(stationName)
                 .model(model)
                 .vendorId(vendorId)
                 .latitude(latitude)
