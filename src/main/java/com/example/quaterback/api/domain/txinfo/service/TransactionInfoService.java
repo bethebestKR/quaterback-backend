@@ -26,7 +26,6 @@ public class TransactionInfoService {
     private final TxInfoRepository txInfoRepository;
     private final ChargerRepository chargerRepository;
     private final ChargingStationRepository chargingStationRepository;
-    private final JpaTxInfoRepository jpaTxInfoRepository;
 
     //charger 별 충전기록 얻기
     public TransactionSummaryDto getChargerTransactionsByStationAndPeriod(LocalDateTime start,
@@ -84,14 +83,14 @@ public class TransactionInfoService {
 
     public TransactionInfoDto getOneTxInfo(String transactionId) {
         TransactionInfoDomain txDomain = TransactionInfoDomain.transactionIdDomain(transactionId);
-        TransactionInfoDomain fullTxDomain = jpaTxInfoRepository.getOneTxInfoByTxId(txDomain);
+        TransactionInfoDomain fullTxDomain = txInfoRepository.getOneTxInfoByTxId(txDomain);
         return new TransactionInfoDto(fullTxDomain);
     }
 
 
     public void saveTxInfo(CreateTransactionInfoRequest request) {
         TransactionInfoDomain txInfoDomain = request.toDomain();
-        jpaTxInfoRepository.save(txInfoDomain);
+        txInfoRepository.save(txInfoDomain);
     }
 
     public List<String> getCsNames() {
