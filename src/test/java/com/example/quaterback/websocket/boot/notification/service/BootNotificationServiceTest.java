@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
+import com.example.quaterback.api.domain.charger.repository.FakeChargerRepository;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
@@ -29,12 +30,14 @@ class BootNotificationServiceTest {
 
     private BootNotificationConverter converter;
     private FakeChargingStationRepository repository;
+    private FakeChargerRepository chargerRepository;
 
     @BeforeEach
     void setUp() {
         converter = new BootNotificationConverter();
         repository = new FakeChargingStationRepository();
-        bootNotificationService = new BootNotificationService(repository, converter, redisMappingService);
+        chargerRepository = new FakeChargerRepository();
+        bootNotificationService = new BootNotificationService(repository, converter, redisMappingService, chargerRepository);
     }
 
     @Test

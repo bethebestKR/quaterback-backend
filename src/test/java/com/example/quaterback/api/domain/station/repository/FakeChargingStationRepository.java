@@ -60,6 +60,11 @@ public class FakeChargingStationRepository implements ChargingStationRepository 
         return null;
     }
 
+    @Override
+    public void save(ChargingStationDomain chargingStationDomain) {
+
+    }
+
     public void initializeStorage(ChargingStationEntity entity) {
         storage.put(entity.getStationId(), entity);
     }
