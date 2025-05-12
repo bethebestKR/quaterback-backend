@@ -22,7 +22,7 @@ public class HeartBeatHandler implements OcppMessageHandler {
     private final RefreshTimeoutService refreshTimeoutService;
     @Override
     public String getAction() {
-        return "HeartBeat";
+        return "Heartbeat";
     }
 
     @Override
@@ -45,7 +45,7 @@ public class HeartBeatHandler implements OcppMessageHandler {
         try {
             session.sendMessage(new TextMessage(response.toString()));
         } catch (IOException e) {
-            log.error("Error sending BootNotificationResponse", e);
+            log.error("Error sending Heartbeat Response", e);
         }
     }
 
