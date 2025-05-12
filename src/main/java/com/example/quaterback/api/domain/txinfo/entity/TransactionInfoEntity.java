@@ -65,6 +65,8 @@ public class TransactionInfoEntity {
                 .vehicleNo(vehicleNo)
                 .totalMeterValue(totalMeterValue)
                 .totalPrice(totalPrice)
+                .stationId(stationId)
+                .idToken(idToken)
                 .build();
     }
 }

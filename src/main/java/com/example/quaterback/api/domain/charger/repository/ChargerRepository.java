@@ -12,4 +12,5 @@ public interface ChargerRepository {
     Integer update(ChargerDomain domain);
     List<ChargerDomain> findAllByStationId(String stationId);
     List<ChargerDomain> findByStationID(String stationId);
+    void save(ChargerDomain chargerDomain);
 }

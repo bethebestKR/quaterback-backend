@@ -80,11 +80,19 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
         return stationEntity.toDomain();
     }
+
+    @Override
+    public void save(ChargingStationDomain chargingStationDomain) {
+        ChargingStationEntity csEntity = ChargingStationEntity.fromCsDomain(chargingStationDomain);
+        chargingStationRepository.save(csEntity);
+    }
+
     @Override
     public String findStationIdByStationName(String stationName) {
         ChargingStationEntity entity = chargingStationRepository.findByStationName(stationName)
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
         return entity.getStationId();
     }
+
 
 }

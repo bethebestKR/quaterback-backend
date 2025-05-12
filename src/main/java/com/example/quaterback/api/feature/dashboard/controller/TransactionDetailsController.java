@@ -1,12 +1,12 @@
 package com.example.quaterback.api.feature.dashboard.controller;
-import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
-import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
 import com.example.quaterback.api.feature.managing.dto.apiRequest.CreateTransactionInfoRequest;
 import com.example.quaterback.api.feature.managing.dto.apiResponse.ApiResponse;
 import com.example.quaterback.api.feature.managing.dto.txInfo.PageResponse;
 import com.example.quaterback.api.feature.managing.dto.txInfo.TransactionInfoDto;
 import com.example.quaterback.api.feature.managing.dto.txInfo.TransactionSummaryDto;
+import com.example.quaterback.common.exception.StationIdValidator;
+import com.example.quaterback.common.exception.StationNameValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -67,29 +67,31 @@ public class TransactionDetailsController {
         TransactionInfoDto result = transactionInfoService.getOneTxInfo(transactionId);
         return ResponseEntity.ok(new ApiResponse<>("success", result));
     }
-//     @GetMapping("api/v1/charging-station/names")
-//     public List<String> getStationNames(
-//     ) {
-//        chargingStationService.getStationNames();
-//     }
-//    @GetMapping(value = "api/v1/charging-station/record", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<TransactionInfoDto> getTxInfo(
-//            @RequestParam("transactionId") String transactionId
-//    ){
-//        TransactionInfoEntity txInfoEntity = transactionInfoService.getTxInfoByTxId(transactionId);
-//        TransactionInfoDto txInfoDto = new TransactionInfoDto(txInfoEntity);
-//        return ResponseEntity.ok(txInfoDto);
-//    }
 
+     @GetMapping("api/v1/charging-station/names")
+     public ResponseEntity<ApiResponse<List<String>>> getStationNames(
+     ) {
+        return ResponseEntity.ok(new ApiResponse<>("success",
+                transactionInfoService.getCsNames()));
+     }
+
+     @GetMapping("api/v1/charging-station/chargers")
+     public ResponseEntity<ApiResponse<List<Integer>>> getEvseIds(
+             @RequestParam("stationName") String stationName
+     ){
+        StationNameValidator.validateStationName(stationName);
+        return ResponseEntity.ok(new ApiResponse<>("success"
+                ,transactionInfoService.getEvseIds(stationName)));
+     }
 
 
     @PostMapping("api/v1/charging-station/create-TxIfo")
     public  ResponseEntity<ApiResponse<String>> createTxInfo(
             @RequestBody CreateTransactionInfoRequest request
     ){
+        StationIdValidator.validateStationId(request.getStationId());
 
         transactionInfoService.saveTxInfo(request);
-
         return ResponseEntity.ok(new ApiResponse<>("success","created"));
     }
 }
