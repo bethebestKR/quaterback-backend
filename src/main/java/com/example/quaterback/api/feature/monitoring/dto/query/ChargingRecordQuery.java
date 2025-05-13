@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class ChargingRecordQuery {
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
-    private Integer price;
+    private Double price;
     private String transactionId;
 }

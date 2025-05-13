@@ -19,8 +19,8 @@ public class TransactionInfoDomain {
     private String idToken;
     private String stationId;
     private Integer evseId;
-    private Integer totalMeterValue;
-    private Integer totalPrice;
+    private Double totalMeterValue;
+    private Double totalPrice;
 
     public static TransactionInfoDomain fromStartedTxEventDomain(TransactionEventDomain domain, String stationId) {
         return TransactionInfoDomain.builder()
@@ -33,7 +33,7 @@ public class TransactionInfoDomain {
                 .build();
     }
 
-    public static TransactionInfoDomain fromEndedTxEventDomain(TransactionEventDomain domain, Integer totalMeterValue, Integer totalPrice) {
+    public static TransactionInfoDomain fromEndedTxEventDomain(TransactionEventDomain domain, Double totalMeterValue, Double totalPrice) {
         return TransactionInfoDomain.builder()
                 .transactionId(domain.extractTransactionId())
                 .endedTime(domain.getTimestamp())

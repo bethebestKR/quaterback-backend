@@ -8,6 +8,6 @@ import lombok.Getter;
 @Data
 @AllArgsConstructor
 public class TransactionSummaryDto {
-    private Integer totalMeterValue;
-    private Integer totalPrice;
+    private Double totalMeterValue;
+    private Double totalPrice;
 }

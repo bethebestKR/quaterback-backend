@@ -17,8 +17,8 @@ public class CreateTransactionInfoRequest {
     private LocalDateTime endedTime;
     private String stationId;
     private Integer evseId;
-    private Integer totalMeterValue;
-    private Integer totalPrice;
+    private Double totalMeterValue;
+    private Double totalPrice;
 
     public TransactionInfoDomain toDomain(){
         return TransactionInfoDomain.builder()

@@ -4,7 +4,7 @@ import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQu
 import lombok.Builder;
 
 @Builder
-public record DashboardSummaryResponse(Long usage, Long profit, Long discharge) {
+public record DashboardSummaryResponse(Long usage, Double profit, Double discharge) {
 
     public static DashboardSummaryResponse from(DashboardSummaryQuery query){
         return DashboardSummaryResponse.builder()

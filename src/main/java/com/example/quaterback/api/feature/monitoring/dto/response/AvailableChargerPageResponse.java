@@ -10,9 +10,9 @@ import java.util.List;
 @Builder
 public record AvailableChargerPageResponse(
         //일일정보
-        long totalChargedEnergy,
+        double totalChargedEnergy,
         int totalVehicleCount,
-        long totalRevenue,
+        double totalRevenue,
 
         //퍼센트계산
         int chargedEnergyDiffPercent,

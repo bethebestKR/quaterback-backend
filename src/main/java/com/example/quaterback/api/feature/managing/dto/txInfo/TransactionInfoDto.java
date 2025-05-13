@@ -17,10 +17,10 @@ public class TransactionInfoDto {
     public static class ChargeSummary {
         private final LocalDateTime startedTime;
         private final LocalDateTime endedTime;
-        private final Integer totalMeterValue;
-        private final Integer totalPrice;
+        private final Double totalMeterValue;
+        private final Double totalPrice;
 
-        public ChargeSummary(LocalDateTime startedTime, LocalDateTime endedTime, Integer totalMeterValue, Integer totalPrice) {
+        public ChargeSummary(LocalDateTime startedTime, LocalDateTime endedTime, Double totalMeterValue, Double totalPrice) {
             this.startedTime = startedTime;
             this.endedTime = endedTime;
             this.totalMeterValue = totalMeterValue;

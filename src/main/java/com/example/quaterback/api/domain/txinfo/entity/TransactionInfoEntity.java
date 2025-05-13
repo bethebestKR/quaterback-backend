@@ -31,8 +31,8 @@ public class TransactionInfoEntity {
     @JoinColumn(name = "evse_id")
     private ChargerEntity evseId;
 
-    private Integer totalMeterValue;
-    private Integer totalPrice;
+    private Double totalMeterValue;
+    private Double totalPrice;
 
     public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain, ChargerEntity chargerEntity) {
         return TransactionInfoEntity.builder()
