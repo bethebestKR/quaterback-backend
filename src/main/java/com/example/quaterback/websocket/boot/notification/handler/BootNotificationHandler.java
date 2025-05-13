@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.handler;
 
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.domain.txinfo.repository.SpringDataJpaTxInfoRepository;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
@@ -41,7 +42,7 @@ public class BootNotificationHandler implements OcppMessageHandler {
         String reason = payload.path("reason").asText();
         log.info("BootNotification reason - {}", reason);
         String sessionId = session.getId();
-    
+
         if (reason.equals("PowerUp")) {
             String stationId = bootNotificationService.updateStationStatus(jsonNode, session.getId());
             refreshTimeoutService.refreshTimeout(sessionId);
@@ -57,8 +58,13 @@ public class BootNotificationHandler implements OcppMessageHandler {
             payloadNode.put("status", "Accepted");
 
             ObjectNode customDataNode = mapper.createObjectNode();
-            Optional<String> transactionId = springDataJpaTxInfoRepository.findLatestTransactionId();
-            customDataNode.put("transactionId", transactionId.orElse("tx-000"));
+            Optional<TransactionInfoEntity> entity = springDataJpaTxInfoRepository.findFirstByOrderByTransactionIdDesc();
+            if(entity.isEmpty()){
+                customDataNode.put("transactionId", "tx-000");
+            }
+            else{
+                customDataNode.put("transactionId", entity.get().getTransactionId());
+            }
             // payload에 customData 추가
             payloadNode.put("customData", customDataNode);
             response.add(payloadNode);
