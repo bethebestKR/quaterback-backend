@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface SpringDataJpaChargerRepository extends JpaRepository<ChargerEntity, Long> {
     Optional<ChargerEntity> findByStation_StationIdAndEvseId(String stationId, Integer evseId);
+    List<ChargerEntity> findByStation_StationId(String stationId);
 
     @Query("select c from ChargerEntity c where c.station.stationId =:stationId")
     List<ChargerEntity> findAllByStationId(@Param("stationId")String stationId);

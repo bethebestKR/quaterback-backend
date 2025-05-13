@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.txlog.entity;
 
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
 import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,10 @@ public class TransactionLogEntity {
     private String transactionId;
     private LocalDateTime timestamp;
     private Integer meterValue;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evse_id")
+    private ChargerEntity evseId;
 
     public static TransactionLogEntity fromTxLogDomain(TransactionLogDomain domain) {
         return TransactionLogEntity.builder()

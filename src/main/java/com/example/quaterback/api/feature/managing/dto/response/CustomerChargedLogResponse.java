@@ -9,8 +9,8 @@ public record CustomerChargedLogResponse(
         String endedTime,
         String vehicleNo,
         String transactionId,
-        Integer totalMeterValue,
-        Integer totalPrice
+        Double totalMeterValue,
+        Double totalPrice
 ) {
     public static CustomerChargedLogResponse fromTxInfoDomain(TransactionInfoDomain txInfoDomain) {
         return CustomerChargedLogResponse.builder()

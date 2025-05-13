@@ -3,14 +3,12 @@ package com.example.quaterback.api.domain.station.repository;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
-import com.example.quaterback.api.feature.dashboard.dto.response.StationFullInfoResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -82,4 +80,19 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
         return stationEntity.toDomain();
     }
+
+    @Override
+    public void save(ChargingStationDomain chargingStationDomain) {
+        ChargingStationEntity csEntity = ChargingStationEntity.fromCsDomain(chargingStationDomain);
+        chargingStationRepository.save(csEntity);
+    }
+
+    @Override
+    public String findStationIdByStationName(String stationName) {
+        ChargingStationEntity entity = chargingStationRepository.findByStationName(stationName)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        return entity.getStationId();
+    }
+
+
 }

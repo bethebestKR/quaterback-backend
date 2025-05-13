@@ -28,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -67,11 +68,22 @@ public class TransactionEventService {
 
         TransactionEventDomain txEventDomain = converter.convertToNonStartedTransactionDomain(jsonNode);
 
-        Integer totalMeterValue = txLogRepository.getTotalMeterValue(txEventDomain.extractTransactionId());
-        Integer totalPrice = (int) (totalMeterValue * 0.5); // 추후 총 사용 전력량에 대한 전기요금 계산으로 변경
+        int avgMeterValue = txLogRepository.getTotalMeterValue(txEventDomain.extractTransactionId());
+        int pricePerWh = 100;
 
-        TransactionInfoDomain txInfoDomain = TransactionInfoDomain.fromEndedTxEventDomain(txEventDomain, totalMeterValue, totalPrice);
-        String resultTransactionId = txInfoRepository.updateEndTime(txInfoDomain);
+        TransactionInfoDomain oriTxInfoDomain = txInfoRepository.findByTxId(txEventDomain.extractTransactionId());
+
+        int durationSeconds = (int) Duration.between(oriTxInfoDomain.getStartedTime(), txEventDomain.getTimestamp()).getSeconds();
+        if (durationSeconds < 0) {
+            throw new IllegalArgumentException("종료 시간은 시작 시간보다 이후여야합니다.");
+        }
+
+        double totalMeterValue = avgMeterValue / 1000.0 * (durationSeconds / 3600.0);
+        totalMeterValue = Math.round(totalMeterValue * 100) / 100.0;
+        Double totalPrice = pricePerWh * totalMeterValue;
+
+        TransactionInfoDomain endTxInfoDomain = TransactionInfoDomain.fromEndedTxEventDomain(txEventDomain, totalMeterValue, totalPrice);
+        String resultTransactionId = txInfoRepository.updateEndTime(endTxInfoDomain);
 
         return resultTransactionId;
     }

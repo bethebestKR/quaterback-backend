@@ -12,9 +12,16 @@ import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.time.LocalDate;
 
@@ -34,6 +41,7 @@ public class JpaTxInfoRepository implements TxInfoRepository {
     public String save(TransactionInfoDomain domain) {
         String stationId = domain.getStationId();
         Integer evseId = domain.getEvseId();
+
         ChargerEntity chargerEntity = springDataJpaChargerRepository.findByStation_StationIdAndEvseId(stationId, evseId)
                 .orElseThrow(() -> new EntityNotFoundException("entity not found"));
 
@@ -81,14 +89,20 @@ public class JpaTxInfoRepository implements TxInfoRepository {
 
     @Override
     public Page<TransactionInfoDomain> findAllByEvseId(String stationId, Integer evseId, Pageable pageable) {
-        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findAllByEvseId(stationId, evseId, pageable);
+        ChargerEntity chargerEntity = springDataJpaChargerRepository.findByStation_StationIdAndEvseId(stationId, evseId)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findAllByEvseId(stationId, chargerEntity.getId(), pageable);
 
         return entityPage.map(TransactionInfoEntity::toDomain);
     }
 
     @Override
     public DailyUsageQuery findDailyUsageByEvseIdAndDate(String stationId, Integer evseId, LocalDate date) {
-        return springDataJpaTxInfoRepository.findDailyUsageByEvseIdAndDate(stationId,evseId,date)
+        ChargerEntity chargerEntity = springDataJpaChargerRepository.findByStation_StationIdAndEvseId(stationId, evseId)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        return springDataJpaTxInfoRepository.findDailyUsageByEvseIdAndDate(stationId, chargerEntity.getId(), date)
                 .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
     }
 
@@ -103,5 +117,53 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         Page<TransactionInfoEntity> entityPage = springDataJpaTxInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, startTime, endTime, pageable);
         return entityPage.map(TransactionInfoEntity::toDomain);
     }
+
+
+    @Override
+    public List<TransactionInfoDomain> findByChargerPkAndCreatedAtBetween(TransactionInfoDomain domain,
+                                                                          Long chargerPk) {
+        LocalDateTime start = domain.getStartedTime();
+        LocalDateTime end = domain.getEndedTime();
+
+        List<TransactionInfoEntity> txEntities = springDataJpaTxInfoRepository.findByChargerPkAndTimeRange(
+                chargerPk
+                ,start
+                ,end);
+        List<TransactionInfoDomain> txDomains = txEntities.stream()
+                .map(TransactionInfoDomain::fromTxEntityDomain)
+                .collect(Collectors.toList());
+        return txDomains;
+    }
+
+    @Override
+    public Page<TransactionInfoDomain> findByStationIdAndCreatedAtBetween(TransactionInfoDomain domain,
+                                                                          String stationId,
+                                                                          Pageable pageable) {
+        LocalDateTime start = domain.getStartedTime();
+        LocalDateTime end = domain.getEndedTime();
+
+        Page<TransactionInfoEntity> txInfoEntities =  springDataJpaTxInfoRepository.findByStationIdAndPeriod(
+                stationId, start, end, pageable
+        );
+
+        Page<TransactionInfoDomain> txInfoDomains = txInfoEntities
+                .map(entity -> TransactionInfoDomain.fromTxEntityDomain(entity));
+        return txInfoDomains;
+    }
+
+    @Override
+    public TransactionInfoDomain getOneTxInfoByTxId(TransactionInfoDomain txInfoDomain) {
+        TransactionInfoEntity txEntity = springDataJpaTxInfoRepository.findByTransactionId(txInfoDomain.getTransactionId())
+                .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
+        return TransactionInfoDomain.fromTxEntityDomain(txEntity);
+    }
+
+    @Override
+    public TransactionInfoDomain findByTxId(String txId) {
+        TransactionInfoEntity txEntity = springDataJpaTxInfoRepository.findByTransactionId(txId)
+                .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
+        return TransactionInfoDomain.fromTxEntityDomain(txEntity);
+    }
+
 
 }

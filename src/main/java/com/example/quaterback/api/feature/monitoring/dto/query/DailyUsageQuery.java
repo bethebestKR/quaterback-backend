@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DailyUsageQuery {
-    private Long totalChargedEnergy;
+    private Double totalChargedEnergy;
     private Long totalVehicleCount;
-    private Long totalRevenue;
+    private Double totalRevenue;
 }

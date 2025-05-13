@@ -20,7 +20,7 @@ public class JpaTxLogRepository implements TxLogRepository {
 
     @Override
     public Integer getTotalMeterValue(String transactionId) {
-        Integer totalMeterValue = springDataJpaTxLogRepository.sumMeterValueByTransactionId(transactionId);
+        Integer totalMeterValue = springDataJpaTxLogRepository.avgMeterValueByTransactionId(transactionId);
         return totalMeterValue;
     }
 

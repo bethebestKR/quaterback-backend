@@ -1,7 +1,6 @@
 package com.example.quaterback.api.domain.txinfo.entity;
 
 import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
-import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +19,7 @@ public class TransactionInfoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String transactionId;
     private LocalDateTime startedTime;
     private LocalDateTime endedTime;
@@ -28,19 +27,24 @@ public class TransactionInfoEntity {
     private String idToken;
     private String stationId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evse_id")
-    private ChargerEntity charger;
-    private Integer totalMeterValue;
-    private Integer totalPrice;
+    private ChargerEntity evseId;
+
+    private Double totalMeterValue;
+    private Double totalPrice;
 
     public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain, ChargerEntity chargerEntity) {
         return TransactionInfoEntity.builder()
                 .transactionId(domain.getTransactionId())
                 .startedTime(domain.getStartedTime())
+                .endedTime(domain.getEndedTime())
                 .vehicleNo(domain.getVehicleNo())
+                .stationId(domain.getStationId())
+                .totalPrice(domain.getTotalPrice())
+                .totalMeterValue(domain.getTotalMeterValue())
+                .evseId(chargerEntity)
                 .idToken(domain.getIdToken())
-                .charger(chargerEntity)
                 .build();
     }
 
@@ -61,6 +65,8 @@ public class TransactionInfoEntity {
                 .vehicleNo(vehicleNo)
                 .totalMeterValue(totalMeterValue)
                 .totalPrice(totalPrice)
+                .stationId(stationId)
+                .idToken(idToken)
                 .build();
     }
 }

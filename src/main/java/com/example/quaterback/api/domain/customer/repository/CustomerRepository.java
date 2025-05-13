@@ -9,6 +9,7 @@ public interface CustomerRepository {
     Page<CustomerDomain>  findAll(Pageable pageable);
     CustomerDomain findByCustomerId(String customerId);
     String updateCustomerInfo(CustomerDomain customerDomain);
-    Page<CustomerDomain> findByCustomerIdContating(String keyword, Pageable pageable);
+    Page<CustomerDomain> findByCustomerIdContaining(String keyword, Pageable pageable);
     Page<CustomerDomain> findByCustomerNameContaining(String keyword, Pageable pageable);
+    boolean existsByIdToken(String idToken);
 }

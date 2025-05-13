@@ -38,7 +38,7 @@ public class JpaCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Page<CustomerDomain> findByCustomerIdContating(String keyword, Pageable pageable) {
+    public Page<CustomerDomain> findByCustomerIdContaining(String keyword, Pageable pageable) {
         Page<CustomerEntity> customerEntityPage = springDataJpaCustomerRepository.findByCustomerIdContaining(keyword, pageable);
         return customerEntityPage.map(CustomerEntity::toDomain);
     }
@@ -49,5 +49,9 @@ public class JpaCustomerRepository implements CustomerRepository {
         return customerEntityPage.map(CustomerEntity::toDomain);
     }
 
+    @Override
+    public boolean existsByIdToken(String idToken) {
+        return springDataJpaCustomerRepository.existsByIdToken(idToken);
+    }
 
 }

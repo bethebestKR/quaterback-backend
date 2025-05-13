@@ -23,8 +23,10 @@ public class ChargingStationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String stationId;
+
+    private String stationName;
     private String model;
     private String vendorId;
     private Double latitude;
@@ -42,6 +44,7 @@ public class ChargingStationEntity {
     public ChargingStationDomain toDomain() {
         return ChargingStationDomain.builder()
                 .stationId(stationId)
+                .stationName(stationName)
                 .model(model)
                 .vendorId(vendorId)
                 .latitude(latitude)
@@ -60,5 +63,19 @@ public class ChargingStationEntity {
 
     public void updateStationEssValue(Integer value){
         essValue = value;
+    }
+
+    public static ChargingStationEntity fromCsDomain(ChargingStationDomain csDomain){
+        return ChargingStationEntity.builder()
+                .stationId(csDomain.getStationId())
+                .stationName(csDomain.getStationName())
+                .model(csDomain.getModel())
+                .vendorId(csDomain.getVendorId())
+                .latitude(csDomain.getLatitude())
+                .longitude(csDomain.getLongitude())
+                .address(csDomain.getAddress())
+                .updateStatusTimeStamp(csDomain.getUpdateStatusTimeStamp())
+                .stationStatus(csDomain.getStationStatus())
+                .build();
     }
 }

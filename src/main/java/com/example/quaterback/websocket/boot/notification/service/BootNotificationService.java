@@ -1,5 +1,8 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
+import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
+import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
@@ -11,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BootNotificationService {
@@ -18,7 +23,7 @@ public class BootNotificationService {
     private final ChargingStationRepository chargingStationRepository;
     private final BootNotificationConverter converter;
     private final RedisMapSessionToStationService redisMappingService;
-
+    private final ChargerRepository chargerRepository;
     @Transactional
     public String updateStationStatus(JsonNode jsonNode, String sessionId) {
         BootNotificationDomain bootNotificationDomain = converter.convertToBootNotificationDomain(jsonNode);
@@ -28,6 +33,13 @@ public class BootNotificationService {
 
         chargingStationDomain.updateStationStatus(StationStatus.ACTIVE);
         String resultStationId = chargingStationRepository.update(chargingStationDomain);
+
+
+        List<ChargerDomain> chargerDomains = chargerRepository.findByStationID(stationId);
+        for(ChargerDomain charger: chargerDomains){
+            charger.updateChargerStatus(ChargerStatus.AVAILABLE);
+            chargerRepository.update(charger);
+        }
 
         return resultStationId;
     }

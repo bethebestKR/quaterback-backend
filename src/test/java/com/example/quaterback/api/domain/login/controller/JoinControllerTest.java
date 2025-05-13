@@ -1,6 +1,5 @@
 package com.example.quaterback.api.domain.login.controller;
 
-import com.example.quaterback.api.domain.login.controller.JoinController;
 import com.example.quaterback.api.domain.login.service.JoinService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +16,7 @@ import java.util.Map;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(JoinController.class)
@@ -53,6 +51,6 @@ class JoinControllerTest {
                         .content(json)
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(username));
+                .andExpect(jsonPath("$.username").value(username));
     }
 }

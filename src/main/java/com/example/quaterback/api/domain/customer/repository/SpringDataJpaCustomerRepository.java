@@ -13,4 +13,5 @@ public interface SpringDataJpaCustomerRepository extends JpaRepository<CustomerE
     Optional<CustomerEntity> findByCustomerId(String customerId);
     Page<CustomerEntity> findByCustomerIdContaining(String keyword, Pageable pageable);
     Page<CustomerEntity> findByCustomerNameContaining(String keyword, Pageable pageable);
+    boolean existsByIdToken(String idToken);
 }

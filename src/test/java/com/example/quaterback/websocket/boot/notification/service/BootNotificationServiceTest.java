@@ -1,12 +1,13 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
+import com.example.quaterback.api.domain.charger.repository.FakeChargerRepository;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
+import com.example.quaterback.api.domain.station.repository.FakeChargingStationRepository;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.example.quaterback.websocket.boot.notification.converter.BootNotificationConverter;
 import com.example.quaterback.websocket.boot.notification.fixture.BootNotificationFixture;
-import com.example.quaterback.api.domain.station.repository.FakeChargingStationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,14 @@ class BootNotificationServiceTest {
 
     private BootNotificationConverter converter;
     private FakeChargingStationRepository repository;
+    private FakeChargerRepository chargerRepository;
 
     @BeforeEach
     void setUp() {
         converter = new BootNotificationConverter();
         repository = new FakeChargingStationRepository();
-        bootNotificationService = new BootNotificationService(repository, converter, redisMappingService);
+        chargerRepository = new FakeChargerRepository();
+        bootNotificationService = new BootNotificationService(repository, converter, redisMappingService, chargerRepository);
     }
 
     @Test
