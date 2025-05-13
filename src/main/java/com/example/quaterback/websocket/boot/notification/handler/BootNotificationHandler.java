@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.handler;
 
+import com.example.quaterback.api.domain.txinfo.repository.SpringDataJpaTxInfoRepository;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
@@ -16,6 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Handler
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class BootNotificationHandler implements OcppMessageHandler {
     private final BootNotificationService bootNotificationService;
     private final ObjectMapper objectMapper;
     private final RefreshTimeoutService refreshTimeoutService;
+    private final SpringDataJpaTxInfoRepository springDataJpaTxInfoRepository;
 
     @Override
     public String getAction() {
@@ -38,7 +41,7 @@ public class BootNotificationHandler implements OcppMessageHandler {
         String reason = payload.path("reason").asText();
         log.info("BootNotification reason - {}", reason);
         String sessionId = session.getId();
-
+    
         if (reason.equals("PowerUp")) {
             String stationId = bootNotificationService.updateStationStatus(jsonNode, session.getId());
             refreshTimeoutService.refreshTimeout(sessionId);
@@ -53,8 +56,12 @@ public class BootNotificationHandler implements OcppMessageHandler {
             payloadNode.put("interval", 15);
             payloadNode.put("status", "Accepted");
 
+            ObjectNode customDataNode = mapper.createObjectNode();
+            Optional<String> transactionId = springDataJpaTxInfoRepository.findLatestTransactionId();
+            customDataNode.put("transactionId", transactionId.orElse("tx-000"));
+            // payload에 customData 추가
+            payloadNode.put("customData", customDataNode);
             response.add(payloadNode);
-
             // 메시지 전송
             try {
                 session.sendMessage(new TextMessage(response.toString()));
