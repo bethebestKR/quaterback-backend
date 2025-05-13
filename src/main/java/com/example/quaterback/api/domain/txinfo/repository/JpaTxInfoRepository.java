@@ -158,5 +158,12 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         return TransactionInfoDomain.fromTxEntityDomain(txEntity);
     }
 
+    @Override
+    public TransactionInfoDomain findByTxId(String txId) {
+        TransactionInfoEntity txEntity = springDataJpaTxInfoRepository.findByTransactionId(txId)
+                .orElseThrow(() -> new EntityNotFoundException("tx info entity not found"));
+        return TransactionInfoDomain.fromTxEntityDomain(txEntity);
+    }
+
 
 }
