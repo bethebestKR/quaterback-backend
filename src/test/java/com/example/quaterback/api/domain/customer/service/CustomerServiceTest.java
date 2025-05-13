@@ -140,8 +140,8 @@ class CustomerServiceTest {
                 .endedTime(LocalDateTime.now())
                 .vehicleNo("vehicle123")
                 .transactionId("tx001")
-                .totalMeterValue(2000)
-                .totalPrice(2000)
+                .totalMeterValue(2000.0)
+                .totalPrice(2000.0)
                 .build();
         Page<TransactionInfoDomain> page = new PageImpl<>(List.of(tx));
         when(txInfoRepository.findByIdTokenOrderByStartedTimeDesc(idToken, pageable)).thenReturn(page);
@@ -172,8 +172,8 @@ class CustomerServiceTest {
                 .endedTime(LocalDateTime.now())
                 .vehicleNo("vehicle123")
                 .transactionId("tx001")
-                .totalMeterValue(2000)
-                .totalPrice(2000)
+                .totalMeterValue(2000.0)
+                .totalPrice(2000.0)
                 .build();
         Page<TransactionInfoDomain> page = new PageImpl<>(List.of(tx));
         when(txInfoRepository.findByIdTokenAndStartedTimeBetweenOrderByStartedTimeDesc(idToken, start, end, pageable)).thenReturn(page);
