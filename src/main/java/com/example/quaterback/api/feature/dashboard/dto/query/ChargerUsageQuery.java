@@ -13,8 +13,8 @@ public class ChargerUsageQuery {
     private LocalDateTime time;
     private String stationAddress;
     private String stationModel;
-    private int usageKwh;
-    private int priceWon;
+    private Double usageKwh;
+    private Double priceWon;
     private String confirmCode;
 
     public String getUsageKwh() {
@@ -22,6 +22,6 @@ public class ChargerUsageQuery {
     }
 
     public String getPriceWon() {
-        return String.format("%,d(KRW)",priceWon);
+        return String.format("%2f,(KRW)",priceWon);
     }
 }

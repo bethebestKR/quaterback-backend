@@ -51,11 +51,11 @@ public class TransactionInfoService {
             totalTransactionInfos.addAll(tmp);
         }
 
-        Integer allMeterValue = totalTransactionInfos.stream()
-                .mapToInt(TransactionInfoDomain::getTotalMeterValue)
+        Double allMeterValue = totalTransactionInfos.stream()
+                .mapToDouble(TransactionInfoDomain::getTotalMeterValue)
                 .sum();
-        Integer allPrice = totalTransactionInfos.stream()
-                .mapToInt(TransactionInfoDomain::getTotalPrice)
+        Double allPrice = totalTransactionInfos.stream()
+                .mapToDouble(TransactionInfoDomain::getTotalPrice)
                 .sum();
 
         TransactionSummaryDto transactionSummaryDto = new TransactionSummaryDto(

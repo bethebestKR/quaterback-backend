@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public record ChargingRecordResponse(
         LocalDateTime startTime,
         LocalDateTime endTime,
-        Integer priceKRW,
+        Double priceKRW,
         String transactionId
 ) {
     public static ChargingRecordResponse from(ChargingRecordQuery query){

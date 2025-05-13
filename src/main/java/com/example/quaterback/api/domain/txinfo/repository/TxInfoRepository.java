@@ -43,4 +43,6 @@ public interface TxInfoRepository {
     Page<TransactionInfoDomain> findAllByEvseId(String stationId, Integer evseId, Pageable pageable);
 
    DailyUsageQuery findDailyUsageByEvseIdAndDate(String stationId, Integer evseId, LocalDate date);
+
+    TransactionInfoDomain findByTxId(String txId);
 }

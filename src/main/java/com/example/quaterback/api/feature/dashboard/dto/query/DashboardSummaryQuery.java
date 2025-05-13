@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class DashboardSummaryQuery {
     private long usage;
-    private long totalProfit;
-    private long totalDischarge;
+    private double totalProfit;
+    private double totalDischarge;
 
-    public DashboardSummaryQuery(long usage, long totalProfit, long totalDischarge) {
+    public DashboardSummaryQuery(long usage, double totalProfit, double totalDischarge) {
         this.usage = usage;
         this.totalProfit = totalProfit;
         this.totalDischarge = totalDischarge;
