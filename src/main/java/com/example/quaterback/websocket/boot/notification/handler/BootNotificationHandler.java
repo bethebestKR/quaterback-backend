@@ -41,8 +41,7 @@ public class BootNotificationHandler implements OcppMessageHandler {
         String reason = payload.path("reason").asText();
         log.info("BootNotification reason - {}", reason);
         String sessionId = session.getId();
-
-        
+    
         if (reason.equals("PowerUp")) {
             String stationId = bootNotificationService.updateStationStatus(jsonNode, session.getId());
             refreshTimeoutService.refreshTimeout(sessionId);
