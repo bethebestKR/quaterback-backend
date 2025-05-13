@@ -60,8 +60,8 @@ public class BootNotificationHandler implements OcppMessageHandler {
             Optional<String> transactionId = springDataJpaTxInfoRepository.findLatestTransactionId();
             customDataNode.put("transactionId", transactionId.orElse("tx-000"));
             // payload에 customData 추가
-            payloadNode.set("customData", customDataNode);
-
+            payloadNode.put("customData", customDataNode);
+            response.add(payloadNode);
             // 메시지 전송
             try {
                 session.sendMessage(new TextMessage(response.toString()));
