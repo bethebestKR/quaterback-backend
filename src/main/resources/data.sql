@@ -7,6 +7,7 @@ DELETE FROM tx_info;
 DELETE FROM charger_info WHERE station_id = 'station-001';
 DELETE FROM charging_station WHERE station_id = 'station-001';
 DELETE FROM customer;
+DELETE FROM price;
 
 -- 🔥 외래키 체크 복구
 SET FOREIGN_KEY_CHECKS = 1;
@@ -28,3 +29,5 @@ VALUES
     ('user4', '이름4', 'user-004', 'e4@gmail.com', '01012345673', '12-2222', '2024-05-23T16:30:00'),
     ('user5', '이름5', 'user-005', 'e5@gmail.com', '01012334455', '12-6666', '2024-05-24T16:30:00'),
     ('user6', '이름6', 'user-006', 'e6@gmail.com', '01010044499', '12-8989', '2024-05-25T16:30:00');
+
+INSERT INTO price (id, price_per_mwh, updated_date_time) VALUES (1, 100, '2025-05-12T12:00:00');

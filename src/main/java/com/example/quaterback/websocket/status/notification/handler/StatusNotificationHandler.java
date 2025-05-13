@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket.status.notification.handler;
 
+import com.example.quaterback.api.domain.price.service.PriceService;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
@@ -23,6 +24,7 @@ public class StatusNotificationHandler implements OcppMessageHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RefreshTimeoutService refreshTimeoutService;
     private final StatusNotificationService statusNotificationService;
+    private final PriceService priceService;
     @Override
     public String getAction() {
         return "StatusNotification";
@@ -50,7 +52,8 @@ public class StatusNotificationHandler implements OcppMessageHandler {
         // payload 생성
         ObjectNode payloadNode = mapper.createObjectNode();
         ObjectNode customDataNode = mapper.createObjectNode();
-        customDataNode.put("pricePermW", 1);
+        Double price = priceService.getCurrentPrice();
+        customDataNode.put("pricePermWh", price);
         payloadNode.set("customData", customDataNode);
         response.add(payloadNode);
 
