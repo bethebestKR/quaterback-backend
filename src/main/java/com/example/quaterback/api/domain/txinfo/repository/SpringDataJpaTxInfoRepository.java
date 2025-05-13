@@ -133,4 +133,7 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
             @Param("end") LocalDateTime end,
             Pageable pageable
     );
+
+    @Query("SELECT ti.transactionId FROM TransactionInfoEntity ti ORDER BY ti.transactionId DESC")
+    Optional<String> findLatestTransactionId();
 }
