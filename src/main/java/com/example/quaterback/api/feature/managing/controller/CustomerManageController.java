@@ -55,7 +55,6 @@ public class CustomerManageController {
         }
 
         return customerService.searchCustomersByCustomerName(keyword, pageable);
-
     }
 
     @GetMapping("/{customerId}")
@@ -70,7 +69,7 @@ public class CustomerManageController {
         return customerService.updateCustomerInfo(customerId, dto);
     }
 
-    @GetMapping("chargedLog/{customerId}")
+    @GetMapping("/chargedLog/{customerId}")
     public CustomerChargedLogListResponse getAllChargedLog(
             @PathVariable String customerId,
             @RequestParam(defaultValue = "0") int page,
