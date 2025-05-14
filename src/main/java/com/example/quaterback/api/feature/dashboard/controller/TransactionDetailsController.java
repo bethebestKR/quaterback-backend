@@ -10,6 +10,7 @@ import com.example.quaterback.common.exception.StationNameValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,23 +26,27 @@ import java.util.List;
 public class TransactionDetailsController {
     private final TransactionInfoService transactionInfoService;
 
-    @GetMapping(value = "api/v1/charging-station/records")
+    @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<TransactionInfoDto>>> getDetails(
             @RequestParam("fistDate") LocalDate firstDate,
             @RequestParam("secondDate") LocalDate secondDate,
             @RequestParam("stationName") String stationName,
-            Pageable pageable
-    ){
+            @RequestParam(name = "size") int size,
+            @RequestParam(name = "page") int page
+    ) {
         LocalDateTime start = firstDate.atStartOfDay();
         LocalDateTime end = secondDate.atTime(LocalTime.MAX);
 
+        // ✅ 여기서 직접 PageRequest 생성
+        Pageable pageable = PageRequest.of(page, size);
+
         Page<TransactionInfoDto> dtoPage = transactionInfoService.getStationTransactionsByStationAndPeriod(
-                start, end,  stationName, pageable
+                start, end, stationName, pageable
         );
 
         PageResponse<TransactionInfoDto> pageResponse = new PageResponse<>(dtoPage);
 
-        return ResponseEntity.ok(new ApiResponse("success", pageResponse));
+        return ResponseEntity.ok(new ApiResponse<>("success", pageResponse));
     }
 
     @GetMapping("api/v1/charging-station/records/summary")
