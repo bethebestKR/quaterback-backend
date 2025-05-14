@@ -23,6 +23,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class TransactionDetailsController {
     private final TransactionInfoService transactionInfoService;
 
