@@ -15,6 +15,6 @@ public class InactiveStationCleaner {
 
     @Scheduled(fixedRate = 15_000) // 15초마다 실행
     public void cleanInactiveStations() {
-        //inactiveStationService.cleanInactiveStationsWithTx();
+        inactiveStationService.cleanInactiveStationsWithTx();
     }
 }
