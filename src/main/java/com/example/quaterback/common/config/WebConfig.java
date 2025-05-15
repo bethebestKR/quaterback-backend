@@ -14,7 +14,10 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://43.201.92.25:3000", "http://localhost:3000") // 여러 개는 쉼표로 한 번에
+                        .allowedOrigins(
+                                "http://quarterback-capstone.com", // 도메인만
+                                "http://localhost:3000"             // (개발할 때를 위해 localhost도 남겨두자)
+                        )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
