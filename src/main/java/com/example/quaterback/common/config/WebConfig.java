@@ -15,8 +15,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "http://quarterback-capstone.com", // 도메인만
-                                "http://localhost:3000"             // (개발할 때를 위해 localhost도 남겨두자)
+                                "/**" // 도메인// (개발할 때를 위해 localhost도 남겨두자)
                         )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
