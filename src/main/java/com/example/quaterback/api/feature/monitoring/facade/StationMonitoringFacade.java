@@ -54,4 +54,8 @@ public class StationMonitoringFacade {
         Page<TransactionInfoDomain> domainPage = transactionEventService.findTransactionInfo(stationId,evseId, pageable);
         return UnavailableChargerPageResponse.from(domainPage);
     }
+
+    public EssValueResponse getEssValue(String stationId) {
+        return stationService.getEssValue(stationId);
+    }
 }

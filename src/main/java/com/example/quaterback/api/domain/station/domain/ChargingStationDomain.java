@@ -21,7 +21,7 @@ public class ChargingStationDomain {
     private String address;
     private LocalDateTime updateStatusTimeStamp;
     private StationStatus stationStatus;
-    private Integer essValue;
+    private Double essValue;
 
     public void updateStationStatus(StationStatus status) {
         if (!this.stationStatus.equals(status)) {
@@ -30,7 +30,7 @@ public class ChargingStationDomain {
         }
     }
 
-    public void updateStationEssValue(Integer essValue){
+    public void updateStationEssValue(Double essValue){
         this.essValue = essValue;
     }
 

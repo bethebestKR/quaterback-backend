@@ -123,7 +123,9 @@ public class TransactionInfoService {
             TransactionInfoDomain domain = TransactionInfoDomain.fromEndedTxEventDomain(transactionId, LocalDateTime.now(), "01", 0.0, 0.0);
             return txInfoRepository.updateEndTime(domain);
         }
+
         TransactionInfoDomain oriTxInfoDomain = txInfoRepository.findByTxId(transactionId);
+        ChargingStationDomain stationDomain = chargingStationRepository.findByStationId(oriTxInfoDomain.getStationId());
         int avgMeterValue = txLogRepository.getTotalMeterValue(transactionId);
         double pricePerWh = priceService.getCurrentPrice();
         int durationSeconds = (int) Duration.between(oriTxInfoDomain.getStartedTime(), end).getSeconds();
@@ -134,6 +136,9 @@ public class TransactionInfoService {
         totalMeterValue = Math.round(totalMeterValue * 100) / 100.0;
         Double totalPrice = pricePerWh * totalMeterValue;
 
+        stationDomain.updateStationEssValue(stationDomain.getEssValue() - totalMeterValue);
+        chargingStationRepository.updateEss(stationDomain);
+        
         TransactionInfoDomain endTxInfoDomain = TransactionInfoDomain.fromEndedTxEventDomain(transactionId, end, errorCode, totalMeterValue, totalPrice);
         String resultTransactionId = txInfoRepository.updateEndTime(endTxInfoDomain);
         return resultTransactionId;
