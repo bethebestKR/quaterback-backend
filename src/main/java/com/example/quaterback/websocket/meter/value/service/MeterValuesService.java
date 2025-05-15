@@ -24,7 +24,7 @@ public class MeterValuesService {
         MeterValuesDomain meterValuesDomain = meterValuesConverter.convertToMeterValuesDomain(jsonNode);
         MeterValue meterValue = meterValuesDomain.extractFirstMeterValue();
         SampledValue sampledValue = meterValue.extractFirstSampledValue();
-        Integer value = sampledValue.getValue();
+        Double value = sampledValue.getValue();
 
         String stationId = redisService.getStationId(sessionId);
 

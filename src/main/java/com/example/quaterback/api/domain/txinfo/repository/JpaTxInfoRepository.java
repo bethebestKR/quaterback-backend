@@ -165,5 +165,9 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         return TransactionInfoDomain.fromTxEntityDomain(txEntity);
     }
 
-
+    @Override
+    public List<TransactionInfoDomain> findNotEnded(String stationId) {
+        return springDataJpaTxInfoRepository.findNotEndedTxInfos(stationId)
+                .stream().map(TransactionInfoEntity::toDomain).toList();
+    }
 }

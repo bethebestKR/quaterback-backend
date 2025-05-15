@@ -33,7 +33,7 @@ public class ChargingStationEntity {
     private Double longitude;
     private String address;
     private LocalDateTime updateStatusTimeStamp;
-    private Integer essValue;
+    private Double essValue;
 
     @Enumerated(EnumType.STRING)
     private StationStatus stationStatus;
@@ -61,7 +61,7 @@ public class ChargingStationEntity {
         updateStatusTimeStamp = LocalDateTime.now();
     }
 
-    public void updateStationEssValue(Integer value){
+    public void updateStationEssValue(Double value){
         essValue = value;
     }
 

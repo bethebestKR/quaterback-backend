@@ -7,14 +7,15 @@ DELETE FROM tx_info;
 DELETE FROM charger_info WHERE station_id = 'station-001';
 DELETE FROM charging_station WHERE station_id = 'station-001';
 DELETE FROM customer;
-DELETE FROM price;
+DELETE FROM cs_price;
+DELETE FROM kepco_price;
 
 -- 🔥 외래키 체크 복구
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 2. 새 데이터 삽입
-INSERT INTO charging_station (station_id, model, vendor_id, latitude, longitude, address, update_status_time_stamp, station_status, station_name)
-VALUES ('station-001', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 중구 세종대로 110', '2025-04-17T11:20:00', 'inactive', 'sejong');
+INSERT INTO charging_station (station_id, model, vendor_id, latitude, longitude, address, update_status_time_stamp, station_status, station_name, ess_value)
+VALUES ('station-001', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 중구 세종대로 110', '2025-04-17T11:20:00', 'inactive', 'sejong', 100.0);
 
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id)
 VALUES (1, 'Available', '2025-04-20T12:30:00', 'station-001'),
@@ -30,4 +31,15 @@ VALUES
     ('user5', '이름5', 'user-005', 'e5@gmail.com', '01012334455', '12-6666', '2024-05-24T16:30:00'),
     ('user6', '이름6', 'user-006', 'e6@gmail.com', '01010044499', '12-8989', '2024-05-25T16:30:00');
 
-INSERT INTO price (id, price_per_mwh, updated_date_time) VALUES (1, 100, '2025-05-12T12:00:00');
+INSERT INTO cs_price (price_per_mwh, updated_date_time) VALUES (100, '2025-05-12T12:00:00');
+
+INSERT INTO kepco_price (season, time_slot, price_per_kwh) VALUES
+    ('SUMMER', 'OFF_PEAK', 79.2),
+    ('SUMMER', 'MID_PEAK', 137.4),
+    ('SUMMER', 'ON_PEAK', 190.4),
+    ('SPRING_FALL', 'OFF_PEAK', 80.2),
+    ('SPRING_FALL', 'MID_PEAK', 91.0),
+    ('SPRING_FALL', 'ON_PEAK', 94.9),
+    ('WINTER', 'OFF_PEAK', 96.6),
+    ('WINTER', 'MID_PEAK', 127.7),
+    ('WINTER', 'ON_PEAK', 165.5);

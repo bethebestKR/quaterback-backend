@@ -135,4 +135,11 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     );
 
     Optional<TransactionInfoEntity> findFirstByOrderByTransactionIdDesc();
+
+    @Query("""
+        SELECT t FROM TransactionInfoEntity t
+        WHERE t.stationId = :stationId
+        AND t.totalMeterValue IS NULL
+    """)
+    List<TransactionInfoEntity> findNotEndedTxInfos(String stationId);
 }

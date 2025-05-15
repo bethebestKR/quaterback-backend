@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket.transaction.event.handler;
 
+import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.websocket.MessageUtil;
 import com.example.quaterback.websocket.OcppMessageHandler;
@@ -15,7 +16,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.time.Instant;
 
 @Handler
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ public class TransactionEventHandler implements OcppMessageHandler {
     private final TransactionEventService transactionEventService;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RefreshTimeoutService refreshTimeoutService;
+    private final TransactionInfoService transactionInfoService;
 
     @Override
     public String getAction() {
@@ -39,7 +40,7 @@ public class TransactionEventHandler implements OcppMessageHandler {
         log.info(eventType);
         String sessionId = session.getId();
         refreshTimeoutService.refreshTimeout(sessionId);
-        String tx_id;
+        String tx_id = null;
         switch (eventType) {
             case "Started":
                 tx_id = transactionEventService.saveTxInfo(jsonNode, session.getId());
@@ -65,6 +66,9 @@ public class TransactionEventHandler implements OcppMessageHandler {
         response.add(messageId);  // 요청에서 가져온 messageId
         // payload 생성
         ObjectNode payloadNode = mapper.createObjectNode();
+        if (eventType.equals("Ended")) {
+            payloadNode.put("totalPrice", transactionInfoService.getOneTxInfo(tx_id).getChargeSummary().getTotalPrice());
+        }
         response.add(payloadNode);
 
         // 메시지 전송

@@ -183,7 +183,7 @@ public class TransactionEventFixture {
             String transactionId,
             Integer id,
             String idToken,
-            Integer value
+            Double value
     ) {
         return new TransactionEventDomain(
                 messageTypeId,

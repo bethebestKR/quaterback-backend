@@ -6,6 +6,7 @@ import com.example.quaterback.api.domain.station.repository.ChargingStationRepos
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.DeleteResultResponse;
 import com.example.quaterback.api.feature.dashboard.dto.response.StationFullInfoResponse;
+import com.example.quaterback.api.feature.monitoring.dto.response.EssValueResponse;
 import com.example.quaterback.api.feature.monitoring.dto.response.EvseIdResponse;
 import com.example.quaterback.api.feature.overview.dto.response.StationOverviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,9 @@ public class StationService {
     public StationOverviewResponse getStationOverview(String stationName) {
         ChargingStationDomain station = chargingStationRepository.findByStationName(stationName);
         return converter.toStationOverviewRespons(station);
+    }
+
+    public EssValueResponse getEssValue(String stationId) {
+        return new EssValueResponse(chargingStationRepository.findByStationId(stationId).getEssValue());
     }
 }

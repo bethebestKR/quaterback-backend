@@ -69,4 +69,9 @@ public class StationMonitoringController {
     public Long todoCharger() {
         return 1L;
     }
+
+    @GetMapping("/ess-value/{stationId}")
+    public EssValueResponse getEssValue(@PathVariable(name = "stationId") String stationId) {
+        return stationMonitoringFacade.getEssValue(stationId);
+    }
 }

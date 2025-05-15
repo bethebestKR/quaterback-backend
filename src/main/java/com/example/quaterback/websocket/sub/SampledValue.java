@@ -10,14 +10,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SampledValue {
-    private final Integer value;
+    private final Double value;
     private final String measurand;
 
-    public static SampledValue forMeterValues(Integer value, String measurand) {
+    public static SampledValue forMeterValues(Double value, String measurand) {
         return new SampledValue(value, measurand);
     }
 
-    public static SampledValue forTransactionEvent(Integer value) {
+    public static SampledValue forTransactionEvent(Double value) {
         return new SampledValue(value, null);
     }
 }

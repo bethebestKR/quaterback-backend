@@ -5,6 +5,8 @@ import com.example.quaterback.api.domain.txlog.entity.TransactionLogEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Repository
 public class JpaTxLogRepository implements TxLogRepository {
@@ -22,6 +24,15 @@ public class JpaTxLogRepository implements TxLogRepository {
     public Integer getTotalMeterValue(String transactionId) {
         Integer totalMeterValue = springDataJpaTxLogRepository.avgMeterValueByTransactionId(transactionId);
         return totalMeterValue;
+    }
+
+    @Override
+    public LocalDateTime getLastLogDateTime(String transactionId) {
+        TransactionLogEntity entity = springDataJpaTxLogRepository.findTopByTransactionIdOrderByTimestampDesc(transactionId);
+        if (entity == null) {
+            return null;
+        }
+        return entity.getTimestamp();
     }
 
 
