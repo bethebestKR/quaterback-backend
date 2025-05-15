@@ -14,11 +14,11 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://43.201.92.25:3000")// 프론트엔드 주소
-                        .allowedOrigins("http://loaclhost:3000")// 프론트엔드 주소
+                        .allowedOrigins("http://43.201.92.25:3000", "http://localhost:3000") // 여러 개는 쉼표로 한 번에
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
+
             }
         };
     }
