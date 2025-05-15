@@ -2,10 +2,11 @@ package com.example.quaterback.api.domain.price.service;
 
 import com.example.quaterback.api.domain.price.entity.PricePerMwh;
 import com.example.quaterback.api.domain.price.repository.PriceRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.quaterback.api.feature.dashboard.dto.response.CsPriceHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -13,15 +14,17 @@ public class PriceService {
     private final PriceRepository priceRepository;
 
     public Double getCurrentPrice() {
-        PricePerMwh entity = priceRepository.findById(1L)
-                .orElseThrow(() -> new EntityNotFoundException("Price not found"));
+        PricePerMwh entity = priceRepository.findTopByOrderByUpdatedDateTimeDesc();
         return entity.getPricePerMwh();
     }
 
-    @Transactional
     public void updatePrice(Double price) {
-        PricePerMwh entity = priceRepository.findById(1L)
-                .orElseThrow(() -> new EntityNotFoundException("Price not found"));
-        entity.setPricePerMwh(price);
+        PricePerMwh entity = PricePerMwh.from(price);
+        priceRepository.save(entity);
+    }
+
+    public List<CsPriceHistory> getCsPriceHistory() {
+        List<PricePerMwh> entities = priceRepository.findAllByOrderByUpdatedDateTimeDesc();
+        return entities.stream().map(CsPriceHistory::from).toList();
     }
 }

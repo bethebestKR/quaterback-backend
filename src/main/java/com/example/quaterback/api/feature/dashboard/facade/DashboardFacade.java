@@ -1,6 +1,8 @@
 package com.example.quaterback.api.feature.dashboard.facade;
 
 import com.example.quaterback.api.domain.charger.service.ChargerService;
+import com.example.quaterback.api.domain.price.service.KepcoService;
+import com.example.quaterback.api.domain.price.service.PriceService;
 import com.example.quaterback.api.domain.station.service.StationService;
 import com.example.quaterback.api.feature.dashboard.dto.response.*;
 import com.example.quaterback.common.annotation.Facade;
@@ -18,6 +20,8 @@ public class DashboardFacade {
     private final TransactionEventService transactionEventService;
     private final ChargerService chargerService;
     private final StationService stationService;
+    private final PriceService priceService;
+    private final KepcoService kepcoService;
 
     public List<HourlyDischargeResponse> getHourlyDischarge() {
        return transactionEventService.getHourlyDischarge();
@@ -41,5 +45,18 @@ public class DashboardFacade {
 
     public DeleteResultResponse removeStation(String stationName) {
          return stationService.removeStation(stationName);
+    }
+
+    public List<CsPriceHistory> getCsPriceHistory() {
+        return priceService.getCsPriceHistory();
+    }
+
+    public UpdateCsPriceResponse updateCsPrice(double price) {
+        priceService.updatePrice(price);
+        return new UpdateCsPriceResponse("success");
+    }
+
+    public KepcoResponse getKepcoPrice() {
+        return kepcoService.getCurrentKepcoPrice();
     }
 }

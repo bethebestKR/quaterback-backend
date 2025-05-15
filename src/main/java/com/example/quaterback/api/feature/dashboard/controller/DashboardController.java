@@ -1,5 +1,6 @@
 package com.example.quaterback.api.feature.dashboard.controller;
 
+import com.example.quaterback.api.feature.dashboard.dto.request.CsPriceRequest;
 import com.example.quaterback.api.feature.dashboard.dto.request.StationAddRequest;
 import com.example.quaterback.api.feature.dashboard.dto.response.*;
 import com.example.quaterback.api.feature.dashboard.facade.DashboardFacade;
@@ -33,15 +34,19 @@ public class DashboardController {
         return dashboardFacade.getChargerUsage();
     }
 
-    //todo 계빨예정
-    @GetMapping("/electricity-price/realtime")
-    public Long getRealtimeElectricityPrice() {
-        return 1L;
+    @GetMapping("/electricity-price/cs-price")
+    public List<CsPriceHistory> getCsElectricityPrice() {
+        return dashboardFacade.getCsPriceHistory();
     }
-    //todo 계빨예정
-    @GetMapping("/electricity-price/history")
-    public Long getElectricityPriceHistory() {
-       return 1L;
+
+    @PostMapping("/electricity-price/cs-price")
+    public UpdateCsPriceResponse setCsPrice(@RequestBody CsPriceRequest request) {
+        return dashboardFacade.updateCsPrice(request.getPrice());
+    }
+
+    @GetMapping("/electricity-price/kepco-price")
+    public KepcoResponse getKepcoElectricityPrice() {
+        return dashboardFacade.getKepcoPrice();
     }
 
     @GetMapping("/stations")
