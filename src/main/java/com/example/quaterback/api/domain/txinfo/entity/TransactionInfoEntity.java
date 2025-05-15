@@ -34,6 +34,8 @@ public class TransactionInfoEntity {
     private Double totalMeterValue;
     private Double totalPrice;
 
+    private String errorCode;
+
     public static TransactionInfoEntity fromTransactionInfoDomain(TransactionInfoDomain domain, ChargerEntity chargerEntity) {
         return TransactionInfoEntity.builder()
                 .transactionId(domain.getTransactionId())
@@ -45,6 +47,7 @@ public class TransactionInfoEntity {
                 .totalMeterValue(domain.getTotalMeterValue())
                 .evseId(chargerEntity)
                 .idToken(domain.getIdToken())
+                .errorCode(domain.getErrorCode())
                 .build();
     }
 
@@ -52,6 +55,7 @@ public class TransactionInfoEntity {
         endedTime = domain.getEndedTime();
         totalMeterValue = domain.getTotalMeterValue();
         totalPrice = domain.getTotalPrice();
+        errorCode = domain.getErrorCode();
         return transactionId;
     }
 
@@ -67,6 +71,7 @@ public class TransactionInfoEntity {
                 .totalPrice(totalPrice)
                 .stationId(stationId)
                 .idToken(idToken)
+                .errorCode(errorCode)
                 .build();
     }
 }

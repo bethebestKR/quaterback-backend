@@ -87,15 +87,15 @@ public class TransactionEventConverter {
     }
 
     public List<HourlyDischargeResponse> toHourlyDischargeResponseList(List<Object[]> raw) {
-        Map<Integer, Integer> hourMap = new HashMap<>();
+        Map<Integer, Double> hourMap = new HashMap<>();
         for (Object[] row : raw) {
             int hour = ((Number) row[0]).intValue();
-            int value = ((Number) row[1]).intValue();
+            double value = ((Number) row[1]).doubleValue();
             hourMap.put(hour, value);
         }
 
         return IntStream.range(0, 24)
-                .mapToObj(h -> new HourlyDischargeResponse(h, hourMap.getOrDefault(h, 0)))
+                .mapToObj(h -> new HourlyDischargeResponse(h, hourMap.getOrDefault(h, 0.0)))
                 .toList();
     }
 

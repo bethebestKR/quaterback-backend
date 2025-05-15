@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket;
 
+import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,13 +21,17 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     private final Map<String, OcppMessageHandler> handlerMap;
     private final RedisMapSessionToStationService redisMappingService;
+    private final TransactionInfoService transactionInfoService;
 
-    public OcppWebSocketHandler(List<OcppMessageHandler> handlers, RedisMapSessionToStationService redisMappingService) {
+    public OcppWebSocketHandler(List<OcppMessageHandler> handlers,
+                                RedisMapSessionToStationService redisMappingService,
+                                TransactionInfoService transactionInfoService) {
         this.handlerMap = new HashMap<>();
         for (OcppMessageHandler handler : handlers) {
             handlerMap.put(handler.getAction(), handler);
         }
         this.redisMappingService = redisMappingService;
+        this.transactionInfoService = transactionInfoService;
     }
 
     @Override
@@ -49,6 +54,8 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        String stationId = redisMappingService.getStationId(session.getId());
+        transactionInfoService.setErrorCodeToNotEndedTxInfos(stationId);
         redisMappingService.removeMapping(session.getId());
     }
 }

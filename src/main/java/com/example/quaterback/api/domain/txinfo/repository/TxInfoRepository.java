@@ -45,4 +45,6 @@ public interface TxInfoRepository {
    DailyUsageQuery findDailyUsageByEvseIdAndDate(String stationId, Integer evseId, LocalDate date);
 
     TransactionInfoDomain findByTxId(String txId);
+
+    List<TransactionInfoDomain> findNotEnded(String stationId);
 }
