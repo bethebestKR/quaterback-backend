@@ -26,6 +26,6 @@ public class StatisticsData {
     public static class ChartData {
         private String id;     // pie chart 용
         private String label;
-        private int value;
+        private double value;
     }
 }

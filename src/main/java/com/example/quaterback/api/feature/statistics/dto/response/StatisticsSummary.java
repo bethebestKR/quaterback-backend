@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatisticsSummary {
-    private int totalChargingVolume;
-    private int totalChargingCount;
-    private int totalRevenue;
-    private int averageChargingTime;
+    private double totalChargingVolume;
+    private long totalChargingCount;
+    private double totalRevenue;
+    private double averageChargingTime;
     private ComparisonWithPrevious comparisonWithPrevious;
 
     @Data

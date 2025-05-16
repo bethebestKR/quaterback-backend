@@ -18,7 +18,7 @@ public class StatisticsController {
 
     @GetMapping("/summary")
     public StatisticsSummary getStatisticsSummary(@RequestParam String timeRange) {
-        return statisticsService.getSummary(timeRange);
+        return statisticsService.getSummary();
     }
 
     @GetMapping("/cost")
@@ -26,7 +26,7 @@ public class StatisticsController {
             @RequestParam String chartType,
             @RequestParam String timeRange
     ) {
-        return statisticsService.getCostStatistics(chartType, timeRange);
+        return statisticsService.getCostStatistics();
     }
 
     @GetMapping("/charging-volume")
@@ -34,7 +34,7 @@ public class StatisticsController {
             @RequestParam String chartType,
             @RequestParam String timeRange
     ) {
-        return statisticsService.getChargingVolumeStatistics(chartType, timeRange);
+        return statisticsService.getChargingVolumeStatistics();
     }
 
     @GetMapping("/charging-info")
@@ -42,7 +42,7 @@ public class StatisticsController {
             @RequestParam String chartType,
             @RequestParam String timeRange
     ) {
-        return statisticsService.getChargingInfoStatistics(chartType, timeRange);
+        return statisticsService.getChargingInfoStatistics();
     }
 
     @GetMapping("/charger-status")
@@ -50,7 +50,7 @@ public class StatisticsController {
             @RequestParam String chartType,
             @RequestParam String timeRange
     ) {
-        return statisticsService.getChargerStatusStatistics(chartType, timeRange);
+        return statisticsService.getChargerStatusStatistics();
     }
 
     @GetMapping("/power-trading")
@@ -58,6 +58,6 @@ public class StatisticsController {
             @RequestParam String chartType,
             @RequestParam String timeRange
     ) {
-        return statisticsService.getPowerTradingStatistics(chartType, timeRange);
+        return statisticsService.getPowerTradingStatistics();
     }
 }

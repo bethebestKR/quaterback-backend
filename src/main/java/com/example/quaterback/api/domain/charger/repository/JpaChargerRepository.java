@@ -5,6 +5,7 @@ import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
 import com.example.quaterback.api.domain.station.repository.SpringDataJpaChargingStationRepository;
+import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -62,5 +63,23 @@ public class JpaChargerRepository implements ChargerRepository {
         return entityList.stream()
                 .map(ChargerEntity::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> countFaultAndNormalChargers() {
+        List<Object[]> resultList = chargerRepository.countFaultAndNormalChargers();
+        Object[] results = resultList.get(0);
+        double normalChargers = ((Number) results[0]).doubleValue();
+        double faultChargers = ((Number) results[1]).doubleValue();
+        return List.of(
+                StatisticsData.ChartData.builder()
+                        .label("정상")
+                        .value(normalChargers)
+                        .build(),
+                StatisticsData.ChartData.builder()
+                        .label("고장")
+                        .value(faultChargers)
+                        .build()
+        );
     }
 }
