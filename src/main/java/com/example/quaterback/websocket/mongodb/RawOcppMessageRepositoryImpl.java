@@ -34,10 +34,10 @@ public class RawOcppMessageRepositoryImpl implements RawOcppMessageRepositoryCus
         if (filter.getStartDate() != null || filter.getEndDate() != null) {
             Criteria criteria = Criteria.where("timestamp");
             if (filter.getStartDate() != null) {
-                criteria = criteria.gte(filter.getStartDate());
+                criteria = criteria.gte(filter.getStartDate().atStartOfDay());
             }
             if (filter.getEndDate() != null) {
-                criteria = criteria.lte(filter.getEndDate());
+                criteria = criteria.lt(filter.getEndDate().plusDays(1).atStartOfDay());
             }
             query.addCriteria(criteria);
         }
@@ -45,7 +45,7 @@ public class RawOcppMessageRepositoryImpl implements RawOcppMessageRepositoryCus
             query.addCriteria(Criteria.where("message.message.0").is(filter.getMessageType()));
         }
         if (filter.getAction() != null) {
-            query.addCriteria(Criteria.where("message.message.2").is(filter.getAction()));
+            query.addCriteria(Criteria.where("action").is(filter.getAction()));
         }
 
         long total = mongoTemplate.count(query, RawOcppMessage.class);
