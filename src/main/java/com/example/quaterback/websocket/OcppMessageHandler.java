@@ -8,5 +8,5 @@ import java.io.IOException;
 public interface OcppMessageHandler {
     String getAction();
 
-    void handle(WebSocketSession session, JsonNode message) throws IOException;
+    JsonNode handle(WebSocketSession session, JsonNode message) throws IOException;
 }
