@@ -6,6 +6,7 @@ import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
 import com.example.quaterback.api.domain.charger.fixture.ChargerFixture;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.domain.station.fixture.ChargingStationFixture;
+import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +43,11 @@ public class FakeChargerRepository implements ChargerRepository {
     @Override
     public void save(ChargerDomain chargerDomain) {
 
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> countFaultAndNormalChargers() {
+        return List.of();
     }
 
     public void initializeStorage(ChargerStatus status, LocalDateTime dateTime) {

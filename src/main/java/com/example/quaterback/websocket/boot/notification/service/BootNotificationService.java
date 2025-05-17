@@ -37,8 +37,10 @@ public class BootNotificationService {
 
         List<ChargerDomain> chargerDomains = chargerRepository.findByStationID(stationId);
         for(ChargerDomain charger: chargerDomains){
-            charger.updateChargerStatus(ChargerStatus.AVAILABLE);
-            chargerRepository.update(charger);
+            if (!charger.getChargerStatus().equals(ChargerStatus.FAULT)) {
+                charger.updateChargerStatus(ChargerStatus.AVAILABLE);
+                chargerRepository.update(charger);
+            }
         }
 
         return resultStationId;

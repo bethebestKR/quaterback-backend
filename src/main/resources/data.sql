@@ -20,7 +20,8 @@ VALUES ('station-001', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id)
 VALUES (1, 'Available', '2025-04-20T12:30:00', 'station-001'),
        (2, 'Available', '2025-04-20T12:30:00', 'station-001'),
-       (3, 'Available', '2025-04-20T12:30:00', 'station-001');
+       (3, 'Available', '2025-04-20T12:30:00', 'station-001'),
+       (4, 'Fault', '2025-04-20T12:30:00', 'station-001');
 
 INSERT INTO customer (customer_id, customer_name, id_token, email, phone, vehicle_no, registration_date)
 VALUES
@@ -31,7 +32,7 @@ VALUES
     ('user5', '이름5', 'user-005', 'e5@gmail.com', '01012334455', '12-6666', '2024-05-24T16:30:00'),
     ('user6', '이름6', 'user-006', 'e6@gmail.com', '01010044499', '12-8989', '2024-05-25T16:30:00');
 
-INSERT INTO cs_price (price_per_mwh, updated_date_time) VALUES (100, '2025-05-12T12:00:00');
+INSERT INTO cs_price (price_per_mwh, updated_date_time) VALUES (100, '2025-05-16T12:00:00');
 
 INSERT INTO kepco_price (season, time_slot, price_per_kwh) VALUES
     ('SUMMER', 'OFF_PEAK', 79.2),
@@ -43,3 +44,21 @@ INSERT INTO kepco_price (season, time_slot, price_per_kwh) VALUES
     ('WINTER', 'OFF_PEAK', 96.6),
     ('WINTER', 'MID_PEAK', 127.7),
     ('WINTER', 'ON_PEAK', 165.5);
+
+-- 통계 api 테스트용 데이터
+INSERT INTO tx_info (transaction_id, started_time, ended_time,vehicle_no, id_token, station_id,total_meter_value, total_price, error_code)
+VALUES('TX123456','2025-05-15T10:00:00','2025-05-15T10:00:10','12가3456','token001','station-001',15.0,1500,'00'),
+      ('TX12123','2025-05-16T10:20:00','2025-05-16T10:20:20','12가3456','token001','station-001',15.0,1000,'00'),
+      ('TX789012','2025-04-02T14:10:00',          '2025-04-02T14:50:00','34나7890','token001','station-001',22.7,6800,'00');
+
+INSERT INTO cs_price (price_per_mwh, updated_date_time)
+VALUES
+    (70, '2025-05-01T12:00:00'),
+    (75, '2025-05-02T12:00:00'),
+    (80, '2025-05-03T12:00:00'),
+    (85, '2025-05-04T12:00:00'),
+    (90, '2025-05-10T12:00:00'),
+    (95, '2025-05-11T12:00:00'),
+    (97, '2025-05-12T12:00:00'),
+    (98, '2025-05-13T12:00:00'),
+    (100, '2025-05-14T12:00:00');
