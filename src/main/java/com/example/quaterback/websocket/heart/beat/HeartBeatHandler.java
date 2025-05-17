@@ -10,10 +10,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
-import java.io.IOException;
 @Slf4j
 @Handler
 @RequiredArgsConstructor
@@ -26,7 +23,7 @@ public class HeartBeatHandler implements OcppMessageHandler {
     }
 
     @Override
-    public void handle(WebSocketSession session, JsonNode message) throws IOException {
+    public JsonNode handle(WebSocketSession session, JsonNode message) {
         String messageId = MessageUtil.getMessageId(message);
         String messageAction = MessageUtil.getAction(message);
         String sessionId = session.getId();
@@ -41,14 +38,7 @@ public class HeartBeatHandler implements OcppMessageHandler {
         ObjectNode payloadNode = mapper.createObjectNode();
         response.add(payloadNode);
 
-        // 메시지 전송
-        try {
-            session.sendMessage(new TextMessage(response.toString()));
-        } catch (IOException e) {
-            log.error("Error sending Heartbeat Response", e);
-        }
+        return response;
     }
-
-    //Response 보내기
 
 }

@@ -13,10 +13,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -36,45 +34,37 @@ public class BootNotificationHandler implements OcppMessageHandler {
     }
 
     @Override
-    public void handle(WebSocketSession session, JsonNode jsonNode) {
+    public JsonNode handle(WebSocketSession session, JsonNode jsonNode) {
         String messageId = MessageUtil.getMessageId(jsonNode);
         JsonNode payload = MessageUtil.getPayload(jsonNode);
         String reason = payload.path("reason").asText();
         log.info("BootNotification reason - {}", reason);
         String sessionId = session.getId();
 
-        if (reason.equals("PowerUp")) {
-            String stationId = bootNotificationService.updateStationStatus(jsonNode, session.getId());
-            refreshTimeoutService.refreshTimeout(sessionId);
-            // 응답 메시지 생성
-            ObjectMapper mapper = this.objectMapper;
-            ArrayNode response = mapper.createArrayNode();
-            response.add(3);  // MessageTypeId for CALL_RESULT
-            response.add(messageId);  // 요청에서 가져온 messageId
+        String stationId = bootNotificationService.updateStationStatus(jsonNode, session.getId());
+        refreshTimeoutService.refreshTimeout(sessionId);
+        // 응답 메시지 생성
+        ObjectMapper mapper = this.objectMapper;
+        ArrayNode response = mapper.createArrayNode();
+        response.add(3);  // MessageTypeId for CALL_RESULT
+        response.add(messageId);  // 요청에서 가져온 messageId
 
-            ObjectNode payloadNode = mapper.createObjectNode();
-            payloadNode.put("currentTime", LocalDateTime.now().toString());  // 또는 UTC 포맷 사용
-            payloadNode.put("interval", 15);
-            payloadNode.put("status", "Accepted");
+        ObjectNode payloadNode = mapper.createObjectNode();
+        payloadNode.put("currentTime", LocalDateTime.now().toString());  // 또는 UTC 포맷 사용
+        payloadNode.put("interval", 15);
+        payloadNode.put("status", "Accepted");
 
-            ObjectNode customDataNode = mapper.createObjectNode();
-            Optional<TransactionInfoEntity> entity = springDataJpaTxInfoRepository.findFirstByOrderByTransactionIdDesc();
-            if(entity.isEmpty()){
-                customDataNode.put("transactionId", "tx-000");
-            }
-            else{
-                customDataNode.put("transactionId", entity.get().getTransactionId());
-            }
-            // payload에 customData 추가
-            payloadNode.put("customData", customDataNode);
-            response.add(payloadNode);
-            // 메시지 전송
-            try {
-                session.sendMessage(new TextMessage(response.toString()));
-                log.info("Sent BootNotificationResponse: {}", response);
-            } catch (IOException e) {
-                log.error("Error sending BootNotificationResponse", e);
-            }
+        ObjectNode customDataNode = mapper.createObjectNode();
+        Optional<TransactionInfoEntity> entity = springDataJpaTxInfoRepository.findFirstByOrderByTransactionIdDesc();
+        if (entity.isEmpty()) {
+            customDataNode.put("transactionId", "tx-000");
+        } else {
+            customDataNode.put("transactionId", entity.get().getTransactionId());
         }
+        // payload에 customData 추가
+        payloadNode.put("customData", customDataNode);
+        response.add(payloadNode);
+
+        return response;
     }
 }

@@ -3,6 +3,7 @@ package com.example.quaterback.websocket;
 import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
 import com.example.quaterback.common.annotation.Handler;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
+import com.example.quaterback.websocket.mongodb.MongoDBService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -22,16 +23,19 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     private final Map<String, OcppMessageHandler> handlerMap;
     private final RedisMapSessionToStationService redisMappingService;
     private final TransactionInfoService transactionInfoService;
+    private final MongoDBService mongoDBService;
 
     public OcppWebSocketHandler(List<OcppMessageHandler> handlers,
                                 RedisMapSessionToStationService redisMappingService,
-                                TransactionInfoService transactionInfoService) {
+                                TransactionInfoService transactionInfoService,
+                                MongoDBService mongoDBService) {
         this.handlerMap = new HashMap<>();
         for (OcppMessageHandler handler : handlers) {
             handlerMap.put(handler.getAction(), handler);
         }
         this.redisMappingService = redisMappingService;
         this.transactionInfoService = transactionInfoService;
+        this.mongoDBService = mongoDBService;
     }
 
     @Override
@@ -43,9 +47,19 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
         String action = MessageUtil.getAction(jsonNode);
 
+        if (!action.equals("BootNotification"))
+            mongoDBService.saveMessage(objectMapper.writeValueAsString(jsonNode), redisMappingService.getStationId(session.getId()), action);
+
         OcppMessageHandler handler = handlerMap.get(action);
         if (handler != null) {
-            handler.handle(session, jsonNode);  // payload만 넘겨도 됨
+            JsonNode response = handler.handle(session, jsonNode);  // payload만 넘겨도 됨
+            String stationId = redisMappingService.getStationId(session.getId());
+            if (action.equals("BootNotification")) {
+                mongoDBService.saveMessage(objectMapper.writeValueAsString(jsonNode), stationId, action);
+            }
+            session.sendMessage(new TextMessage(response.toString()));
+            log.info("Sent StatusNotificationResponse: {}", response);
+            mongoDBService.saveMessage(objectMapper.writeValueAsString(response), stationId, action);
         } else {
             log.warn("No handler found for action: {}", jsonNode);
             // optionally respond with error
