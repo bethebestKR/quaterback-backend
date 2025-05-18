@@ -4,17 +4,85 @@ import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsSummary;
 import com.example.quaterback.api.feature.statistics.service.StatisticsService;
+import com.example.quaterback.api.domain.price.constant.Season;
+import com.example.quaterback.api.domain.price.service.KepcoService;
+import com.example.quaterback.api.feature.managing.dto.apiResponse.ApiResponse;
+import com.example.quaterback.api.feature.statistics.dto.*;
+import com.example.quaterback.api.feature.statistics.service.StatisticService;
 import com.sun.jdi.CharType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @RequestMapping("/api/statistics")
 @RestController
 @RequiredArgsConstructor
 public class StatisticsController {
+    private final StatisticService statisticService;
+    private final KepcoService kepcoService;
+
+    @GetMapping("/charger-uptime")
+    public ResponseEntity<ApiResponse<ChargerUptimeData>> getChargerRate(
+    ){
+        LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endTime = LocalDateTime.now();
+
+        ChargerUptimeData c = statisticService.getChargerRate(startTime, endTime);
+
+        return ResponseEntity.ok(new ApiResponse<>("success", c));
+    }
+
+    @GetMapping("/charger-troubles")
+    public ResponseEntity<ApiResponse<ChargerTroubleData>> getChargerTrouble(){
+        ChargerTroubleData c = statisticService.getChargerTrouble();
+        return ResponseEntity.ok(new ApiResponse<>("success", c));
+    }
+
+    @PostMapping("/charger-trouble-report")
+    public ResponseEntity<ApiResponse<String>> reportChargerTrouble(
+            @RequestBody TroubleRequest troubleRequest
+    ){
+        statisticService.reportTrouble(troubleRequest.getStationName()
+                ,troubleRequest.getEvseId());
+        return ResponseEntity.ok(new ApiResponse<>("success", "reported"));
+    }
+
+
+    @GetMapping("/power-trading-revenue")
+    public ResponseEntity<ApiResponse<PowerTradingRevenueData>> getPowerTradingRevenueData(){
+        LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endTime = LocalDateTime.now();
+
+        PowerTradingRevenueData c = statisticService.getPowerTradingData(startTime, endTime);
+        return ResponseEntity.ok(new ApiResponse<>("success", c));
+    }
+
+    @GetMapping("/power-trading-volume")
+    public ResponseEntity<ApiResponse<PowerTradingVolumeData>> getPowerTradingVolumeData(){
+        LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endTime = LocalDateTime.now();
+
+        PowerTradingVolumeData c = statisticService.getPowerVolumeData(startTime, endTime);
+        return ResponseEntity.ok(new ApiResponse<>("success", c));
+    }
+
+    @GetMapping("/power-trading-price")
+    public ResponseEntity<ApiResponse<PowerTradingPriceData>> getPowerTradingPrice(){
+        LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endTime = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
+
+        PowerTradingPriceData c = statisticService.getTradingPriceByMonth(startTime, endTime);
+       return ResponseEntity.ok(new ApiResponse<>("success", c));
+    }
+
 
     private final StatisticsService statisticsService;
 

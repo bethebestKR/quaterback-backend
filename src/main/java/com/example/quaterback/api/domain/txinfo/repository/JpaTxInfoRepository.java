@@ -264,4 +264,9 @@ public class JpaTxInfoRepository implements TxInfoRepository {
                         .build()
         );
     }
+
+    @Override
+    public List<TransactionInfoEntity> findTxInfoByTerm(LocalDateTime startTime, LocalDateTime endTime) {
+        return springDataJpaTxInfoRepository.findByEndedTimeBetween(startTime, endTime);
+    }
 }

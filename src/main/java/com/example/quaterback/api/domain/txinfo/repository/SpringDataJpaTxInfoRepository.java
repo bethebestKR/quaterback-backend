@@ -147,6 +147,16 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     """)
     List<TransactionInfoEntity> findNotEndedTxInfos(String stationId);
 
+    @Query("""
+    SELECT t FROM TransactionInfoEntity t
+    WHERE t.endedTime BETWEEN :startTime AND :endTime
+""")
+    List<TransactionInfoEntity> findByEndedTimeBetween(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
+
+
     @Query(value = """
     SELECT
         COALESCE(SUM(t.total_meter_value), 0) AS totalChargingVolume,
