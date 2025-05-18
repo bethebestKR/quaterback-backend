@@ -27,14 +27,16 @@ public class ChargerUptimeEntity {
     @JoinColumn(name = "charging_station")
     private ChargingStationEntity station;
 
+    private String reason;
     /**
      * 신규 세그먼트 생성용 팩토리
      */
-    public static ChargerUptimeEntity of(ChargingStationEntity station, double initialUpTime, LocalDateTime timestamp) {
+    public static ChargerUptimeEntity of(ChargingStationEntity station, double initialUpTime, LocalDateTime timestamp, String reason) {
         return ChargerUptimeEntity.builder()
                 .station(station)
                 .upTime(initialUpTime)
                 .createdAt(timestamp)
+                .reason(reason)
                 .build();
     }
 
@@ -44,5 +46,8 @@ public class ChargerUptimeEntity {
     public void accumulate(double additionalPercent, LocalDateTime timestamp) {
         this.upTime += additionalPercent;
         this.createdAt = timestamp;
+    }
+    public void updateReason(String reason){
+        this.reason = reason;
     }
 }
