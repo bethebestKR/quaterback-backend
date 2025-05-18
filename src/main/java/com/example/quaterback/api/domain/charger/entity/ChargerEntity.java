@@ -3,13 +3,10 @@ package com.example.quaterback.api.domain.charger.entity;
 import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
-import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "charger_info")
@@ -59,8 +56,8 @@ public class ChargerEntity {
 
     public void assignStation(ChargingStationEntity stationEntity) {
         station = stationEntity;
-        if (!stationEntity.getChargerList().contains(this)) {
-            stationEntity.getChargerList().add(this);
+        if (!stationEntity.getChargerEntityList().contains(this)) {
+            stationEntity.getChargerEntityList().add(this);
         }
     }
 
