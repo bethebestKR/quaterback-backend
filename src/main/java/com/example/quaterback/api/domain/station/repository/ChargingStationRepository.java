@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.station.repository;
 
+import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 
 import java.util.List;
@@ -22,4 +23,5 @@ public interface ChargingStationRepository {
 
     void save(ChargingStationDomain chargingStationDomain);
 
+    String updateStationStatus(String stationId, StationStatus status);
 }

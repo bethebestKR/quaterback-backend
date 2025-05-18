@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.station.repository;
 
+import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
@@ -7,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -69,6 +71,7 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
     @Override
     public List<ChargingStationDomain> findAll() {
         List<ChargingStationEntity> stationEntitys = chargingStationRepository.findAll();
+
         return stationEntitys.stream()
                 .map(ChargingStationEntity::toDomain)
                 .toList();
@@ -85,6 +88,17 @@ public class JpaChargingStationRepository implements ChargingStationRepository {
     public void save(ChargingStationDomain chargingStationDomain) {
         ChargingStationEntity csEntity = ChargingStationEntity.fromCsDomain(chargingStationDomain);
         chargingStationRepository.save(csEntity);
+    }
+
+    @Override
+    @Transactional
+    public String updateStationStatus(String stationId, StationStatus status) {
+        ChargingStationEntity entity = chargingStationRepository.findByStationId(stationId)
+                .orElseThrow(() -> new EntityNotFoundException("entity not found"));
+
+        entity.updateStationStatus(status);
+        ChargingStationEntity savedEntity = chargingStationRepository.save(entity);
+        return savedEntity.getStationId();
     }
 
     @Override

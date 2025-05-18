@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.station.repository;
 
+import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -55,6 +56,5 @@ public interface SpringDataJpaChargingStationRepository extends JpaRepository<Ch
     @Modifying
     @Query("delete from ChargingStationEntity cs where cs.stationName = :stationName")
     int deleteByName(@Param("stationName")String stationName);
-
 
 }
