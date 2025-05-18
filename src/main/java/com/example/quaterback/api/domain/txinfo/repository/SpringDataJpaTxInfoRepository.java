@@ -156,14 +156,14 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     MonthlyTransactionStatistics getMonthlyStatistics(@Param("year") int year, @Param("month") int month);
 
     @Query(value = """
-    SELECT 
-        DATE(t.ended_time) AS `date`,
-        SUM(t.total_price) AS dailyRevenue
-    FROM tx_info t
-    WHERE t.ended_time >= CURDATE() - INTERVAL 7 DAY
-    GROUP BY DATE(t.ended_time)
-    ORDER BY DATE(t.ended_time)
-    """, nativeQuery = true)
+            SELECT 
+                DATE(t.ended_time) AS `date`,
+                SUM(t.total_price) AS dailyRevenue
+            FROM tx_info t
+            WHERE t.ended_time < NOW()
+            GROUP BY DATE(t.ended_time)
+            ORDER BY DATE(t.ended_time)
+            """, nativeQuery = true)
     List<Object[]> findDailyRevenueLast7DaysRaw();
 
     @Query(value = """
@@ -171,11 +171,12 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         DATE(t.ended_time) AS `date`,
         SUM(t.total_meter_value) AS dailyUsage
     FROM tx_info t
-    WHERE t.ended_time >= CURDATE() - INTERVAL 7 DAY
+    WHERE t.ended_time < NOW()
     GROUP BY DATE(t.ended_time)
     ORDER BY DATE(t.ended_time)
     """, nativeQuery = true)
     List<Object[]> findDailyUsageLast7DaysRaw();
+
 
     @Query(value = """
     SELECT 

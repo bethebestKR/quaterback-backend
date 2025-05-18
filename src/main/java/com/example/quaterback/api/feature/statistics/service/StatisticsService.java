@@ -4,7 +4,9 @@ import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
 import com.example.quaterback.api.domain.price.entity.PricePerMwh;
 import com.example.quaterback.api.domain.price.repository.PriceRepository;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
+import com.example.quaterback.api.feature.statistics.converter.StatisticsConverter;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsSummary;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class StatisticsService {
     private final TxInfoRepository txInfoRepository;
     private final ChargerRepository chargerRepository;
     private final PriceRepository priceRepository;
+
+    private final StatisticsConverter converter;
 
     public StatisticsSummary getSummary() {
         MonthlyTransactionStatistics cur = txInfoRepository.getMonthlyStatisticsByYearAndMonth(
@@ -69,53 +73,33 @@ public class StatisticsService {
                 .build();
     }
 
-    public StatisticsData getCostStatistics() {
+    public StatisticsData getCostStatistics(ChartType chartType) {
         List<StatisticsData.ChartData> results = txInfoRepository.findDailyRevenueLast7DaysRaw();
-        return StatisticsData.builder()
-                .barChartData(results)
-                .lineChartData(Collections.emptyList())
-                .pieChartData(Collections.emptyList())
-                .build();
+        return converter.toStatisticsData(results, chartType);
     }
 
-    public StatisticsData getChargingVolumeStatistics() {
+    public StatisticsData getChargingVolumeStatistics(ChartType chartType) {
         List<StatisticsData.ChartData> results = txInfoRepository.findDailyUsageLast7DayRaw();
-        return StatisticsData.builder()
-                .barChartData(Collections.emptyList())
-                .lineChartData(results)
-                .pieChartData(Collections.emptyList())
-                .build();
+        return converter.toStatisticsData(results, chartType);
     }
 
-    public StatisticsData getChargingInfoStatistics() {
+    public StatisticsData getChargingInfoStatistics(ChartType chartType) {
         List<StatisticsData.ChartData> results = txInfoRepository.countChargingSpeedByMonth(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
-        return StatisticsData.builder()
-                .barChartData(Collections.emptyList())
-                .lineChartData(Collections.emptyList())
-                .pieChartData(results)
-                .build();
+        return converter.toStatisticsData(results, chartType);
     }
 
-    public StatisticsData getChargerStatusStatistics() {
+    public StatisticsData getChargerStatusStatistics(ChartType chartType) {
         List<StatisticsData.ChartData> results = chargerRepository.countFaultAndNormalChargers();
-        return StatisticsData.builder()
-                .barChartData(results)
-                .lineChartData(Collections.emptyList())
-                .pieChartData(Collections.emptyList())
-                .build();
+        return converter.toStatisticsData(results, chartType);
     }
 
-    public StatisticsData getPowerTradingStatistics() {
+    public StatisticsData getPowerTradingStatistics(ChartType chartType) {
         List<StatisticsData.ChartData> results = priceRepository.findDailyCsPrice7DayRaw()
                 .stream().map(price -> StatisticsData.ChartData.builder()
                         .label(price.getUpdatedDateTime().toString())
                         .value(price.getPricePerMwh())
                         .build()
                 ).toList();
-        return StatisticsData.builder()
-                .barChartData(Collections.emptyList())
-                .lineChartData(results)
-                .pieChartData(Collections.emptyList())
-                .build();
+        return converter.toStatisticsData(results, chartType);
     }
 }
