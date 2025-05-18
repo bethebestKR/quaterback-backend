@@ -1,7 +1,7 @@
--- 🔥 외래키 체크 해제
+-- 외래키 체크 해제
 SET FOREIGN_KEY_CHECKS = 0;
 
--- 1. 기존 데이터 삭제
+-- 1. 기존 데이터 삭제 (삭제 순서 중요: 자식 테이블 → 부모 테이블)
 DELETE FROM tx_log;
 DELETE FROM tx_info;
 DELETE FROM charger_info WHERE station_id = 'station-001';
@@ -10,7 +10,7 @@ DELETE FROM customer;
 DELETE FROM cs_price;
 DELETE FROM kepco_price;
 
--- 🔥 외래키 체크 복구
+-- 외래키 체크 복구
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 2. 새 데이터 삽입
@@ -20,7 +20,8 @@ VALUES ('station-001', 'R1', 'quarterback', 37.5665, 126.9780, '서울특별시 
 INSERT INTO charger_info (evse_id, charger_status, update_status_time_stamp, station_id)
 VALUES (1, 'Available', '2025-04-20T12:30:00', 'station-001'),
        (2, 'Available', '2025-04-20T12:30:00', 'station-001'),
-       (3, 'Available', '2025-04-20T12:30:00', 'station-001');
+       (3, 'Available', '2025-04-20T12:30:00', 'station-001'),
+       (4, 'Fault', '2025-04-20T12:30:00', 'station-001');
 
 INSERT INTO customer (customer_id, customer_name, id_token, email, phone, vehicle_no, registration_date)
 VALUES
@@ -31,15 +32,31 @@ VALUES
     ('user5', '이름5', 'user-005', 'e5@gmail.com', '01012334455', '12-6666', '2024-05-24T16:30:00'),
     ('user6', '이름6', 'user-006', 'e6@gmail.com', '01010044499', '12-8989', '2024-05-25T16:30:00');
 
-INSERT INTO cs_price (price_per_mwh, updated_date_time) VALUES (100, '2025-05-12T12:00:00');
+INSERT INTO cs_price (price_per_mwh, updated_date_time) VALUES
+                                                            (100, '2025-05-16T12:00:00'),
+                                                            (70, '2025-05-01T12:00:00'),
+                                                            (75, '2025-05-02T12:00:00'),
+                                                            (80, '2025-05-03T12:00:00'),
+                                                            (85, '2025-05-04T12:00:00'),
+                                                            (90, '2025-05-10T12:00:00'),
+                                                            (95, '2025-05-11T12:00:00'),
+                                                            (97, '2025-05-12T12:00:00'),
+                                                            (98, '2025-05-13T12:00:00'),
+                                                            (100, '2025-05-14T12:00:00');
 
 INSERT INTO kepco_price (season, time_slot, price_per_kwh) VALUES
-    ('SUMMER', 'OFF_PEAK', 79.2),
-    ('SUMMER', 'MID_PEAK', 137.4),
-    ('SUMMER', 'ON_PEAK', 190.4),
-    ('SPRING_FALL', 'OFF_PEAK', 80.2),
-    ('SPRING_FALL', 'MID_PEAK', 91.0),
-    ('SPRING_FALL', 'ON_PEAK', 94.9),
-    ('WINTER', 'OFF_PEAK', 96.6),
-    ('WINTER', 'MID_PEAK', 127.7),
-    ('WINTER', 'ON_PEAK', 165.5);
+                                                               ('SUMMER', 'OFF_PEAK', 79.2),
+                                                               ('SUMMER', 'MID_PEAK', 137.4),
+                                                               ('SUMMER', 'ON_PEAK', 190.4),
+                                                               ('SPRING_FALL', 'OFF_PEAK', 80.2),
+                                                               ('SPRING_FALL', 'MID_PEAK', 91.0),
+                                                               ('SPRING_FALL', 'ON_PEAK', 94.9),
+                                                               ('WINTER', 'OFF_PEAK', 96.6),
+                                                               ('WINTER', 'MID_PEAK', 127.7),
+                                                               ('WINTER', 'ON_PEAK', 165.5);
+
+INSERT INTO tx_info (transaction_id, started_time, ended_time, vehicle_no, id_token, station_id, total_meter_value, total_price, error_code)
+VALUES
+    ('TX123456', '2025-05-15T10:00:00', '2025-05-15T10:00:10', '12가3456', 'token001', 'station-001', 15.0, 1500, '00'),
+    ('TX12123',  '2025-05-16T10:20:00', '2025-05-16T10:20:20', '12가3456', 'token001', 'station-001', 15.0, 1000, '00'),
+    ('TX789012', '2025-04-02T14:10:00', '2025-04-02T14:50:00', '34나7890', 'token001', 'station-001', 22.7, 6800, '00');

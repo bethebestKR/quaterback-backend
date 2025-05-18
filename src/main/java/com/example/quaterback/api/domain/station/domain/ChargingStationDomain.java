@@ -1,10 +1,12 @@
 package com.example.quaterback.api.domain.station.domain;
 
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.feature.overview.dto.response.CsAndChargerParams;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -22,6 +24,7 @@ public class ChargingStationDomain {
     private LocalDateTime updateStatusTimeStamp;
     private StationStatus stationStatus;
     private Double essValue;
+    private List<ChargerDomain> chargers;
 
     public void updateStationStatus(StationStatus status) {
         if (!this.stationStatus.equals(status)) {

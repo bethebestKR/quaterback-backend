@@ -1,6 +1,7 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -152,4 +153,46 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
             @Param("endTime") LocalDateTime endTime
     );
 
+
+    @Query(value = """
+    SELECT
+        COALESCE(SUM(t.total_meter_value), 0) AS totalChargingVolume,
+        COUNT(t.id) AS totalChargingCount,
+        COALESCE(SUM(t.total_price), 0) AS totalRevenue,
+        COALESCE(AVG(TIMESTAMPDIFF(SECOND, t.started_time, t.ended_time)), 0) AS averageChargingTime
+        FROM tx_info t
+        WHERE MONTH(t.started_time) = :month AND YEAR(t.started_time) = :year
+    """, nativeQuery = true)
+    MonthlyTransactionStatistics getMonthlyStatistics(@Param("year") int year, @Param("month") int month);
+
+    @Query(value = """
+    SELECT 
+        DATE(t.ended_time) AS `date`,
+        SUM(t.total_price) AS dailyRevenue
+    FROM tx_info t
+    WHERE t.ended_time >= CURDATE() - INTERVAL 7 DAY
+    GROUP BY DATE(t.ended_time)
+    ORDER BY DATE(t.ended_time)
+    """, nativeQuery = true)
+    List<Object[]> findDailyRevenueLast7DaysRaw();
+
+    @Query(value = """
+    SELECT 
+        DATE(t.ended_time) AS `date`,
+        SUM(t.total_meter_value) AS dailyUsage
+    FROM tx_info t
+    WHERE t.ended_time >= CURDATE() - INTERVAL 7 DAY
+    GROUP BY DATE(t.ended_time)
+    ORDER BY DATE(t.ended_time)
+    """, nativeQuery = true)
+    List<Object[]> findDailyUsageLast7DaysRaw();
+
+    @Query(value = """
+    SELECT 
+        SUM(CASE WHEN TIMESTAMPDIFF(SECOND, t.started_time, t.ended_time) < 20 THEN 1 ELSE 0 END) AS rapidCount,
+        SUM(CASE WHEN TIMESTAMPDIFF(SECOND, t.started_time, t.ended_time) >= 20 THEN 1 ELSE 0 END) AS slowCount
+    FROM tx_info t
+    WHERE MONTH(t.started_time) = :month AND YEAR(t.started_time) = :year
+    """, nativeQuery = true)
+    List<Object[]> countChargingSpeedByMonth(@Param("year") int year, @Param("month") int month);
 }

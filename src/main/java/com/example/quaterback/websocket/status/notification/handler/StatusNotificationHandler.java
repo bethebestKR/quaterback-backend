@@ -12,10 +12,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
-import java.io.IOException;
 
 @Handler
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class StatusNotificationHandler implements OcppMessageHandler {
     }
 
     @Override
-    public void handle(WebSocketSession session, JsonNode jsonNode) throws IOException {
+    public JsonNode handle(WebSocketSession session, JsonNode jsonNode) {
         String messageId = MessageUtil.getMessageId(jsonNode);
         JsonNode payload = MessageUtil.getPayload(jsonNode);
         String stationId = payload.path("customData").path("stationId").asText();
@@ -57,12 +54,6 @@ public class StatusNotificationHandler implements OcppMessageHandler {
         payloadNode.set("customData", customDataNode);
         response.add(payloadNode);
 
-        // 메시지 전송
-        try {
-            session.sendMessage(new TextMessage(response.toString()));
-            log.info("Sent BootNotificationResponse: {}", response);
-        } catch (IOException e) {
-            log.error("Error sending BootNotificationResponse", e);
-        }
+        return response;
     }
 }

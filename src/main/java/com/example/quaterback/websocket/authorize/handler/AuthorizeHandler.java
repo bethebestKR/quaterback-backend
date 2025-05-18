@@ -29,21 +29,18 @@ public class AuthorizeHandler implements OcppMessageHandler {
     }
 
     @Override
-    public void handle(WebSocketSession session, JsonNode jsonNode) throws IOException {
+    public JsonNode handle(WebSocketSession session, JsonNode jsonNode) throws IOException {
         String messageId = MessageUtil.getMessageId(jsonNode);
         JsonNode payload = MessageUtil.getPayload(jsonNode);
         String type = payload.path("idToken").path("type").asText();
         log.info("Authorize idToken - {}", type);
 
         boolean isAccepted = authorizeService.authorize(jsonNode);
-        sendResponseMessage(session, messageId, isAccepted);
-    }
 
-    private void sendResponseMessage(WebSocketSession session, String messageId, boolean isAccepted) throws IOException {
         //response
-        ArrayNode responseArray = objectMapper.createArrayNode();
-        responseArray.add(3); // MessageTypeId
-        responseArray.add(messageId); // MessageId
+        ArrayNode response = objectMapper.createArrayNode();
+        response.add(3); // MessageTypeId
+        response.add(messageId); // MessageId
 
         ObjectNode idTokenInfo = objectMapper.createObjectNode();
         if (isAccepted) {
@@ -55,9 +52,8 @@ public class AuthorizeHandler implements OcppMessageHandler {
         ObjectNode responseBody = objectMapper.createObjectNode();
         responseBody.set("idTokenInfo", idTokenInfo);
 
-        responseArray.add(responseBody);
+        response.add(responseBody);
 
-        String jsonResponse = objectMapper.writeValueAsString(responseArray);
-        session.sendMessage(new TextMessage(jsonResponse));
+        return response;
     }
 }
