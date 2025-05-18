@@ -37,9 +37,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
                                 RedisMapSessionToStationService redisMappingService,
                                 TransactionInfoService transactionInfoService,
                                 MongoDBService mongoDBService,
-                                ReactWebSocketHandler reactWebSocketHandler,
-                                RawOcppMessageRepository rawOcppMessageRepository
-                                ) {
+                                RawOcppMessageRepository rawOcppMessageRepository,
                                 ReactWebSocketHandler reactWebSocketHandler,
                                 InactiveStationService inactiveStationService) {
         this.handlerMap = new HashMap<>();
