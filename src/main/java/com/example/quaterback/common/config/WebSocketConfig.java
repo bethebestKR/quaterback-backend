@@ -25,10 +25,14 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final WebSocketHandler ocppWebSocketHandler;
+    private final WebSocketHandler reactWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(ocppWebSocketHandler, "/ocpp")
+                .setAllowedOrigins("*");
+
+        registry.addHandler(reactWebSocketHandler, "/react")
                 .setAllowedOrigins("*");
     }
 
