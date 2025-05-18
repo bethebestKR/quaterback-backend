@@ -101,6 +101,11 @@ public class StatisticsService {
         return converter.toStatisticsData(results, chartType);
     }
 
+    public StatisticsData getTransactionCountStatistics(ChartType chartType) {
+        List<StatisticsData.ChartData> results = txInfoRepository.findDailyTxCount(chartType);
+        return converter.toStatisticsData(results, chartType);
+    }
+
     public StatisticsData getTotalPriceGroupedByStationId(ChartType chartType) {
         List<StatisticsData.ChartData> results = txInfoRepository.findTotalPriceGroupedByStationId();
         return converter.toStatisticsData(results, chartType);

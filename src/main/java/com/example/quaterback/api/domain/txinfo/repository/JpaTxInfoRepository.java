@@ -11,6 +11,7 @@ import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 import com.example.quaterback.api.feature.statistics.dto.query.DayNightMeterValueDto;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
 import com.example.quaterback.api.feature.statistics.dto.query.StationTotalPriceDto;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import jakarta.persistence.EntityNotFoundException;
@@ -216,6 +217,18 @@ public class JpaTxInfoRepository implements TxInfoRepository {
                         .build()
         );
 
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findDailyTxCount(ChartType chartType) {
+
+         return springDataJpaTxInfoRepository.findDailyTxCount()
+                 .stream()
+                 .map(row -> StatisticsData.ChartData.builder()
+                         .label(row[0].toString())
+                         .value(((Number) row[1]).doubleValue())
+                         .build())
+                 .toList();
     }
 
     @Override
