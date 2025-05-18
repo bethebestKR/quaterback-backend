@@ -102,4 +102,9 @@ public class StatisticsService {
                 ).toList();
         return converter.toStatisticsData(results, chartType);
     }
+
+    public StatisticsData getTransactionCountStatistics(ChartType chartType) {
+        List<StatisticsData.ChartData> results = txInfoRepository.findDailyTxCount(chartType);
+        return converter.toStatisticsData(results, chartType);
+    }
 }

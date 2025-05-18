@@ -62,4 +62,12 @@ public class StatisticsController {
     ) {
         return statisticsService.getPowerTradingStatistics(chartType);
     }
+
+    @GetMapping("/transaction-count")
+    public StatisticsData getTransactionCountStatistics(
+            @RequestParam(name ="chartType") ChartType chartType,
+            @RequestParam String timeRange
+    ){
+        return statisticsService.getTransactionCountStatistics(chartType);
+    }
 }
