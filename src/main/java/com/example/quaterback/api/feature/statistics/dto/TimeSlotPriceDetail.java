@@ -12,5 +12,4 @@ import java.util.List;
 public class TimeSlotPriceDetail {
     private String timeSlot;
     private double averagePrice;
-    private List<Double> values;
 }

@@ -204,7 +204,7 @@ public class StatisticService {
                     List<Double> values = grouped.getOrDefault(slot, List.of());
                     double avg = values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
                     avg = Math.round(avg * 100) / 100.0;
-                    return new TimeSlotPriceDetail(slot.name(), avg, values);
+                    return new TimeSlotPriceDetail(slot.name(), avg);
                 })
                 .collect(Collectors.toList());
         // 전체 평균 계산
