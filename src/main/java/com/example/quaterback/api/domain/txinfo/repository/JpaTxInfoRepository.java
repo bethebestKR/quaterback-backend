@@ -9,7 +9,10 @@ import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQu
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
+import com.example.quaterback.api.feature.statistics.dto.query.DayNightMeterValueDto;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
+import com.example.quaterback.api.feature.statistics.dto.query.StationTotalPriceDto;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -214,6 +217,52 @@ public class JpaTxInfoRepository implements TxInfoRepository {
                         .build()
         );
 
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findDailyTxCount(ChartType chartType) {
+
+         return springDataJpaTxInfoRepository.findDailyTxCount()
+                 .stream()
+                 .map(row -> StatisticsData.ChartData.builder()
+                         .label(row[0].toString())
+                         .value(((Number) row[1]).doubleValue())
+                         .build())
+                 .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findTotalPriceGroupedByStationId() {
+        List<StationTotalPriceDto> list = springDataJpaTxInfoRepository.findTotalPriceGroupedByStationId();
+        return list.stream()
+                .map(dto -> StatisticsData.ChartData.builder()
+                        .label(dto.getStationId())
+                        .value(dto.getTotalPrice() != null ? dto.getTotalPrice() : 0.0)
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findMeterValueGroupedByTimeType() {
+        List<DayNightMeterValueDto> list = springDataJpaTxInfoRepository.findMeterValueGroupedByTimeType();
+        double dayTotal = 0.0;
+        double nightTotal = 0.0;
+        for (DayNightMeterValueDto dto : list) {
+            if ("DAY".equals(dto.getTimeType())) {
+                dayTotal = dto.getTotalMeterValue() != null ? dto.getTotalMeterValue() : 0.0;
+            }
+            else if ("NIGHT".equals(dto.getTimeType())) {
+                nightTotal = dto.getTotalMeterValue() != null ? dto.getTotalMeterValue() : 0.0;
+            }
+        }
+        return List.of(
+                StatisticsData.ChartData.builder()
+                        .label("주간").value(dayTotal)
+                        .build(),
+                StatisticsData.ChartData.builder()
+                        .label("야간").value(nightTotal)
+                        .build()
+        );
     }
 
     @Override

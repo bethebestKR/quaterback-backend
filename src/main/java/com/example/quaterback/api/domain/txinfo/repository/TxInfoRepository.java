@@ -3,6 +3,7 @@ package com.example.quaterback.api.domain.txinfo.repository;
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
 import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,4 +62,10 @@ public interface TxInfoRepository {
     List<StatisticsData.ChartData> countChargingSpeedByMonth(int year, int month);
 
     List<TransactionInfoEntity> findTxInfoByTerm(LocalDateTime startTime, LocalDateTime endTime);
+
+    List<StatisticsData.ChartData> findDailyTxCount(ChartType chartType);
+
+    List<StatisticsData.ChartData> findTotalPriceGroupedByStationId();
+
+    List<StatisticsData.ChartData> findMeterValueGroupedByTimeType();
 }

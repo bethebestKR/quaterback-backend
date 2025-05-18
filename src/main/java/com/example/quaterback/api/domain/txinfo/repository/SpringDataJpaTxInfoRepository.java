@@ -1,7 +1,10 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.feature.statistics.dto.query.DayNightMeterValueDto;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
+import com.example.quaterback.api.feature.statistics.dto.query.StationTotalPriceDto;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -166,14 +169,14 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     MonthlyTransactionStatistics getMonthlyStatistics(@Param("year") int year, @Param("month") int month);
 
     @Query(value = """
-    SELECT 
-        DATE(t.ended_time) AS `date`,
-        SUM(t.total_price) AS dailyRevenue
-    FROM tx_info t
-    WHERE t.ended_time >= CURDATE() - INTERVAL 7 DAY
-    GROUP BY DATE(t.ended_time)
-    ORDER BY DATE(t.ended_time)
-    """, nativeQuery = true)
+            SELECT 
+                DATE(t.ended_time) AS `date`,
+                SUM(t.total_price) AS dailyRevenue
+            FROM tx_info t
+            WHERE t.ended_time < NOW()
+            GROUP BY DATE(t.ended_time)
+            ORDER BY DATE(t.ended_time)
+            """, nativeQuery = true)
     List<Object[]> findDailyRevenueLast7DaysRaw();
 
     @Query(value = """
@@ -181,11 +184,12 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         DATE(t.ended_time) AS `date`,
         SUM(t.total_meter_value) AS dailyUsage
     FROM tx_info t
-    WHERE t.ended_time >= CURDATE() - INTERVAL 7 DAY
+    WHERE t.ended_time < NOW()
     GROUP BY DATE(t.ended_time)
     ORDER BY DATE(t.ended_time)
     """, nativeQuery = true)
     List<Object[]> findDailyUsageLast7DaysRaw();
+
 
     @Query(value = """
     SELECT 
@@ -195,4 +199,32 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     WHERE MONTH(t.started_time) = :month AND YEAR(t.started_time) = :year
     """, nativeQuery = true)
     List<Object[]> countChargingSpeedByMonth(@Param("year") int year, @Param("month") int month);
+
+    @Query(value = """
+    SELECT 
+        DATE(ended_time) AS date,
+        COUNT(*) AS tx_count
+    FROM tx_info
+    WHERE ended_time < NOW()
+    GROUP BY DATE(ended_time)
+    ORDER BY DATE(ended_time) DESC
+    """, nativeQuery = true)
+    List<Object[]> findDailyTxCount();
+
+    @Query("SELECT t.stationId AS stationId, SUM(t.totalPrice) AS totalPrice " +
+            "FROM TransactionInfoEntity t " +
+            "GROUP BY t.stationId")
+    List<StationTotalPriceDto> findTotalPriceGroupedByStationId();
+
+    @Query(value = """
+        SELECT 
+            CASE 
+                WHEN HOUR(started_time) >= 6 AND HOUR(started_time) < 18 THEN 'DAY'
+                ELSE 'NIGHT'
+            END AS timeType,
+            SUM(total_meter_value) AS totalMeterValue
+        FROM tx_info
+        GROUP BY timeType
+        """, nativeQuery = true)
+    List<DayNightMeterValueDto> findMeterValueGroupedByTimeType();
 }
