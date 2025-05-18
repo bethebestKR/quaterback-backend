@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @RequestMapping("/api/statistics")
 @RestController
@@ -42,6 +43,7 @@ public class StatisticsController {
         ChargerTroubleData c = statisticService.getChargerTrouble();
         return ResponseEntity.ok(new ApiResponse<>("success", c));
     }
+
     @PostMapping("/charger-trouble-report")
     public ResponseEntity<ApiResponse<String>> reportChargerTrouble(
             @RequestBody TroubleRequest troubleRequest
@@ -72,10 +74,14 @@ public class StatisticsController {
 
     @GetMapping("/power-trading-price")
     public ResponseEntity<ApiResponse<PowerTradingPriceData>> getPowerTradingPrice(){
-       Season season =  kepcoService.determineSeason(LocalDateTime.now());
-       PowerTradingPriceData c = statisticService.getTradingPriceBySeason(season);
+        LocalDateTime startTime = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endTime = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
+
+        PowerTradingPriceData c = statisticService.getTradingPriceByMonth(startTime, endTime);
        return ResponseEntity.ok(new ApiResponse<>("success", c));
     }
+
+
     private final StatisticsService statisticsService;
 
     @GetMapping("/summary")
