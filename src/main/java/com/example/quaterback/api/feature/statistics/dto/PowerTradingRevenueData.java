@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PowerTradingRevenueData {
     private double netRevenue;
+    private String percentText;
 }

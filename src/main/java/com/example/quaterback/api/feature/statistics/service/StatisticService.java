@@ -7,8 +7,12 @@ import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
 import com.example.quaterback.api.domain.chargerUptime.entity.ChargerUptimeEntity;
 import com.example.quaterback.api.domain.chargerUptime.repository.ChargerInfoRepository;
 import com.example.quaterback.api.domain.price.constant.Season;
+import com.example.quaterback.api.domain.price.constant.TimeSlot;
 import com.example.quaterback.api.domain.price.entity.KepcoPrice;
+import com.example.quaterback.api.domain.price.entity.PricePerMwh;
 import com.example.quaterback.api.domain.price.repository.KepcoRepository;
+import com.example.quaterback.api.domain.price.repository.PriceRepository;
+import com.example.quaterback.api.domain.price.service.KepcoService;
 import com.example.quaterback.api.domain.station.repository.ChargingStationRepository;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
@@ -19,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +33,8 @@ public class StatisticService {
     private final ChargerInfoRepository chargerInfoRepository;
     private final ChargerRepository chargerRepository;
     private final TxInfoRepository txInfoRepository;
-    private final KepcoRepository kepcoRepository;
+    private final PriceRepository priceRepository;
+    private final KepcoService kepcoService;
     private final ChargingStationRepository chargingStationRepository;
 
 
@@ -97,48 +101,130 @@ public class StatisticService {
     }
 
     public PowerTradingRevenueData getPowerTradingData(LocalDateTime startTime, LocalDateTime endTime){
+        LocalDate today = LocalDate.now();
+        LocalDate prevMonthStart = today.minusMonths(1).withDayOfMonth(1);
+        LocalDate prevMonthEnd = today.minusMonths(1);
+
+        LocalDateTime prevStartTime = prevMonthStart.atStartOfDay();
+        LocalDateTime prevEndTime = prevMonthEnd.atTime(endTime.toLocalTime());
+
         List<TransactionInfoEntity> txList = txInfoRepository.findTxInfoByTerm(startTime, endTime);
+        List<TransactionInfoEntity> prevTxList = txInfoRepository.findTxInfoByTerm(prevStartTime, prevEndTime);
+
         double netRevenue = txList.stream()
                 .mapToDouble(tx -> tx.getTotalPrice() != null ? tx.getTotalPrice() : 0.0)
                 .sum();
-        return new PowerTradingRevenueData(netRevenue);
+
+        double prevNetRevenue = prevTxList.stream()
+                .mapToDouble(tx-> tx.getTotalPrice() != null ? tx.getTotalPrice() : 0.0)
+                .sum();
+
+        String percentText;
+        if (prevNetRevenue == 0.0) {
+            if (netRevenue == 0.0) {
+                percentText = "0%";
+            } else {
+                percentText = "신규 수익 발생"; // or "∞%"
+            }
+        } else {
+            double percent = (netRevenue / prevNetRevenue - 1.0) * 100;
+            percentText = String.format("%.1f%% 증가", percent);
+        }
+
+        return new PowerTradingRevenueData(netRevenue, percentText);
     }
 
     public PowerTradingVolumeData getPowerVolumeData(LocalDateTime startTime, LocalDateTime endTime){
         List<TransactionInfoEntity> txList = txInfoRepository.findTxInfoByTerm(startTime, endTime);
-        List<Double> meterValues = txList.stream()
+        List<TransactionInfoEntity> filtered = txList.stream()
+                .filter(tx -> tx.getTotalMeterValue() != null)
+                .toList();
+
+        double netVolume = filtered.stream()
+                .mapToDouble(TransactionInfoEntity::getTotalMeterValue)
+                .sum();
+        // 최소값 객체 찾기
+        TransactionInfoEntity minEntity = filtered.stream()
+                .min(Comparator.comparing(TransactionInfoEntity::getTotalMeterValue))
+                .orElse(null);
+
+        // 최대값 객체 찾기
+        TransactionInfoEntity maxEntity = filtered.stream()
+                .max(Comparator.comparing(TransactionInfoEntity::getTotalMeterValue))
+                .orElse(null);
+
+        // 값과 날짜 분리
+        double minVolume = minEntity != null ? minEntity.getTotalMeterValue() : 0.0;
+        LocalDateTime minDate = minEntity != null ? minEntity.getStartedTime() : null;
+
+        double maxVolume = maxEntity != null ? maxEntity.getTotalMeterValue() : 0.0;
+        LocalDateTime maxDate = maxEntity != null ? maxEntity.getStartedTime() : null;
+
+
+        LocalDate today = LocalDate.now();
+        LocalDate prevMonthStart = today.minusMonths(1).withDayOfMonth(1);
+        LocalDate prevMonthEnd = today.minusMonths(1);
+
+        LocalDateTime prevStartTime = prevMonthStart.atStartOfDay();
+        LocalDateTime prevEndTime = prevMonthEnd.atTime(endTime.toLocalTime());
+
+        List<TransactionInfoEntity> prevtxList = txInfoRepository.findTxInfoByTerm(prevStartTime, prevEndTime);
+        List<Double> prevMeterValues = prevtxList.stream()
                 .map(TransactionInfoEntity::getTotalMeterValue)
                 .filter(Objects::nonNull)
                 .toList();
-        double netVolume = meterValues.stream().mapToDouble(Double::doubleValue).sum();
-        double minVolume = meterValues.stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
-        double maxVolume = meterValues.stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
+        double prevNetVolume = prevMeterValues.stream().mapToDouble(Double::doubleValue).sum();
 
-        return new PowerTradingVolumeData(netVolume, minVolume, maxVolume);
+        String percentText;
+        if (prevNetVolume == 0.0) {
+            if (netVolume == 0.0) {
+                percentText = "0%";
+            } else {
+                percentText = "신규 전력거래 발생"; // or "∞%"
+            }
+        } else {
+            double percent = (netVolume / prevNetVolume - 1.0) * 100;
+            percentText = String.format("%.1f%% 증가", percent);
+        }
+
+        return new PowerTradingVolumeData(netVolume, percentText, minVolume, minDate,  maxVolume, maxDate);
     }
 
-    public PowerTradingPriceData getTradingPriceBySeason(Season season){
-        List<KepcoPrice> kepcoPrices = kepcoRepository.findBySeason(season);
-
-        List<PowerTradingPriceData.TimeSlotPrice> priceByTimeSlot = kepcoPrices.stream()
-                .map(p-> new PowerTradingPriceData.TimeSlotPrice(
-                        p.getTimeSlot().name(),
-                        p.getPricePerKwh()
-                ))
-                .toList();
-        double averagePrice = kepcoPrices.stream()
-                .mapToDouble(KepcoPrice :: getPricePerKwh)
+    public PowerTradingPriceData getTradingPriceByMonth(LocalDateTime startTime, LocalDateTime endTime){
+        List<PricePerMwh> prices = priceRepository.findByUpdatedDateTimeBetween(startTime, endTime);
+        // TimeSlot -> Price 리스트 매핑
+        Map<TimeSlot, List<Double>> grouped = prices.stream()
+                .collect(Collectors.groupingBy(
+                        p -> kepcoService.determineTimeSlot(p.getUpdatedDateTime()),
+                        Collectors.mapping(PricePerMwh::getPricePerMwh, Collectors.toList())
+                ));
+        // 각 TimeSlot별 평균 및 리스트 구성
+        List<TimeSlotPriceDetail> details = Arrays.stream(TimeSlot.values())
+                .map(slot -> {
+                    List<Double> values = grouped.getOrDefault(slot, List.of());
+                    double avg = values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+                    avg = Math.round(avg * 100) / 100.0;
+                    return new TimeSlotPriceDetail(slot.name(), avg, values);
+                })
+                .collect(Collectors.toList());
+        // 전체 평균 계산
+        double overall = prices.stream()
+                .mapToDouble(PricePerMwh::getPricePerMwh)
                 .average()
                 .orElse(0.0);
+        overall = Math.round(overall * 100) / 100.0;
 
-        return new PowerTradingPriceData(averagePrice, priceByTimeSlot);
+        return new PowerTradingPriceData(overall, details);
     }
+
+
+
 
     @Transactional
     public void reportTrouble(String stationName, Integer evseId){
         String stationId = chargingStationRepository.findStationIdByStationName(stationName);
         ChargerDomain chargerDomain = chargerRepository.findByStationIdAndEvseId(stationId, evseId);
-        chargerDomain.updateChargerStatus(ChargerStatus.UNAVAILABLE);
+        chargerDomain.updateChargerStatus(ChargerStatus.FAULT);
         chargerDomain.addTrouble();
         chargerRepository.updateTroubleAndStatus(chargerDomain);
     }
