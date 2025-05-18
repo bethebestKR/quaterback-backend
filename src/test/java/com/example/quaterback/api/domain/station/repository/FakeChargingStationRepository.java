@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.station.repository;
 
+import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.station.entity.ChargingStationEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.StationFullInfoQuery;
@@ -63,6 +64,11 @@ public class FakeChargingStationRepository implements ChargingStationRepository 
     @Override
     public void save(ChargingStationDomain chargingStationDomain) {
 
+    }
+
+    @Override
+    public String updateStationStatus(String stationId, StationStatus status) {
+        return "";
     }
 
     public void initializeStorage(ChargingStationEntity entity) {
