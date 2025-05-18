@@ -21,6 +21,7 @@ public class TransactionInfoDomain {
     private Integer evseId;
     private Double totalMeterValue;
     private Double totalPrice;
+    private String errorCode;
 
     public static TransactionInfoDomain fromStartedTxEventDomain(TransactionEventDomain domain, String stationId) {
         return TransactionInfoDomain.builder()
@@ -33,12 +34,13 @@ public class TransactionInfoDomain {
                 .build();
     }
 
-    public static TransactionInfoDomain fromEndedTxEventDomain(TransactionEventDomain domain, Double totalMeterValue, Double totalPrice) {
+    public static TransactionInfoDomain fromEndedTxEventDomain(String transactionId, LocalDateTime endedTime, String errorCode, Double totalMeterValue, Double totalPrice) {
         return TransactionInfoDomain.builder()
-                .transactionId(domain.extractTransactionId())
-                .endedTime(domain.getTimestamp())
+                .transactionId(transactionId)
+                .endedTime(endedTime)
                 .totalMeterValue(totalMeterValue)
                 .totalPrice(totalPrice)
+                .errorCode(errorCode)
                 .build();
     }
 
@@ -58,6 +60,7 @@ public class TransactionInfoDomain {
                 .evseId(entity.getEvseId().getEvseId())
                 .totalMeterValue(entity.getTotalMeterValue())
                 .totalPrice(entity.getTotalPrice())
+                .errorCode(entity.getErrorCode())
                 .build();
     }
 

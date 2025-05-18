@@ -14,4 +14,15 @@ public interface SpringDataJpaChargerRepository extends JpaRepository<ChargerEnt
 
     @Query("select c from ChargerEntity c where c.station.stationId =:stationId")
     List<ChargerEntity> findAllByStationId(@Param("stationId")String stationId);
+
+    @Query(value = """
+    SELECT
+        SUM(CASE WHEN c.charger_status != 'FAULT' THEN 1 ELSE 0 END) AS faultCount,
+        SUM(CASE WHEN c.charger_status = 'FAULT' THEN 1 ELSE 0 END) AS normalCount
+    FROM charger_info c
+    """, nativeQuery = true)
+    List<Object[]> countFaultAndNormalChargers();
+
+    @Query("select c from ChargerEntity c where c.station.stationId = :stationId and c.evseId = :evseId")
+    Optional<ChargerEntity> findOneCharger(String stationId, Integer evseId);
 }

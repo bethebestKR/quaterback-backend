@@ -1,5 +1,6 @@
 package com.example.quaterback.api.domain.station.entity;
 
+import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.station.constant.StationStatus;
 import com.example.quaterback.api.domain.station.domain.ChargingStationDomain;
 import com.example.quaterback.api.domain.charger.entity.ChargerEntity;
@@ -33,15 +34,16 @@ public class ChargingStationEntity {
     private Double longitude;
     private String address;
     private LocalDateTime updateStatusTimeStamp;
-    private Integer essValue;
+    private Double essValue;
 
     @Enumerated(EnumType.STRING)
     private StationStatus stationStatus;
 
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL)
-    private List<ChargerEntity> ChargerList = new ArrayList<>();
+    private List<ChargerEntity> chargerEntityList = new ArrayList<>();
 
     public ChargingStationDomain toDomain() {
+
         return ChargingStationDomain.builder()
                 .stationId(stationId)
                 .stationName(stationName)
@@ -53,15 +55,21 @@ public class ChargingStationEntity {
                 .updateStatusTimeStamp(updateStatusTimeStamp)
                 .stationStatus(stationStatus)
                 .essValue(essValue)
+                .chargers(
+                        chargerEntityList.stream()
+                                .map(ChargerDomain::fromEntityToDomain)
+                                .toList()
+                )
                 .build();
     }
+
 
     public void updateStationStatus(StationStatus status) {
         stationStatus = status;
         updateStatusTimeStamp = LocalDateTime.now();
     }
 
-    public void updateStationEssValue(Integer value){
+    public void updateStationEssValue(Double value){
         essValue = value;
     }
 

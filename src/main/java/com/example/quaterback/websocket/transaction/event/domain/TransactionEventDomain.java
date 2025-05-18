@@ -54,7 +54,7 @@ public class TransactionEventDomain {
         return txIdToken.getIdToken();
     }
 
-    public Integer extractMeterValue() {
+    public Double extractMeterValue() {
         return meterValue.get(0).getSampledValues().get(0).getValue();
     }
 

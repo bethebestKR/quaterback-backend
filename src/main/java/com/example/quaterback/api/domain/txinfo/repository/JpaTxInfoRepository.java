@@ -6,29 +6,27 @@ import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
-import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
+import com.example.quaterback.api.feature.statistics.dto.query.DayNightMeterValueDto;
+import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.request.ChartType;
+import com.example.quaterback.api.feature.statistics.dto.query.StationTotalPriceDto;
+import com.example.quaterback.api.feature.statistics.dto.response.StatisticsData;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import java.time.LocalDate;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -165,5 +163,105 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         return TransactionInfoDomain.fromTxEntityDomain(txEntity);
     }
 
+    @Override
+    public List<TransactionInfoDomain> findNotEnded(String stationId) {
+        return springDataJpaTxInfoRepository.findNotEndedTxInfos(stationId)
+                .stream().map(TransactionInfoEntity::toDomain).toList();
+    }
 
+    @Override
+    public MonthlyTransactionStatistics getMonthlyStatisticsByYearAndMonth(int year, int month) {
+        return springDataJpaTxInfoRepository.getMonthlyStatistics(year, month);
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findDailyRevenueLast7DaysRaw() {
+        return springDataJpaTxInfoRepository.findDailyRevenueLast7DaysRaw()
+                .stream()
+                .map(row -> StatisticsData.ChartData.builder()
+                        .label(row[0].toString())
+                        .value(((Number) row[1]).doubleValue())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findDailyUsageLast7DayRaw() {
+        return springDataJpaTxInfoRepository.findDailyUsageLast7DaysRaw()
+                .stream()
+                .map(row -> StatisticsData.ChartData.builder()
+                        .label(row[0].toString())
+                        .value(((Number) row[1]).doubleValue())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> countChargingSpeedByMonth(int year, int month) {
+        List<Object[]> resultsList = springDataJpaTxInfoRepository.countChargingSpeedByMonth(year, month);
+        Object[] results = resultsList.get(0);
+        double rapid = ((Number) results[0]).doubleValue();
+        double slow = ((Number) results[1]).doubleValue();
+        double rapidPercent = rapid / (rapid + slow) * 100;
+        double slowPercent = 100 - rapidPercent;
+        return List.of(
+                StatisticsData.ChartData.builder()
+                        .id("급속")
+                        .label("급속")
+                        .value(rapidPercent)
+                        .build(),
+                StatisticsData.ChartData.builder()
+                        .id("완속")
+                        .label("완속")
+                        .value(slowPercent)
+                        .build()
+        );
+
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findDailyTxCount(ChartType chartType) {
+
+         return springDataJpaTxInfoRepository.findDailyTxCount()
+                 .stream()
+                 .map(row -> StatisticsData.ChartData.builder()
+                         .label(row[0].toString())
+                         .value(((Number) row[1]).doubleValue())
+                         .build())
+                 .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findTotalPriceGroupedByStationId() {
+        List<StationTotalPriceDto> list = springDataJpaTxInfoRepository.findTotalPriceGroupedByStationId();
+        return list.stream()
+                .map(dto -> StatisticsData.ChartData.builder()
+                        .label(dto.getStationId())
+                        .value(dto.getTotalPrice() != null ? dto.getTotalPrice() : 0.0)
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<StatisticsData.ChartData> findMeterValueGroupedByTimeType() {
+        List<DayNightMeterValueDto> list = springDataJpaTxInfoRepository.findMeterValueGroupedByTimeType();
+        double dayTotal = 0.0;
+        double nightTotal = 0.0;
+        for (DayNightMeterValueDto dto : list) {
+            if ("DAY".equals(dto.getTimeType())) {
+                dayTotal = dto.getTotalMeterValue() != null ? dto.getTotalMeterValue() : 0.0;
+            }
+            else if ("NIGHT".equals(dto.getTimeType())) {
+                nightTotal = dto.getTotalMeterValue() != null ? dto.getTotalMeterValue() : 0.0;
+            }
+        }
+        return List.of(
+                StatisticsData.ChartData.builder()
+                        .label("주간").value(dayTotal)
+                        .build(),
+                StatisticsData.ChartData.builder()
+                        .label("야간").value(nightTotal)
+                        .build()
+        );
+    }
 }

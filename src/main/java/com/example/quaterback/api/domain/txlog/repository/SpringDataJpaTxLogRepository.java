@@ -5,7 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface SpringDataJpaTxLogRepository extends JpaRepository<TransactionLogEntity, Long> {
     @Query("SELECT AVG(t.meterValue) FROM TransactionLogEntity t WHERE t.transactionId = :transactionId")
     Integer avgMeterValueByTransactionId(@Param("transactionId") String transactionId);
+
+    TransactionLogEntity findTopByTransactionIdOrderByTimestampDesc(String txId);
 }

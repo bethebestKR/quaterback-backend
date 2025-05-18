@@ -1,6 +1,10 @@
 package com.example.quaterback.websocket.transaction.event.service;
 
-import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
+import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
+import com.example.quaterback.api.domain.txinfo.service.TransactionInfoService;
+import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
+import com.example.quaterback.api.domain.txlog.repository.TxLogRepository;
 import com.example.quaterback.api.feature.dashboard.dto.query.ChargerUsageQuery;
 import com.example.quaterback.api.feature.dashboard.dto.query.DashboardSummaryQuery;
 import com.example.quaterback.api.feature.dashboard.dto.response.ChargerUsageResponse;
@@ -9,15 +13,8 @@ import com.example.quaterback.api.feature.dashboard.dto.response.HourlyDischarge
 import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
-import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponse;
-import com.example.quaterback.api.feature.monitoring.dto.response.ChargingRecordResponsePage;
-import com.example.quaterback.api.feature.monitoring.dto.response.DailyUsageDto;
 import com.example.quaterback.api.feature.monitoring.dto.response.HourlyCongestion;
 import com.example.quaterback.common.redis.service.RedisMapSessionToStationService;
-import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
-import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
-import com.example.quaterback.api.domain.txlog.domain.TransactionLogDomain;
-import com.example.quaterback.api.domain.txlog.repository.TxLogRepository;
 import com.example.quaterback.websocket.transaction.event.converter.TransactionEventConverter;
 import com.example.quaterback.websocket.transaction.event.domain.TransactionEventDomain;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,10 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +37,7 @@ public class TransactionEventService {
     private final TxInfoRepository txInfoRepository;
     private final TxLogRepository txLogRepository;
     private final RedisMapSessionToStationService redisMappingService;
+    private final TransactionInfoService transactionInfoService;
 
     public String saveTxInfo(JsonNode jsonNode, String sessionId) {
         TransactionEventDomain txEventDomain = converter.convertToStartedTransactionDomain(jsonNode);
@@ -68,24 +64,10 @@ public class TransactionEventService {
 
         TransactionEventDomain txEventDomain = converter.convertToNonStartedTransactionDomain(jsonNode);
 
-        int avgMeterValue = txLogRepository.getTotalMeterValue(txEventDomain.extractTransactionId());
-        int pricePerWh = 100;
-
-        TransactionInfoDomain oriTxInfoDomain = txInfoRepository.findByTxId(txEventDomain.extractTransactionId());
-
-        int durationSeconds = (int) Duration.between(oriTxInfoDomain.getStartedTime(), txEventDomain.getTimestamp()).getSeconds();
-        if (durationSeconds < 0) {
-            throw new IllegalArgumentException("종료 시간은 시작 시간보다 이후여야합니다.");
-        }
-
-        double totalMeterValue = avgMeterValue / 1000.0 * (durationSeconds / 3600.0);
-        totalMeterValue = Math.round(totalMeterValue * 100) / 100.0;
-        Double totalPrice = pricePerWh * totalMeterValue;
-
-        TransactionInfoDomain endTxInfoDomain = TransactionInfoDomain.fromEndedTxEventDomain(txEventDomain, totalMeterValue, totalPrice);
-        String resultTransactionId = txInfoRepository.updateEndTime(endTxInfoDomain);
-
-        return resultTransactionId;
+        return transactionInfoService.updateTxInfo(
+                txEventDomain.extractTransactionId(),
+                "00",
+                txEventDomain.getTimestamp());
     }
 
     @Transactional

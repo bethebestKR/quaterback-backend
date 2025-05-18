@@ -21,7 +21,7 @@ public class TransactionLogEntity {
 
     private String transactionId;
     private LocalDateTime timestamp;
-    private Integer meterValue;
+    private Double meterValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evse_id")

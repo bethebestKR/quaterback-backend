@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class TransactionLogDomain {
     private String transactionId;
     private LocalDateTime timestamp;
-    private Integer meterValue;
+    private Double meterValue;
 
     public static TransactionLogDomain fromTxEventDomain(TransactionEventDomain domain) {
         return TransactionLogDomain.builder()

@@ -19,7 +19,7 @@ public class MeterValue {
                 .timestamp(LocalDateTime.parse(node.path("timestamp").asText()))
                 .sampledValues(List.of(
                         SampledValue.forMeterValues(
-                                node.path("sampledValue").get(0).path("value").asInt(),
+                                node.path("sampledValue").get(0).path("value").asDouble(),
                                 node.path("sampledValue").get(0).path("measurand").asText()
                         )
                 ))
@@ -31,7 +31,7 @@ public class MeterValue {
                 .timestamp(LocalDateTime.parse(node.path("timestamp").asText()))
                 .sampledValues(List.of(
                         SampledValue.forTransactionEvent(
-                                node.path("sampledValue").get(0).path("value").asInt()
+                                node.path("sampledValue").get(0).path("value").asDouble()
                                 )
                 ))
                 .build();
