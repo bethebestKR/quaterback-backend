@@ -34,9 +34,8 @@ public class ChargerEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id", referencedColumnName = "stationId")
     private ChargingStationEntity station;
-    //@OneToMany(mappedBy ="evseId", cascade = CascadeType.ALL)
-    //private List<TransactionInfoEntity> txInfoList = new ArrayList<>();
 
+    private Integer troubleCnt;
 
 /***연관 관계 메서드 작성 필요!!!!***/
 
@@ -47,6 +46,7 @@ public class ChargerEntity {
                 .evseId(evseId)
                 .chargerStatus(chargerStatus)
                 .updateStatusTimeStamp(updateStatusTimeStamp)
+                .troubleCnt(troubleCnt)
                 .build();
     }
 
@@ -56,7 +56,14 @@ public class ChargerEntity {
             updateStatusTimeStamp = LocalDateTime.now();
         }
     }
-
+    public void addTrouble(){
+        if(this.troubleCnt == null){
+            troubleCnt = 1;
+        }
+        else {
+            troubleCnt += 1;
+        }
+    }
     public void assignStation(ChargingStationEntity stationEntity) {
         station = stationEntity;
         if (!stationEntity.getChargerList().contains(this)) {
