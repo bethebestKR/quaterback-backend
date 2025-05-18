@@ -60,4 +60,8 @@ public interface TxInfoRepository {
     List<StatisticsData.ChartData> countChargingSpeedByMonth(int year, int month);
 
     List<StatisticsData.ChartData> findDailyTxCount(ChartType chartType);
+
+    List<StatisticsData.ChartData> findTotalPriceGroupedByStationId();
+
+    List<StatisticsData.ChartData> findMeterValueGroupedByTimeType();
 }
