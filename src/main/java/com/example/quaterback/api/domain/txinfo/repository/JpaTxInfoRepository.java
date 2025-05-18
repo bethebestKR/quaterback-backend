@@ -170,4 +170,9 @@ public class JpaTxInfoRepository implements TxInfoRepository {
         return springDataJpaTxInfoRepository.findNotEndedTxInfos(stationId)
                 .stream().map(TransactionInfoEntity::toDomain).toList();
     }
+
+    @Override
+    public List<TransactionInfoEntity> findTxInfoByTerm(LocalDateTime startTime, LocalDateTime endTime) {
+        return springDataJpaTxInfoRepository.findByEndedTimeBetween(startTime, endTime);
+    }
 }

@@ -142,4 +142,14 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
         AND t.totalMeterValue IS NULL
     """)
     List<TransactionInfoEntity> findNotEndedTxInfos(String stationId);
+
+    @Query("""
+    SELECT t FROM TransactionInfoEntity t
+    WHERE t.endedTime BETWEEN :startTime AND :endTime
+""")
+    List<TransactionInfoEntity> findByEndedTimeBetween(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
+
 }

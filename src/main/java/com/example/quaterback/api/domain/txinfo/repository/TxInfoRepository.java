@@ -1,6 +1,7 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
 import com.example.quaterback.api.domain.txinfo.domain.TransactionInfoDomain;
+import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,6 +12,7 @@ import com.example.quaterback.api.feature.monitoring.dto.query.ChargingRecordQue
 import com.example.quaterback.api.feature.monitoring.dto.query.DailyUsageQuery;
 import com.example.quaterback.api.feature.monitoring.dto.query.HourlyCongestionQuery;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TxInfoRepository {
@@ -47,4 +49,6 @@ public interface TxInfoRepository {
     TransactionInfoDomain findByTxId(String txId);
 
     List<TransactionInfoDomain> findNotEnded(String stationId);
+
+    List<TransactionInfoEntity> findTxInfoByTerm(LocalDateTime startTime, LocalDateTime endTime);
 }
