@@ -60,7 +60,7 @@ public class BootNotificationFixture {
             String address,
             StationStatus status,
             LocalDateTime updateDateTime,
-            Integer essValue
+            Double essValue
     ) {
         return ChargingStationEntity.builder()
                 .stationId(stationId)

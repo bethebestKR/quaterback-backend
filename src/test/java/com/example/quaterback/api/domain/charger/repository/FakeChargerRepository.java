@@ -50,6 +50,11 @@ public class FakeChargerRepository implements ChargerRepository {
         return List.of();
     }
 
+    @Override
+    public ChargerDomain updateChargerStatus(String stationId, Integer evseId, ChargerStatus status) {
+        return null;
+    }
+
     public void initializeStorage(ChargerStatus status, LocalDateTime dateTime) {
         ChargingStationEntity stationEntity = ChargingStationFixture.createStationEntity();
         ChargerEntity chargerEntity = ChargerFixture.createChargerEntity(stationEntity, status, dateTime);
