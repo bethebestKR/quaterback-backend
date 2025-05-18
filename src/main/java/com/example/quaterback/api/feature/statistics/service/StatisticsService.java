@@ -1,7 +1,6 @@
 package com.example.quaterback.api.feature.statistics.service;
 
 import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
-import com.example.quaterback.api.domain.price.entity.PricePerMwh;
 import com.example.quaterback.api.domain.price.repository.PriceRepository;
 import com.example.quaterback.api.domain.txinfo.repository.TxInfoRepository;
 import com.example.quaterback.api.feature.statistics.converter.StatisticsConverter;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -100,6 +98,16 @@ public class StatisticsService {
                         .value(price.getPricePerMwh())
                         .build()
                 ).toList();
+        return converter.toStatisticsData(results, chartType);
+    }
+
+    public StatisticsData getTotalPriceGroupedByStationId(ChartType chartType) {
+        List<StatisticsData.ChartData> results = txInfoRepository.findTotalPriceGroupedByStationId();
+        return converter.toStatisticsData(results, chartType);
+    }
+
+    public StatisticsData getMeterValueGroupedByTimeType(ChartType chartType) {
+        List<StatisticsData.ChartData> results = txInfoRepository.findMeterValueGroupedByTimeType();
         return converter.toStatisticsData(results, chartType);
     }
 }

@@ -1,7 +1,9 @@
 package com.example.quaterback.api.domain.txinfo.repository;
 
 import com.example.quaterback.api.domain.txinfo.entity.TransactionInfoEntity;
+import com.example.quaterback.api.feature.statistics.dto.query.DayNightMeterValueDto;
 import com.example.quaterback.api.feature.statistics.dto.query.MonthlyTransactionStatistics;
+import com.example.quaterback.api.feature.statistics.dto.query.StationTotalPriceDto;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -186,4 +188,21 @@ public interface SpringDataJpaTxInfoRepository extends JpaRepository<Transaction
     WHERE MONTH(t.started_time) = :month AND YEAR(t.started_time) = :year
     """, nativeQuery = true)
     List<Object[]> countChargingSpeedByMonth(@Param("year") int year, @Param("month") int month);
+
+    @Query("SELECT t.stationId AS stationId, SUM(t.totalPrice) AS totalPrice " +
+            "FROM TransactionInfoEntity t " +
+            "GROUP BY t.stationId")
+    List<StationTotalPriceDto> findTotalPriceGroupedByStationId();
+
+    @Query(value = """
+        SELECT 
+            CASE 
+                WHEN HOUR(started_time) >= 6 AND HOUR(started_time) < 18 THEN 'DAY'
+                ELSE 'NIGHT'
+            END AS timeType,
+            SUM(total_meter_value) AS totalMeterValue
+        FROM tx_info
+        GROUP BY timeType
+        """, nativeQuery = true)
+    List<DayNightMeterValueDto> findMeterValueGroupedByTimeType();
 }

@@ -62,4 +62,14 @@ public class StatisticsController {
     ) {
         return statisticsService.getPowerTradingStatistics(chartType);
     }
+
+    @GetMapping("/time-type-metervalue")
+    public StatisticsData getTimeTypeMeterValueStatistics(@RequestParam(name = "chartType") ChartType chartType) {
+        return statisticsService.getMeterValueGroupedByTimeType(chartType);
+    }
+
+    @GetMapping("/stations-price")
+    public StatisticsData getStationsPriceStatistics(@RequestParam(name = "chartType") ChartType chartType) {
+        return statisticsService.getTotalPriceGroupedByStationId(chartType);
+    }
 }
