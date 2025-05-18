@@ -8,6 +8,7 @@ import com.example.quaterback.websocket.mongodb.RawOcppMessageRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -31,6 +32,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
     private final RawOcppMessageRepository rawOcppMessageRepository;
 
+    private final InactiveStationService inactiveStationService;
     public OcppWebSocketHandler(List<OcppMessageHandler> handlers,
                                 RedisMapSessionToStationService redisMappingService,
                                 TransactionInfoService transactionInfoService,
@@ -38,6 +40,8 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
                                 ReactWebSocketHandler reactWebSocketHandler,
                                 RawOcppMessageRepository rawOcppMessageRepository
                                 ) {
+                                ReactWebSocketHandler reactWebSocketHandler,
+                                InactiveStationService inactiveStationService) {
         this.handlerMap = new HashMap<>();
         for (OcppMessageHandler handler : handlers) {
             handlerMap.put(handler.getAction(), handler);
@@ -47,6 +51,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         this.mongoDBService = mongoDBService;
         this.reactWebSocketHandler = reactWebSocketHandler;
         this.rawOcppMessageRepository = rawOcppMessageRepository;
+        this.inactiveStationService = inactiveStationService;
     }
 
     @Override
@@ -109,8 +114,10 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
+    @Transactional
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String stationId = redisMappingService.getStationId(session.getId());
+        inactiveStationService.valueChange(stationId, session.getId(), "WebSocket");
         transactionInfoService.setErrorCodeToNotEndedTxInfos(stationId);
         redisMappingService.removeMapping(session.getId());
         sessions.remove(session);
