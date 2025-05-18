@@ -24,11 +24,13 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     private final RedisMapSessionToStationService redisMappingService;
     private final TransactionInfoService transactionInfoService;
     private final MongoDBService mongoDBService;
+    private final ReactWebSocketHandler reactWebSocketHandler;
 
     public OcppWebSocketHandler(List<OcppMessageHandler> handlers,
                                 RedisMapSessionToStationService redisMappingService,
                                 TransactionInfoService transactionInfoService,
-                                MongoDBService mongoDBService) {
+                                MongoDBService mongoDBService,
+                                ReactWebSocketHandler reactWebSocketHandler) {
         this.handlerMap = new HashMap<>();
         for (OcppMessageHandler handler : handlers) {
             handlerMap.put(handler.getAction(), handler);
@@ -36,11 +38,19 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         this.redisMappingService = redisMappingService;
         this.transactionInfoService = transactionInfoService;
         this.mongoDBService = mongoDBService;
+        this.reactWebSocketHandler = reactWebSocketHandler;
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("WebSocket message received");
+
+        for (WebSocketSession client : reactWebSocketHandler.getSessions()) {
+            if (client.isOpen()) {
+                client.sendMessage(message);
+            }
+        }
+        log.info("WebSocket message sent to react");
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(message.getPayload());
@@ -59,6 +69,14 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
             }
             session.sendMessage(new TextMessage(response.toString()));
             log.info("Sent StatusNotificationResponse: {}", response);
+
+            for (WebSocketSession client : reactWebSocketHandler.getSessions()) {
+                if (client.isOpen()) {
+                    client.sendMessage(message);
+                }
+            }
+            log.info("WebSocket message sent to react");
+
             mongoDBService.saveMessage(objectMapper.writeValueAsString(response), stationId, action);
         } else {
             log.warn("No handler found for action: {}", jsonNode);
@@ -72,4 +90,6 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         transactionInfoService.setErrorCodeToNotEndedTxInfos(stationId);
         redisMappingService.removeMapping(session.getId());
     }
+
+    
 }
