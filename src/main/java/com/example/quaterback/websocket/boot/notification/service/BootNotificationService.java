@@ -1,5 +1,6 @@
 package com.example.quaterback.websocket.boot.notification.service;
 
+import com.example.quaterback.api.domain.activeStationRecord.service.ActiveStationService;
 import com.example.quaterback.api.domain.charger.constant.ChargerStatus;
 import com.example.quaterback.api.domain.charger.domain.ChargerDomain;
 import com.example.quaterback.api.domain.charger.repository.ChargerRepository;
@@ -24,6 +25,8 @@ public class BootNotificationService {
     private final BootNotificationConverter converter;
     private final RedisMapSessionToStationService redisMappingService;
     private final ChargerRepository chargerRepository;
+    private final ActiveStationService activeStationService;
+
     @Transactional
     public String updateStationStatus(JsonNode jsonNode, String sessionId) {
         BootNotificationDomain bootNotificationDomain = converter.convertToBootNotificationDomain(jsonNode);
@@ -41,6 +44,8 @@ public class BootNotificationService {
             chargerRepository.update(charger);
         }
 
+
+        activeStationService.activate(stationId);
         return resultStationId;
     }
 }
