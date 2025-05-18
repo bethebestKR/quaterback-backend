@@ -128,7 +128,7 @@ public class StatisticService {
             }
         } else {
             double percent = (netRevenue / prevNetRevenue - 1.0) * 100;
-            percentText = String.format("%.1f%% 증가", percent);
+            percentText = String.format("%.1f%%", percent);
         }
 
         return new PowerTradingRevenueData(netRevenue, percentText);
@@ -184,7 +184,7 @@ public class StatisticService {
             }
         } else {
             double percent = (netVolume / prevNetVolume - 1.0) * 100;
-            percentText = String.format("%.1f%% 증가", percent);
+            percentText = String.format("%.1f%%", percent);
         }
 
         return new PowerTradingVolumeData(netVolume, percentText, minVolume, minDate,  maxVolume, maxDate);
