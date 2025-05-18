@@ -51,9 +51,10 @@ public class UptimeRolloverScheduler {
                     .findByStationAndCreatedAtBetween(station, yStart, yEnd)
                     .map(existing -> {
                         existing.accumulate(percentUp, yEnd);
+                        existing.updateReason("EndOfDay");
                         return existing;
                     })
-                    .orElseGet(() -> ChargerUptimeEntity.of(station, percentUp, yEnd));
+                    .orElseGet(() -> ChargerUptimeEntity.of(station, percentUp, yEnd, "EndOfDay"));
 
             uptimeRepo.save(entity);
 

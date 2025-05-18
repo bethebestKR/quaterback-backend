@@ -51,34 +51,37 @@ public class InactiveStationService {
 
             Long lastHeartbeat = heartbeatMonitorService.getLastHeartbeat(stationId);
             if (lastHeartbeat == null || isExpired(lastHeartbeat)) {
-                // ——————————————
-                // 1) 꺼짐 판정 시점에 upTime 누적
-                activeStationService.getStartTime(stationId); // (internal startTime 조회)
-                // 호출만으로 handleInactive 내부에서 DB에 퍼센트 누적 저장까지 끝남
-                handleInactiveDbRecording(stationId);
-                // ——————————————
-
-                ChargingStationDomain domain = chargingStationRepository.findByStationId(stationId);
-                List<ChargerDomain> chargerDomains = chargerRepository.findByStationID(stationId);
-                if (domain != null) {
-                    domain.updateStationStatus(StationStatus.INACTIVE);
-                    chargingStationRepository.update(domain);
-
-                    for(ChargerDomain charger : chargerDomains){
-                        charger.updateChargerStatus(ChargerStatus.UNAVAILABLE);
-                        chargerRepository.update(charger);
-                    }
-                    log.info("Station [{}] marked INACTIVE due to expired heartbeat", stationId);
-                } else {
-                    log.warn("Station [{}] not found in DB", stationId);
-                }
-
-                mapService.removeMapping(sessionId);
-                heartbeatMonitorService.removeHeartbeat(stationId);
+                valueChange(stationId, sessionId, "InactiveHandler");
             }
         }
     }
-    private void handleInactiveDbRecording(String stationId) {
+
+    public void valueChange(String stationId, String sessionId, String reason) {
+        // 1) 꺼짐 판정 시점에 upTime 누적
+        activeStationService.getStartTime(stationId); // (internal startTime 조회)
+        // 호출만으로 handleInactive 내부에서 DB에 퍼센트 누적 저장까지 끝남
+        handleInactiveDbRecording(stationId, reason);
+
+        ChargingStationDomain domain = chargingStationRepository.findByStationId(stationId);
+        List<ChargerDomain> chargerDomains = chargerRepository.findByStationID(stationId);
+        if (domain != null) {
+            domain.updateStationStatus(StationStatus.INACTIVE);
+            chargingStationRepository.update(domain);
+
+            for(ChargerDomain charger : chargerDomains){
+                charger.updateChargerStatus(ChargerStatus.UNAVAILABLE);
+                chargerRepository.update(charger);
+            }
+            log.info("Station [{}] marked INACTIVE due to expired heartbeat", stationId);
+        } else {
+            log.warn("Station [{}] not found in DB", stationId);
+        }
+
+        mapService.removeMapping(sessionId);
+        heartbeatMonitorService.removeHeartbeat(stationId);
+    }
+
+    private void handleInactiveDbRecording(String stationId, String reason) {
         // 1) 부팅 시각 조회
         LocalDateTime start = activeStationService.getStartTime(stationId);
         if (start == null) {
@@ -103,10 +106,11 @@ public class InactiveStationService {
                 .findByStationAndCreatedAtBetween(station, dayStart, dayEnd)
                 .map(existing -> {
                     existing.accumulate(percentUp, end);
+                    existing.updateReason(reason);
                     return existing;
                 })
                 .orElseGet(() ->
-                        ChargerUptimeEntity.of(station, percentUp, end)
+                        ChargerUptimeEntity.of(station, percentUp, end, reason)
                 );
 
         // 6) 저장 및 Active 레코드 삭제
