@@ -37,7 +37,7 @@ public class InactiveStationService {
     private final ChargerRepository chargerRepository;
     private final SpringDataJpaChargerInfoRepository chargerInfoRepository;
     private final SpringDataJpaChargingStationRepository springDataJpaChargingStationRepository;
-    private static final long HEARTBEAT_INTERVAL_MS = 300_000;
+    private static final long HEARTBEAT_INTERVAL_MS = 600_000;
 
     @Transactional
     public void cleanInactiveStationsWithTx() {

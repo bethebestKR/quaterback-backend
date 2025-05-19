@@ -4,11 +4,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. 기존 데이터 삭제 (삭제 순서 중요: 자식 테이블 → 부모 테이블)
 DELETE FROM tx_log;
 DELETE FROM tx_info;
-DELETE FROM charger_info WHERE station_id = 'station-001';
-DELETE FROM charging_station WHERE station_id = 'station-001';
+DELETE FROM charger_info;
+DELETE FROM charging_station;
 DELETE FROM customer;
 DELETE FROM cs_price;
 DELETE FROM kepco_price;
+DELETE FROM charger_uptime;
 
 -- 외래키 체크 복구
 SET FOREIGN_KEY_CHECKS = 1;
