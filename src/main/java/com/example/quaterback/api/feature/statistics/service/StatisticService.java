@@ -70,11 +70,18 @@ public class StatisticService {
             changePercent = ((overallUptime - preOverallUptime) / preOverallUptime) * 100;
         }
 
-        // 충전소별 가동률 리스트 구성
-        List<ChargerUptimeData.StationUptime> stationUptimeList = chargerInfoEntities.stream()
-                .map(entity -> new ChargerUptimeData.StationUptime(
-                        entity.getStation().getStationName(),
-                        entity.getUpTime()
+        // 충전소별 평균 uptime 계산
+        Map<String, Double> avgUptimeByStation = chargerInfoEntities.stream()
+                .collect(Collectors.groupingBy(
+                        e -> e.getStation().getStationName(),
+                        Collectors.averagingDouble(ChargerUptimeEntity::getUpTime)
+                ));
+
+        // DTO 리스트로 변환
+        List<ChargerUptimeData.StationUptime> stationUptimeList = avgUptimeByStation.entrySet().stream()
+                .map(entry -> new ChargerUptimeData.StationUptime(
+                        entry.getKey(),
+                        entry.getValue()
                 ))
                 .collect(Collectors.toList());
 
