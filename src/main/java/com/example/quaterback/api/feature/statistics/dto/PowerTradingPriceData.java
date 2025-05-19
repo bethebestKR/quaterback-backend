@@ -1,6 +1,5 @@
 package com.example.quaterback.api.feature.statistics.dto;
 
-import com.example.quaterback.api.domain.price.constant.TimeSlot;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
