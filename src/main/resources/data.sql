@@ -60,9 +60,9 @@ INSERT INTO kepco_price (season, time_slot, price_per_kwh) VALUES
 
 INSERT INTO tx_info (transaction_id, started_time, ended_time, vehicle_no, id_token, station_id, total_meter_value, total_price, error_code)
 VALUES
-    ('TX123456', '2025-05-15T10:00:00', '2025-05-15T10:00:10', '12가3456', 'token001', 'station-001', 15.0, 1500, '00'),
-    ('TX12123',  '2025-05-16T10:20:00', '2025-05-16T10:20:20', '12가3456', 'token001', 'station-001', 15.0, 1000, '00'),
-    ('TX789012', '2025-04-02T14:10:00', '2025-04-02T14:50:00', '34나7890', 'token001', 'station-001', 22.7, 6800, '00');
+    ('tx-000', '2025-05-15T10:00:00', '2025-05-15T10:00:10', '12가3456', 'token001', 'station-001', 15.0, 1500, '00'),
+    ('tx-001',  '2025-05-16T10:20:00', '2025-05-16T10:20:20', '12가3456', 'token001', 'station-001', 15.0, 1000, '00'),
+    ('tx-002', '2025-04-02T14:10:00', '2025-04-02T14:50:00', '34나7890', 'token001', 'station-001', 22.7, 6800, '00');
 INSERT INTO charger_uptime (up_time, charging_station, created_at)
 VALUES
     (2.5, 1, '2025-05-01 09:00:00.000000'),
