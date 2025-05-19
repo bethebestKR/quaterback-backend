@@ -95,7 +95,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
                 mongoDBService.saveMessage(objectMapper.writeValueAsString(jsonNode), stationId, action);
             }
             session.sendMessage(new TextMessage(response.toString()));
-            log.info("Sent StatusNotificationResponse: {}", response);
+            log.info("Sent Response : {}", response);
 
             for (WebSocketSession client : reactWebSocketHandler.getSessions()) {
                 if (client.isOpen()) {

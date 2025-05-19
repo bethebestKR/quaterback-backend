@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ModelingService {
@@ -57,6 +59,9 @@ public class ModelingService {
         if (before.getChargerStatus().equals(ChargerStatus.UNAVAILABLE) && operationStatus.equals("Inoperative")) {
             return UpdateChargerStatusResponse.from(before);
         }
+        if (before.getChargerStatus().equals(ChargerStatus.FAULT)) {
+            return UpdateChargerStatusResponse.from(before);
+        }
         String action = before.getChargerStatus().equals(ChargerStatus.OCCUPIED) ? "RequestStopTransaction" : "ChangeAvailability";
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode rootArray = mapper.createArrayNode();
@@ -85,14 +90,13 @@ public class ModelingService {
                 break;
             }
         }
+        log.info("Sent Websocket message to CS : {}", rootArray);
         for (WebSocketSession client : reactWebSocketHandler.getSessions()) {
             if (client.isOpen()) {
                 client.sendMessage(new TextMessage(rootArray.toString()));
             }
         }
 
-        ChargerDomain chargerDomain = chargerRepository.updateChargerStatus(stationId, evseId, status);
-
-        return UpdateChargerStatusResponse.from(chargerDomain);
+        return UpdateChargerStatusResponse.from(before);
     }
 }
